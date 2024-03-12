@@ -11,9 +11,8 @@ pipeline {
         stage('build') {
             agent any
             steps {
-                sh "pwd"
-                sh "chmod +x ./backend/gradlew"
-                sh "./backend/gradlew clean build"
+                sh "cd backend && chmod +x ./gradlew"
+                sh "cd backend && ./gradlew clean build"
             }
             post {
                 success {
