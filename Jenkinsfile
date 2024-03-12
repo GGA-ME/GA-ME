@@ -27,7 +27,7 @@ pipeline {
         stage('Docker Build') {
             agent any
             steps {
-                sh 'docker build -t user-service:latest /jenkins'
+                sh 'docker build -t user-service:latest ./jenkins'
             }
             post {
                 success {
