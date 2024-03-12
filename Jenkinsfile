@@ -12,7 +12,7 @@ pipeline {
             agent any
             steps {
                 sh "chmod +x gradlew"
-                sh "./gradlew clean build"
+                sh "./backend/gradlew clean build"
             }
             post {
                 success {
