@@ -5,7 +5,7 @@ pipeline {
         stage('GitLab') {
            agent any
            steps {
-               git branch: 'be/dev', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22E105'
+               git branch: 'be/dev', credentialsId: '145eb9d6-4214-42f8-b81d-4ed730cce8f2',url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22E105'
            }
         }
         stage('build') {
