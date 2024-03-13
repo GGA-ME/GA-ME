@@ -105,7 +105,7 @@ function Navbar() {
 
     return (
         <>
-            <div className="fixed top-0 left-0 flex flex-col items-center w-40 h-screen py-20 bg-gray-900 text-white">
+            <div className="fixed top-0 left-0 flex flex-col items-center px-8 h-screen py-20 bg-gray-900 text-white">
                 {/* Navbar heading or logo */}
                 <div className="mb-10">
                     {/* Replace with your logo */}
@@ -118,16 +118,16 @@ function Navbar() {
                         layout
                         initial={false}
                         animate={{
-                            borderColor: isActive('/main') ? '#ffffff' : 'transparent',
-                            borderWidth: isActive('/main') ? 2 : 0,
+                            borderColor: isActive('/Main') ? '#81BECE' : 'transparent',
+                            borderWidth: isActive('/Main') ? 2 : 0,
                         }}
                         transition={{ type: "spring", stiffness: 300 }}
                         className="flex items-center space-x-2 px-2 py-1 rounded-full"
                     >
-                        <NavLink to="/main" className="flex items-center space-x-2">
+                        <NavLink to="/Main" className="flex items-center space-x-2">
                             <img
                                 id="gameIcon"
-                                src={isActive('/main') ? '/Gameicon.gif' : '/Gameicon.png'}
+                                src={isActive('/Main') ? '/Gameicon.gif' : '/Gameicon.png'}
                                 className="transition-all duration-300 ease-in-out"
                                 style={{ width: '30px', height: 'auto', filter: "brightness(0) invert(1)" }}
                                 alt="Game Icon"
@@ -141,7 +141,7 @@ function Navbar() {
                         layout
                         initial={false}
                         animate={{
-                            borderColor: isActive('/search') ? '#ffffff' : 'transparent',
+                            borderColor: isActive('/search') ? '#81BECE' : 'transparent',
                             borderWidth: isActive('/search') ? 2 : 0,
                         }}
                         transition={{ type: "spring", stiffness: 300 }}
@@ -164,7 +164,7 @@ function Navbar() {
                         layout
                         initial={false}
                         animate={{
-                            borderColor: isActive('/topic') ? '#ffffff' : 'transparent',
+                            borderColor: isActive('/topic') ? '#81BECE' : 'transparent',
                             borderWidth: isActive('/topic') ? 2 : 0,
                         }}
                         transition={{ type: "spring", stiffness: 300 }}
@@ -187,7 +187,7 @@ function Navbar() {
                         layout
                         initial={false}
                         animate={{
-                            borderColor: isActive('/myPage') ? '#ffffff' : 'transparent',
+                            borderColor: isActive('/myPage') ? '#81BECE' : 'transparent',
                             borderWidth: isActive('/myPage') ? 2 : 0,
                         }}
                         transition={{ type: "spring", stiffness: 300 }}
