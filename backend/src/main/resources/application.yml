@@ -11,6 +11,8 @@ spring:
     properties:
       hibernate:
         format_sql: 'true'
+  profiles:
+    include: oauth
 
 server:
   port: 8000
