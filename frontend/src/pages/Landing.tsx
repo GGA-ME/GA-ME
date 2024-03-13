@@ -1,4 +1,3 @@
-import text from './Main.module.css'
 import Navbar from "../components/commonUseComponents/Navbar";
 
 function Landing() {

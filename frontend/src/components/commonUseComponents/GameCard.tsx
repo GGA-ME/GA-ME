@@ -4,8 +4,7 @@ import style from './GameCard.module.css'
 
 const GameCard = ({ imageUrl, title, price }) => {
     return (
-      <div className={`${style.cardBg} w-48 rounded overflow-hidden shadow-lg text-white text-center`}>
-        
+      <div className={`${style.card} w-48 rounded overflow-hidden text-white text-center`}>
         <img src={imageUrl} alt={title} className="w-full" />
         <div className="p-2">
           <h3 className="text-lg">{title}</h3>
