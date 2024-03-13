@@ -81,6 +81,6 @@ with DAG(
 
     run_get_game_data_task = PythonOperator(task_id="get_game_data_task", python_callable=get_game_data)
 
-    test_task = MysqlOperator()
+    #test_task = MysqlOperator()
 
     run_get_game_data_task
