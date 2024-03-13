@@ -1,9 +1,11 @@
+import Navbar from "../components/commonUseComponents/Navbar";
 
 
 function Search() {
 
     return (
       <>
+      <Navbar />
         <h1>Search</h1>
       </>
     );
