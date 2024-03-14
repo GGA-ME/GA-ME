@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    url: jdbc:mysql://j10e105.p.ssafy.io:3306/test
-    password: GGAME!buk105
+    username: ${DB_USERNAME}
+    url: ${DB_URL}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,4 +15,4 @@ spring:
     include: oauth
 
 server:
-  port: 8000
+  port: ${SERVER_PORT}
