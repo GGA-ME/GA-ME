@@ -66,7 +66,8 @@ function Game() {
   }];
 
   return (
-    <motion.ul className="grid grid-cols-4 gap-4"
+    <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5
+    "
       variants={{ 
         hidden: {},
         visible: { transition: { staggerChildren: 0.1 } } // 각 자식 컴포넌트 사이의 지연시간을 설정합니다.
@@ -86,6 +87,8 @@ function Game() {
             imageUrl="/Gameicon.gif"
             title={game.title}
             price={`₩ ${game.price}`}
+            tags={['액션',' 슈팅', '개그']}
+            likes={34}
           />
         </motion.li>
         ))}
