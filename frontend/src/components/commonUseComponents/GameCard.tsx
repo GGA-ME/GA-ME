@@ -27,17 +27,17 @@ const GameCard = ({ imageUrl, title, price, tags, likes }) => {
       <div className={`${style.card} w-48 rounded overflow-hidden text-white text-center`}>
         <img src={imageUrl} alt={title} className="w-full" />
         <div className="p-2">
-          <h3 className="text-lg">{title}</h3>
-          <p className="text-sm">{price}</p>
+          <h3 className="text-base">{title}</h3>
+          <p className="text-xs">{price}</p>
         </div>
       </div>      {isHovered && (
         <motion.div
-        className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-between p-2"
-        variants={overlayVariants}
-        initial="hidden"
-        animate="visible"
-        exit="hidden"
-      >
+          className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-between p-2"
+          variants={overlayVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+        >
           <div className="flex justify-center items-center space-x-2">
             {/* Icons */}
             <button className="bg-white rounded-full p-2">
