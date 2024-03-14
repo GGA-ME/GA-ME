@@ -1,18 +1,24 @@
 import Navbar from "../components/commonUseComponents/Navbar";
-import text from './Main.module.css'
-
+import Banner from "../components/mainComponents/Banner";
+import Game from "../components/mainComponents/Game"
+import Select from "../components/mainComponents/Select"
 function Main() {
 
   return (
     <>
+    <Navbar />
+    <div className="flex flex-col items-center pl-52">
       <Navbar />
-      <div className="flex flex-col justify-center items-center h-screen">
-        <h1>깜빡인효과</h1>
-        <h1 className={`${text.neonText}`}>Main</h1>
-        <h1>기본</h1>
-        <h1 className={`${text.neonNormal}`}>Main</h1>
-        
+      <div className="flex-grow">
+        <Banner />
       </div>
+      <div className="flex-grow">
+        <Select />
+      </div>
+      <div className="flex-grow">
+        <Game />
+      </div>
+    </div>
     </>
   );
 }

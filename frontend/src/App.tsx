@@ -12,7 +12,7 @@ import Suvey from './pages/Suvey';
 const router = createBrowserRouter([
   { path: '/', element: <Landing />,},
   // 메인
-  { path: 'main', element: <Main/>},
+  { path: 'Main', element: <Main/>},
   // 검색 페이지
   { path: 'search', element: <Search /> },
   // 게임 디테일 페이지
