@@ -84,7 +84,7 @@ function Game() {
         >
           <GameCard
             key={index}
-            imageUrl="/Gameicon.gif"
+            imageUrl="/TestGameImg.jpg"
             title={game.title}
             price={`₩ ${game.price}`}
             tags={['액션',' 슈팅', '개그']}

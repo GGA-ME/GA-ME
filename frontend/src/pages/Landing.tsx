@@ -7,9 +7,9 @@ function Landing() {
         <Navbar />
             <div className="flex flex-col justify-center items-center h-screen">
         <h1>깜빡인효과</h1>
-        <h1 className={`${text.neonText}`}>Landing</h1>
+        <h1>Landing</h1>
         <h1>기본</h1>
-        <h1 className={`${text.neonNormal}`}>Landing</h1>
+        <h1>Landing</h1>
         
       </div>
         </>
