@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: env
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: ${DB_USERNAME}
@@ -11,8 +13,13 @@ spring:
     properties:
       hibernate:
         format_sql: 'true'
-  profiles:
-    include: oauth
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH_CLIENT_ID}
+            client-secret: ${OAUTH_CLIENT_SECRET}
+            scope: ${OAUTH_CLIENT_SCOPE}
 server:
   port: ${SERVER_PORT}
