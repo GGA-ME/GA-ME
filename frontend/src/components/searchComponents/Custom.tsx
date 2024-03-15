@@ -1,7 +1,5 @@
 
-import { motion } from 'framer-motion'
-import style from './GameCard.module.css'
-import { useState } from 'react';
+
 import SimpleGameCard from '../commonUseComponents/SimpleGameCard';
 
 
