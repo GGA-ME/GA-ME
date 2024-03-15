@@ -6,8 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserDto {
-    private String email;
-    private String name;
-    private String imageUrl;
+    private Integer userId;
+    private String userEmail;
+    private String userName;
+    private String userProfileImg;
     // Getter, Setter 생략
 }
