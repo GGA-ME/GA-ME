@@ -18,13 +18,13 @@ public class UserService {
     }
 
     // 사용자 ID로 사용자 찾기
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(Integer id) {
         return userRepository.findById(id);
     }
 
     // 이메일로 사용자 찾기
     public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByUserEmail(email);
     }
 
     // 사용자 저장 또는 업데이트
@@ -33,7 +33,7 @@ public class UserService {
     }
 
     // 사용자 삭제
-    public void deleteUser(Long id) {
+    public void deleteUser(Integer id) {
         userRepository.deleteById(id);
     }
 }

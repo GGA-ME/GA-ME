@@ -11,4 +11,7 @@ public class TestController {
     public String test(){
         return "hi!!!!!!!!";
     }
+
+    @GetMapping("/register")
+    public String register() {return "Welcome! you need put your age!";}
 }

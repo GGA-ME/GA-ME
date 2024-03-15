@@ -13,6 +13,7 @@ import ssafy.ggame.domain.user.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Date;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -29,7 +30,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String name = (String) attributes.get("name");
         String imageUrl = (String) attributes.get("picture");
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByUserEmail(email)
                 .map(entity -> updateExistingUser(entity, name, imageUrl))
                 .orElseGet(() -> registerNewUser(email, name, imageUrl));
 
@@ -39,15 +40,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User registerNewUser(String email, String name, String imageUrl) {
         User user = new User();
-        user.setEmail(email);
-        user.setName(name);
-        user.setImageUrl(imageUrl);
+        user.setUserEmail(email);
+        user.setUserName(name);
+        user.setUserProfileImg(imageUrl);
+        user.setUserLastLoginDt(new Date()); // 사용자가 처음으로 가입할 때 lastLogin 정보를 현재 날짜로 설정
         return userRepository.save(user);
     }
 
     private User updateExistingUser(User existingUser, String name, String imageUrl) {
-        existingUser.setName(name);
-        existingUser.setImageUrl(imageUrl);
+        existingUser.setUserName(name);
+        existingUser.setUserProfileImg(imageUrl);
         return userRepository.save(existingUser);
     }
 }
