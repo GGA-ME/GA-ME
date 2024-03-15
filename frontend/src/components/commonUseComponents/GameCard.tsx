@@ -4,9 +4,17 @@ import { motion } from 'framer-motion'
 import style from './GameCard.module.css'
 import { useState } from 'react';
 
+// 타입스크립트 타입 프롭받을 타입 정의
+interface GameCardProps {
+  imageUrl: string;
+  title: string;
+  price: string;
+  tags: string[];
+  likes: number;
+}
 
-
-const GameCard = ({ imageUrl, title, price, tags, likes }) => {
+// 타입스크립트식 선언
+const GameCard: React.FC<GameCardProps> = ({ imageUrl, title, price, tags, likes }) => {
   const [isHovered, setIsHovered] = useState(false);
   const hoverEffects = {
     scale: [1, 1.1], // 호버시 크기 설정
@@ -57,7 +65,7 @@ const GameCard = ({ imageUrl, title, price, tags, likes }) => {
             {/* Tag container */}
             <div className="bg-black bg-opacity-50 rounded px-2 py-1">
               {/* Tags */}
-              {tags.map((tag, index) => (
+              {tags.map((tag: string, index: number) => (
                 <span key={index} className="text-xs font-semibold mx-1">{`#${tag}`}</span>
               ))}
             </div>
