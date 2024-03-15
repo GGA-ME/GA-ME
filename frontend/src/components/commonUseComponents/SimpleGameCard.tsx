@@ -1,6 +1,13 @@
 import { motion } from 'framer-motion';
 
-const SimpleGameCard = ({ imageUrl, title }) => {
+
+// 타입스크립트 타입 프롭받을 타입 정의
+interface SimpleGameCardProps {
+    imageUrl: string;
+    title: string;
+  }
+
+const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ imageUrl, title }) => {
     return (
         <motion.div
             className="w-48 rounded overflow-hidden shadow-lg transform cursor-pointer"
