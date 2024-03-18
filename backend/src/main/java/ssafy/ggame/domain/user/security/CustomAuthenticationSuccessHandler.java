@@ -12,6 +12,7 @@ import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             // 이미 가입된 회원인 경우
             User user = userOptional.get();
             // 사용자의 마지막 로그인 날짜를 현재 날짜로 업데이트
-            user.setUserLastLoginDt(new Date());
+            user.setUserLastLoginDt(LocalDate.now());
             userRepository.save(user); // 변경사항 저장
             response.sendRedirect("/test");
         } else {
@@ -43,7 +44,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             User newUser = new User();
             newUser.setUserEmail(email);
             // newUser의 다른 필드 설정...
-            newUser.setUserLastLoginDt(new Date()); // 가입 시점도 마지막 로그인 날짜로 설정
+            newUser.setUserLastLoginDt(LocalDate.now()); // 가입 시점도 마지막 로그인 날짜로 설정
             userRepository.save(newUser);
 
             response.sendRedirect("/register");
