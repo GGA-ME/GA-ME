@@ -18,11 +18,11 @@ import ssafy.ggame.global.common.BaseCreatedTimeEntity;
 public class Like extends BaseCreatedTimeEntity {
     @Id
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user;
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    private User userId;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "game_id", referencedColumnName = "game_id")
+    @JoinColumn(name = "game_id", referencedColumnName = "gameId")
     private Game gameId;
 }

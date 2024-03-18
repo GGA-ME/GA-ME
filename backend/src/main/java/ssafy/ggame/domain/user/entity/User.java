@@ -5,10 +5,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import ssafy.ggame.domain.like.entity.Like;
 import ssafy.ggame.global.common.BaseCreatedTimeEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,7 +22,6 @@ import java.util.Date;
 @SuperBuilder
 @Table(name= "user")
 public class User extends BaseCreatedTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId; //사용자 아이디 (AI)
@@ -41,9 +43,9 @@ public class User extends BaseCreatedTimeEntity {
     private String userProfileImg;  // 사용자 프로필 이미지 URL
 
 
-//    @OneToMany(mappedBy = "userId")
-//    @PrimaryKeyJoinColumn
-//    List<Like> articleFiles = new ArrayList<>();
+    @OneToMany(mappedBy = "userId")
+    @PrimaryKeyJoinColumn
+    List<Like> articleFiles = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "userId")
 //    @PrimaryKeyJoinColumn

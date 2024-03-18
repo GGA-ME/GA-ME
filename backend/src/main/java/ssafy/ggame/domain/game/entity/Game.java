@@ -1,12 +1,20 @@
 package ssafy.ggame.domain.game.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ssafy.ggame.domain.like.entity.Like;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "game")
 public class Game {
     @Id
@@ -61,8 +69,9 @@ public class Game {
     @Temporal(TemporalType.DATE)
     private LocalDate updatedDt;
 
-    @OneToMany(mappedBy = "game")
+    @OneToMany(mappedBy = "gameId")
     private List<Like> likes;
+
 
     /*
 
