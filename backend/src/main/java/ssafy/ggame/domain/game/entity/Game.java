@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ssafy.ggame.domain.like.entity.Like;
+import ssafy.ggame.domain.prefer.entity.Prefer;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -70,7 +70,7 @@ public class Game {
     private LocalDate updatedDt;
 
     @OneToMany(mappedBy = "gameId")
-    private List<Like> likes;
+    private List<Prefer> likes;
 
 
     /*

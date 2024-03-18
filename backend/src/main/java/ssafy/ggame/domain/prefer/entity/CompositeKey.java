@@ -1,4 +1,4 @@
-package ssafy.ggame.domain.like.entity;
+package ssafy.ggame.domain.prefer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
