@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ssafy.ggame.domain.game.entity.Game;
+import ssafy.ggame.domain.recommendation.entity.Game;
 import ssafy.ggame.domain.gameTag.entity.GameTag;
 import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
 import ssafy.ggame.domain.userTag.entity.UserTag;

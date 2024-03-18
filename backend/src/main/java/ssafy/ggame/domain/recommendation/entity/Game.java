@@ -1,4 +1,4 @@
-package ssafy.ggame.domain.game.entity;
+package ssafy.ggame.domain.recommendation.entity;
 
 import jakarta.persistence.*;
 import ssafy.ggame.domain.like.entity.Like;
