@@ -2,15 +2,13 @@ package ssafy.ggame.domain.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import ssafy.ggame.domain.like.entity.Like;
+import ssafy.ggame.domain.prefer.entity.Prefer;
 import ssafy.ggame.global.common.BaseCreatedTimeEntity;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -45,7 +43,7 @@ public class User extends BaseCreatedTimeEntity {
 
     @OneToMany(mappedBy = "userId")
     @PrimaryKeyJoinColumn
-    List<Like> articleFiles = new ArrayList<>();
+    List<Prefer> articleFiles = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "userId")
 //    @PrimaryKeyJoinColumn
