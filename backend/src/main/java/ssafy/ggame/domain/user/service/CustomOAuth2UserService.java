@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Date;
@@ -43,7 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setUserEmail(email);
         user.setUserName(name);
         user.setUserProfileImg(imageUrl);
-        user.setUserLastLoginDt(new Date()); // 사용자가 처음으로 가입할 때 lastLogin 정보를 현재 날짜로 설정
+        user.setUserLastLoginDt(LocalDate.now()); // 사용자가 처음으로 가입할 때 lastLogin 정보를 현재 날짜로 설정
         return userRepository.save(user);
     }
 
