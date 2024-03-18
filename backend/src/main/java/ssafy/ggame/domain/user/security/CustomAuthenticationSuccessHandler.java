@@ -13,6 +13,7 @@ import ssafy.ggame.domain.user.repository.UserRepository;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -26,20 +27,25 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         String email = authentication.getName(); // 로그인 성공한 사용자의 이메일 획득
 
         // 이메일을 통해 사용자 정보를 데이터베이스에서 조회
-        User user = userRepository.findByUserEmail(email)
-                .orElse(null);
+        Optional<User> userOptional = userRepository.findByUserEmail(email);
 
-        // 이메일을 통해 사용자가 데이터베이스에 존재하는지 확인
-        boolean userExists = userRepository.findByUserEmail(email).isPresent();
-
-        if (userExists) {
+        if (userOptional.isPresent()) {
             // 이미 가입된 회원인 경우
+            User user = userOptional.get();
             // 사용자의 마지막 로그인 날짜를 현재 날짜로 업데이트
             user.setUserLastLoginDt(new Date());
             userRepository.save(user); // 변경사항 저장
             response.sendRedirect("/test");
         } else {
             // 처음 가입하는 유저인 경우
+            // 여기서 사용자 정보를 데이터베이스에 등록하는 로직을 추가해야 합니다.
+            // 예시:
+            User newUser = new User();
+            newUser.setUserEmail(email);
+            // newUser의 다른 필드 설정...
+            newUser.setUserLastLoginDt(new Date()); // 가입 시점도 마지막 로그인 날짜로 설정
+            userRepository.save(newUser);
+
             response.sendRedirect("/register");
         }
     }
