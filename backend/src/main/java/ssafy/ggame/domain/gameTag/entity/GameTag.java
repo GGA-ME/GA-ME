@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import ssafy.ggame.domain.commonCode.entity.CommonCode;
-import ssafy.ggame.domain.recommendation.entity.Game;
+import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.tag.entity.Tag;
 
 @Entity

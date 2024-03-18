@@ -1,6 +1,6 @@
 package ssafy.ggame.domain.like.entity;
 
-import ssafy.ggame.domain.recommendation.entity.Game;
+import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.user.entity.User;
 
 import java.io.Serializable;

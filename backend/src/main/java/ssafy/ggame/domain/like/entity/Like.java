@@ -3,7 +3,7 @@ package ssafy.ggame.domain.like.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import ssafy.ggame.domain.recommendation.entity.Game;
+import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.global.common.BaseCreatedTimeEntity;
 
