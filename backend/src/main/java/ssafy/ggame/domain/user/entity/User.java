@@ -22,8 +22,4 @@ public class User extends BaseCreatedTimeEntity {
     private String userName;    // 사용자 이름
     private String userProfileImg;  // 사용자 프로필 이미지 URL
     private Date userLastLoginDt; // 사용자의 마지막 로그인 날짜
-
-    // 기본 생성자
-    public User() {
-    }
 }

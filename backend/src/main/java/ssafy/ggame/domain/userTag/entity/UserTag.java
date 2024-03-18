@@ -11,16 +11,18 @@ import ssafy.ggame.domain.user.entity.User;
 @Getter
 @Setter
 public class UserTag {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // UserTag 엔티티의 기본 키
+
+    @EmbeddedId
+    private UserTagId id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") // userId 외래 키
+    @MapsId("userId") // UserTagId 내 userId 필드에 매핑
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "tag_id") // tagId 외래 키
+    @MapsId("tagId") // UserTagId 내 tagId 필드에 매핑
+    @JoinColumn(name = "tag_id")
     private Tag tag;
 
     @ManyToOne
