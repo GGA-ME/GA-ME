@@ -1,4 +1,4 @@
-package ssafy.ggame.domain.like.entity;
+package ssafy.ggame.domain.prefer.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,15 +14,15 @@ import ssafy.ggame.global.common.BaseCreatedTimeEntity;
 @AllArgsConstructor
 @SuperBuilder
 @IdClass(CompositeKey.class)
-@Table(name = "like")
-public class Like extends BaseCreatedTimeEntity {
+@Table(name = "prefer")
+public class Prefer extends BaseCreatedTimeEntity {
     @Id
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user;
+    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    private User userId;
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "game_id", referencedColumnName = "game_id")
+    @JoinColumn(name = "game_id", referencedColumnName = "gameId")
     private Game gameId;
 }
