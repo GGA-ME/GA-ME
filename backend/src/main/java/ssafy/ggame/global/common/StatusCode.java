@@ -14,6 +14,9 @@ public enum StatusCode {
     LOGIN_FAIL(false, 300, "로그인에 실패했습니다."),
     USER_NOT_FOUND(false,301,"유저를 찾을 수 없습니다.")
 
+    //회원-태그: 400
+
+
     ;
 
     private final boolean isSuccess;
