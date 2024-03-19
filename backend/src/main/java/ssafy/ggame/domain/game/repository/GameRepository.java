@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface GameRepository extends JpaRepository<Game,Integer> {
     List<Game> findAllByOrderByGameFinalScore();
-    List<Game> findAllByGCodeIdAndTagIdOrderByGameFinalScore(String codeId, Short tagId);
+//    List<Game> findAllByGCodeIdAndTagIdOrderByGameFinalScore(String codeId, Short tagId);
 }

@@ -2,24 +2,21 @@ package ssafy.ggame.domain.game.entity;
 
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.gameTag.entity.GameTag;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import ssafy.ggame.domain.prefer.entity.Prefer;
+import ssafy.ggame.global.common.BaseUpdatedEntity;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "game")
-public class Game {
+public class Game extends BaseUpdatedEntity {
     @Id
     private Long gameId;
 
@@ -65,32 +62,8 @@ public class Game {
     @Column(name = "game_word_cloud_url")
     private String gameWordCloudUrl;
 
-    /*
-    * TemporalType.DATE(TIME, TIMESTAMP): 이 옵션은 시간을 무시하고 날짜만을 저장합니다.
-    * 시간은 항상 자정(00:00:00)으로 설정됩니다.*/
-    @Column(name = "updated_dt")
-    @Temporal(TemporalType.DATE)
-    private LocalDate updatedDt;
-
-    @OneToMany(mappedBy = "preferId.game")
-    private List<Prefer> prefers;
-
-
-    /*
-
-    @OneToMany(mappedBy = "game")
-    private List<Review> reviews;
-
-    @OneToMany(mappedBy = "game")
-    private List<GameScoreInfo> gameScoreInfos;
-
-    @OneToMany(mappedBy = "game")
-    private List<Statistics> statistics;
-    */
-
     @OneToMany(mappedBy = "game")
     private List<GameTag> gameTags;
-
 
     public GameCardDto converToGameCardDto(){
         return GameCardDto.builder()

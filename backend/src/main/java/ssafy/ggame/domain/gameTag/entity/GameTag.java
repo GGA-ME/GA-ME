@@ -2,37 +2,35 @@ package ssafy.ggame.domain.gameTag.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
-import ssafy.ggame.domain.commonCode.entity.CommonCode;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.tag.entity.Tag;
 
 @Entity
 @Getter
-@Setter
+@Table(name = "game_tag")
 public class GameTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // UserTag 엔티티의 기본 키
+    @Column(name = "game_tag_id")
+    private Long gameTagId;
 
     @ManyToOne
-    @JoinColumn(name = "game_id") // gameId 외래 키
-    private Game gameId;        // 게임 아이디(pk)
+    @JoinColumn(name = "game_id")
+    private Game game;
 
     @ManyToOne
-    @JoinColumn(name = "tag_id") // tagId 외래 키
+    @JoinColumns({
+            @JoinColumn(name = "tag_id", referencedColumnName = "tag_id"),
+            @JoinColumn(name = "code_id", referencedColumnName = "code_id")
+    })
     private Tag tag;
-
-    @ManyToOne
-    @JoinColumn(name = "code_id") // codeId 외래 키
-    private CommonCode commonCode;
-
     public TagDto convertToTagDto(){
         return TagDto.builder()
-                .codeId(this.tag.getCodeId())
-                .tagId(this.tag.getTagId())
-                .tagName(this.tag.getTagName())
+                .codeId(tag.getTagId().getCode().getCodeId())
+                .tagId(tag.getTagId().getTagId())
+                .tagName(tag.getTagName())
                 .build();
     }
 }

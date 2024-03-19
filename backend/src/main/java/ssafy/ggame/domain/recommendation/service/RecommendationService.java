@@ -2,15 +2,14 @@ package ssafy.ggame.domain.recommendation.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ssafy.ggame.domain.code.entity.Code;
 import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.game.repository.GameRepository;
 import ssafy.ggame.domain.gameTag.entity.GameTag;
-import ssafy.ggame.domain.recommendation.repository.RecommendationRepository;
-import ssafy.ggame.domain.tag.Code;
 import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.tag.entity.Tag;
-import ssafy.ggame.domain.tag.repository.CodeRepository;
+import ssafy.ggame.domain.code.repository.CodeRepository;
 import ssafy.ggame.domain.tag.repository.TagRepository;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
@@ -21,7 +20,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class RecommendationService {
 
-    private final RecommendationRepository recommendationRepository;
     private final UserRepository userRepository;
     private final CodeRepository codeRepository;
     private final TagRepository tagRepository;
@@ -60,7 +58,7 @@ public class RecommendationService {
         List<GameCardDto> gameCardDtoList = new ArrayList<>();
         // TODO: codeId, tagId에 따른 gameCardList 만들기
         // codeId 가 없을 때,
-        Optional<String> optionalCode = codeRepository.findByCodeId(codeId);
+        Optional<Code> optionalCode = codeRepository.findByCodeId(codeId);
         if(!codeId.equals("0") && optionalCode.isEmpty()){
             // TODO: 해당 코드가 존재하지 않는다는 예외 발생
         }
@@ -78,7 +76,8 @@ public class RecommendationService {
 
         // codeId, tagId 둘 다 0이 아닐 때
         if(!codeId.equals("0") && tagId != 0){
-            List<Game> gameList = gameRepository.findAllByGCodeIdAndTagIdOrderByGameFinalScore(codeId, tagId);
+//            List<Game> gameList = gameRepository.findAllByGCodeIdAndTagIdOrderByGameFinalScore(codeId, tagId);
+            List<Game> gameList = null;
             gameCardDtoList = makeGameCardDtoList(gameList);
         }
 
