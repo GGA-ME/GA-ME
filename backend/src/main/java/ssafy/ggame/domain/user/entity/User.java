@@ -31,7 +31,8 @@ public class User extends BaseCreatedTimeEntity {
 
     @Column(name= "user_birth", nullable = true)
     private short userBirth; // 생년만 받아와서 계산하기
-
+    
+    @Setter //마지막 로그인 날짜만 수정
     @Column(name= "user_last_login_dt", nullable = false)
     private LocalDate userLastLoginDt; // 사용자의 마지막 로그인 날짜
 
@@ -46,4 +47,11 @@ public class User extends BaseCreatedTimeEntity {
 //    @OneToMany(mappedBy = "userId")
 //    @PrimaryKeyJoinColumn
 //    List<Like> articleFiles = new ArrayList<>();
+
+    public void updateUserProfile(String name, String imageUrl){
+        this.userName = name;
+        this.userProfileImg = imageUrl;
+    }
+
+
 }
