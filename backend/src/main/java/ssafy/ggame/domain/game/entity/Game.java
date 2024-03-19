@@ -1,12 +1,14 @@
 package ssafy.ggame.domain.game.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import ssafy.ggame.domain.like.entity.Like;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
+@Getter
 @Table(name = "game")
 public class Game {
     @Id
