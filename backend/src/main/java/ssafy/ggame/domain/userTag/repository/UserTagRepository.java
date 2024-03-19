@@ -1,6 +1,7 @@
 package ssafy.ggame.domain.userTag.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.userTag.entity.UserTag;
 import ssafy.ggame.domain.userTag.entity.UserTagId;
 
@@ -18,6 +19,7 @@ public interface UserTagRepository extends JpaRepository<UserTag, UserTagId> { /
 //    // 특정 tagId를 가진 UserTag 목록을 조회
 //    List<UserTag> findByTagTagId(Short tagId);
 //
-//    // 필요에 따라 추가적인 쿼리 메소드를 정의할 수 있습니다.
+
+    List<UserTag> findFirst10ByUserTagId_UserOrderByUserTagWeight(User userTagId_user);
 }
 
