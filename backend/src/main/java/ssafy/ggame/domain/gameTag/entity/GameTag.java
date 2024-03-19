@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ssafy.ggame.domain.commonCode.entity.CommonCode;
 import ssafy.ggame.domain.game.entity.Game;
+import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.tag.entity.Tag;
 
 @Entity
@@ -26,4 +27,12 @@ public class GameTag {
     @ManyToOne
     @JoinColumn(name = "code_id") // codeId 외래 키
     private CommonCode commonCode;
+
+    public TagDto convertToTagDto(){
+        return TagDto.builder()
+                .codeId(this.tag.getCodeId())
+                .tagId(this.tag.getTagId())
+                .tagName(this.tag.getTagName())
+                .build();
+    }
 }
