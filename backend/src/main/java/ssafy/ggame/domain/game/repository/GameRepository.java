@@ -1,4 +1,11 @@
 package ssafy.ggame.domain.game.repository;
 
-public class GameRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import ssafy.ggame.domain.game.entity.Game;
+
+import java.util.List;
+
+public interface GameRepository extends JpaRepository<Game,Integer> {
+    List<Game> findAllByOrderByGameFinalScore();
+    List<Game> findAllByGCodeIdAndTagIdOrderByGameFinalScore(String codeId, Short tagId);
 }

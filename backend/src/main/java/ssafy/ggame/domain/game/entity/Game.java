@@ -2,6 +2,9 @@ package ssafy.ggame.domain.game.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
+import ssafy.ggame.domain.game.dto.GameCardDto;
+import ssafy.ggame.domain.gameTag.entity.GameTag;
 import ssafy.ggame.domain.like.entity.Like;
 
 import java.time.LocalDate;
@@ -9,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "game")
 public class Game {
     @Id
@@ -76,9 +80,20 @@ public class Game {
 
     @OneToMany(mappedBy = "game")
     private List<Statistics> statistics;
+    */
 
     @OneToMany(mappedBy = "game")
     private List<GameTag> gameTags;
 
-     */
+
+    public GameCardDto converToGameCardDto(){
+        return GameCardDto.builder()
+                .gameId(this.gameId)
+                .gameName(this.gameName)
+                .gameHeaderImg(this.getGameHeaderImg())
+                .gamePriceInitial(this.gamePriceInitial)
+                .gamePriceFinal(this.gamePriceFinal)
+                .gameDeveloper(this.gameDeveloper)
+                .build();
+    }
 }

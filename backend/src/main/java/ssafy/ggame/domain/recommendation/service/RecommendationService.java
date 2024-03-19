@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.entity.Game;
+import ssafy.ggame.domain.game.repository.GameRepository;
+import ssafy.ggame.domain.gameTag.entity.GameTag;
 import ssafy.ggame.domain.recommendation.repository.RecommendationRepository;
 import ssafy.ggame.domain.tag.Code;
+import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.tag.entity.Tag;
 import ssafy.ggame.domain.tag.repository.CodeRepository;
 import ssafy.ggame.domain.tag.repository.TagRepository;
@@ -22,6 +25,7 @@ public class RecommendationService {
     private final UserRepository userRepository;
     private final CodeRepository codeRepository;
     private final TagRepository tagRepository;
+    private final GameRepository gameRepository;
     public List<GameCardDto> getPopularList(Integer userId, String codeId, Integer tagId) {
         // 전체 게임 인기 순위
         // TODO:
@@ -32,6 +36,7 @@ public class RecommendationService {
         // 전체일때
         if(userId == 0){
             // codeId, tagId에 따라 인기게임 가져오기
+            // isPrefer 업데이트
 
         }
         // 전체 아닐때
@@ -47,6 +52,7 @@ public class RecommendationService {
 
             }
         }
+        return null;
     }
 
 
@@ -66,10 +72,31 @@ public class RecommendationService {
 
         // codeId, tagId가 둘 다 0일떄
         if(codeId.equals("0") && tagId == 0){
-
+            List<Game> gameList = gameRepository.findAllByOrderByGameFinalScore();
+            gameCardDtoList = makeGameCardDtoList(gameList);
         }
 
         // codeId, tagId 둘 다 0이 아닐 때
+        if(!codeId.equals("0") && tagId != 0){
+            List<Game> gameList = gameRepository.findAllByGCodeIdAndTagIdOrderByGameFinalScore(codeId, tagId);
+            gameCardDtoList = makeGameCardDtoList(gameList);
+        }
+
+        return gameCardDtoList;
+    }
+
+    private List<GameCardDto> makeGameCardDtoList(List<Game> gameList) {
+        List<GameCardDto> gameCardDtoList = new ArrayList<>();
+        for(Game game : gameList){
+            GameCardDto gameCardDto = game.converToGameCardDto();
+            //tagList 업데이트
+            List<TagDto> tagDtoList = new ArrayList<>();
+            for(GameTag tag : game.getGameTags()){
+                tagDtoList.add(tag.convertToTagDto());
+            }
+            gameCardDto.updateTagList(tagDtoList);
+            gameCardDtoList.add(gameCardDto);
+        }
         return gameCardDtoList;
     }
 }

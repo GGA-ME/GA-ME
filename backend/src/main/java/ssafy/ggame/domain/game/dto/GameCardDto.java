@@ -23,4 +23,12 @@ public class GameCardDto {
     Boolean isPrefer;
     List<TagDto> tagList;
 
+    public void updateIsPrefer(boolean isPrefer){
+        this.isPrefer = isPrefer;
+    }
+
+    public void updateTagList(List<TagDto> tagList){
+        this.tagList = tagList;
+    }
+
 }
