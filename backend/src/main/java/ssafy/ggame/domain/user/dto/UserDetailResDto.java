@@ -2,7 +2,7 @@ package ssafy.ggame.domain.user.dto;
 
 import lombok.*;
 import ssafy.ggame.domain.game.dto.GameCardDto;
-import ssafy.ggame.domain.userTag.dto.TagWeightDto;
+import ssafy.ggame.domain.userTag.dto.UserTagDto;
 
 import java.util.List;
 
@@ -30,5 +30,5 @@ public class UserDetailResDto {
     List<GameCardDto> preferList;
 
     // 선호 태그와 나의 취향 분석 그래프 표시를 위한 리스트
-    List<TagWeightDto> tagWeightList;
+    List<UserTagDto> tagWeightList;
 }
