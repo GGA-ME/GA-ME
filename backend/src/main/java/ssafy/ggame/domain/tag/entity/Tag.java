@@ -1,18 +1,29 @@
 package ssafy.ggame.domain.tag.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
+import ssafy.ggame.domain.tag.Code;
+import ssafy.ggame.domain.tag.dto.TagDto;
 
 @Entity
 @Getter
-@Setter
+@IdClass(TagCompositeKey.class)
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Short tagId;
     // 다른 필드 및 메소드...
+
+    @Enumerated(value = EnumType.STRING)
+    private Code codeId;
+
+    private String tagName;
+
+//    public TagDto convertToTagDto(){
+//        return TagDto.builder()
+//                .codeId(this.codeId)
+//                .tagId(this.tagId)
+//                .tagName(this.tagName)
+//                .build();
+//    }
 }
