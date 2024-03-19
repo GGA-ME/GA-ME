@@ -9,7 +9,8 @@ import ssafy.ggame.domain.tag.dto.TagDto;
 @Getter
 @IdClass(TagCompositeKey.class)
 public class Tag {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Short tagId;
     // 다른 필드 및 메소드...
 

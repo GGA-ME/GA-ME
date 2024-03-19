@@ -2,24 +2,22 @@ package ssafy.ggame.domain.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import ssafy.ggame.domain.prefer.entity.Prefer;
 import ssafy.ggame.global.common.BaseCreatedTimeEntity;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@SuperBuilder
+@Builder
 @Table(name= "user")
 public class User extends BaseCreatedTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId; //사용자 아이디 (AI)
@@ -33,7 +31,8 @@ public class User extends BaseCreatedTimeEntity {
 
     @Column(name= "user_birth", nullable = true)
     private short userBirth; // 생년만 받아와서 계산하기
-
+    
+    @Setter //마지막 로그인 날짜만 수정
     @Column(name= "user_last_login_dt", nullable = false)
     private LocalDate userLastLoginDt; // 사용자의 마지막 로그인 날짜
 
@@ -41,11 +40,18 @@ public class User extends BaseCreatedTimeEntity {
     private String userProfileImg;  // 사용자 프로필 이미지 URL
 
 
-//    @OneToMany(mappedBy = "userId")
-//    @PrimaryKeyJoinColumn
-//    List<Like> articleFiles = new ArrayList<>();
+    @OneToMany(mappedBy = "preferId.user")
+    @PrimaryKeyJoinColumn
+    List<Prefer> articleFiles = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "userId")
 //    @PrimaryKeyJoinColumn
 //    List<Like> articleFiles = new ArrayList<>();
+
+    public void updateUserProfile(String name, String imageUrl){
+        this.userName = name;
+        this.userProfileImg = imageUrl;
+    }
+
+
 }
