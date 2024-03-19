@@ -3,6 +3,7 @@ package ssafy.ggame.domain.user.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ssafy.ggame.domain.user.dto.UserDetailResDto;
 import ssafy.ggame.domain.user.dto.UserDto;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.service.UserService;
@@ -28,5 +29,10 @@ public class UserController {
         userDto.setUserName(user.getUserName());
         userDto.setUserProfileImg(user.getUserProfileImg());
         return ResponseEntity.ok(userDto);
+    }
+
+    @GetMapping("/d/{userId}")
+    public UserDetailResDto myPage(@PathVariable Integer userId){
+        return userService.userDetail(userId);
     }
 }

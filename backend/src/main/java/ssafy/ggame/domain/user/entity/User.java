@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Table(name= "user")
 public class User extends BaseCreatedTimeEntity {
     @Id
@@ -39,19 +40,12 @@ public class User extends BaseCreatedTimeEntity {
     @Column(name= "user_profile_img")
     private String userProfileImg;  // 사용자 프로필 이미지 URL
 
-
-    @OneToMany(mappedBy = "preferId.user")
+    @OneToMany(mappedBy = "preferId.user", fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn
-    List<Prefer> articleFiles = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "userId")
-//    @PrimaryKeyJoinColumn
-//    List<Like> articleFiles = new ArrayList<>();
+    List<Prefer> prefers = new ArrayList<>();
 
     public void updateUserProfile(String name, String imageUrl){
         this.userName = name;
         this.userProfileImg = imageUrl;
     }
-
-
 }
