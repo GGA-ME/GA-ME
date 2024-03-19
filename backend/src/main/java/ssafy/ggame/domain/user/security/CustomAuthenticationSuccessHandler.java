@@ -41,10 +41,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             // 처음 가입하는 유저인 경우
             // 여기서 사용자 정보를 데이터베이스에 등록하는 로직을 추가해야 합니다.
             // 예시:
-            User newUser = new User();
-            newUser.setUserEmail(email);
-            // newUser의 다른 필드 설정...
-            newUser.setUserLastLoginDt(LocalDate.now()); // 가입 시점도 마지막 로그인 날짜로 설정
+            User newUser = User.builder()
+                    .userEmail(email)
+                    .userLastLoginDt(LocalDate.now())
+                    .build();
             userRepository.save(newUser);
 
             response.sendRedirect("/register");

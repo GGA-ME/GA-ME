@@ -40,17 +40,17 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User registerNewUser(String email, String name, String imageUrl) {
-        User user = new User();
-        user.setUserEmail(email);
-        user.setUserName(name);
-        user.setUserProfileImg(imageUrl);
-        user.setUserLastLoginDt(LocalDate.now()); // 사용자가 처음으로 가입할 때 lastLogin 정보를 현재 날짜로 설정
+        User user = User.builder()
+                .userEmail(email)
+                .userName(name)
+                .userProfileImg(imageUrl)
+                .userLastLoginDt(LocalDate.now())
+                .build();
         return userRepository.save(user);
     }
 
     private User updateExistingUser(User existingUser, String name, String imageUrl) {
-        existingUser.setUserName(name);
-        existingUser.setUserProfileImg(imageUrl);
+        existingUser.updateUserProfile(name,imageUrl);
         return userRepository.save(existingUser);
     }
 }
