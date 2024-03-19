@@ -1,22 +1,20 @@
 package ssafy.ggame.domain.tag.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import ssafy.ggame.domain.tag.Code;
-import ssafy.ggame.domain.tag.dto.TagDto;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@IdClass(TagCompositeKey.class)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Tag {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Short tagId;
-    // 다른 필드 및 메소드...
-
-    @Enumerated(value = EnumType.STRING)
-    private Code codeId;
-
+    @EmbeddedId
+    private TagId tagId;
+    @Column(name = "tag_name")
     private String tagName;
 
 //    public TagDto convertToTagDto(){

@@ -1,13 +1,23 @@
 package ssafy.ggame.domain.userTag.entity;
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
+import ssafy.ggame.domain.tag.entity.Tag;
+import ssafy.ggame.domain.user.entity.User;
 
 import java.io.Serializable;
 
 @Embeddable
 public class UserTagId implements Serializable {
-    private Integer userId;
-    private Short tagId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    // 기본 생성자, getters, setters, hashCode(), equals() 구현
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns({
+            @JoinColumn(name = "tag_id", referencedColumnName = "tag_id"),
+            @JoinColumn(name = "code_id", referencedColumnName = "code_id")
+    })
+    private Tag tag;
+
+
 }
