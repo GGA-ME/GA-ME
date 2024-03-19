@@ -12,11 +12,15 @@ public enum StatusCode {
 
     //회원 : 300
     LOGIN_FAIL(false, 300, "로그인에 실패했습니다."),
-    USER_NOT_FOUND(false,301,"유저를 찾을 수 없습니다.")
+    USER_NOT_FOUND(false,301,"유저를 찾을 수 없습니다."),
 
     //회원-태그: 400
 
+    //게임 : 500
+    GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),
 
+    //좋아요 : 600
+    PREFER_CANNOT_SAVE(false,600,"좋아요를 등록할 수 없습니다.")
     ;
 
     private final boolean isSuccess;
