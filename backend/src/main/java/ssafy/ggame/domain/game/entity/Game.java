@@ -23,10 +23,10 @@ public class Game extends BaseUpdatedEntity {
     @Column(name = "game_name", nullable = false)
     private String gameName;
 
-    @Column(name = "game_short_description")
+    @Column(name = "game_short_description", columnDefinition = "MEDIUMTEXT")
     private String gameShortDescription;
 
-    @Column(name = "game_detailed_description")
+    @Column(name = "game_detailed_description", columnDefinition = "MEDIUMTEXT")
     private String gameDetailedDescription;
 
     @Column(name = "game_header_img")
@@ -35,10 +35,10 @@ public class Game extends BaseUpdatedEntity {
     @Column(name = "game_website")
     private String gameWebsite;
 
-    @Column(name = "game_developer", nullable = false)
+    @Column(name = "game_developer", nullable = false, length = 100)
     private String gameDeveloper;
 
-    @Column(name = "game_publisher", nullable = false)
+    @Column(name = "game_publisher", nullable = false, length = 100)
     private String gamePublisher;
 
     @Column(name = "game_price_initial")
@@ -50,10 +50,10 @@ public class Game extends BaseUpdatedEntity {
     @Column(name = "game_discount_percent")
     private Byte gameDiscountPercent;
 
-    @Column(name = "game_release_date")
+    @Column(name = "game_release_date", length = 40)
     private String gameReleaseDate;
 
-    @Column(name = "game_screenshot_img")
+    @Column(name = "game_screenshot_img", columnDefinition = "JSON")
     private String gameScreenshotImg;
 
     @Column(name = "game_final_score")

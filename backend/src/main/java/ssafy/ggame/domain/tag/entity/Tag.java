@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Tag {
     @EmbeddedId
     private TagId tagId;
-    @Column(name = "tag_name")
+    @Column(name = "tag_name", length = 30)
     private String tagName;
 
 //    public TagDto convertToTagDto(){

@@ -23,11 +23,11 @@ public class User extends BaseCreatedTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer userId; //사용자 아이디 (AI)
 
-    @Column(name= "user_email", nullable = false)
+    @Column(name= "user_email", nullable = false, length = 50)
     @Email
     private String userEmail;   // 사용자 이메일
 
-    @Column(name= "user_name", nullable = false)
+    @Column(name= "user_name", nullable = false, length = 30)
     private String userName;    // 사용자 이름
 
     @Column(name= "user_birth", nullable = true)
@@ -37,7 +37,7 @@ public class User extends BaseCreatedTimeEntity {
     @Column(name= "user_last_login_dt", nullable = false)
     private LocalDate userLastLoginDt; // 사용자의 마지막 로그인 날짜
 
-    @Column(name= "user_profile_img")
+    @Column(name= "user_profile_img", length = 500)
     private String userProfileImg;  // 사용자 프로필 이미지 URL
 
     @OneToMany(mappedBy = "preferId.user", fetch = FetchType.LAZY)

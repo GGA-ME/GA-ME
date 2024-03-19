@@ -9,8 +9,8 @@ import lombok.Getter;
 @Getter
 public class Code {
     @Id
-    @Column(name = "code_id")
+    @Column(name = "code_id", length = 3)
     private String codeId;
-    @Column(name = "code_name")
+    @Column(name = "code_name", length = 20)
     private String codeName;
 }
