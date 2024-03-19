@@ -13,11 +13,9 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@SuperBuilder
+@Builder
 @Table(name= "user")
 public class User extends BaseCreatedTimeEntity {
     @Id

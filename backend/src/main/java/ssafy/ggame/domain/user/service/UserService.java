@@ -38,7 +38,6 @@ public class UserService {
                 .userName(userDto.getUserName())
                 .userEmail(userDto.getUserEmail())
                 .userLastLoginDt(userDto.getUserLastLoginDt())
-                .createdDttm(userDto.getCreatedDttm())
                 .build();
 
         if(findById(user.getUserId()).isPresent()){

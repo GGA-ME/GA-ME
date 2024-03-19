@@ -10,10 +10,12 @@ import ssafy.ggame.global.common.BaseCreatedTimeEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Table(name = "prefer")
 public class Prefer extends BaseCreatedTimeEntity {
     @EmbeddedId
     private PreferId preferId;
+    @Builder
+    public Prefer(PreferId preferId) {
+        this.preferId = preferId;
+    }
 }
