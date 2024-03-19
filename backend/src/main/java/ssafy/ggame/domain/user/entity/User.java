@@ -13,11 +13,9 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@SuperBuilder
+@Builder
 @Table(name= "user")
 public class User extends BaseCreatedTimeEntity {
     @Id
@@ -41,7 +39,7 @@ public class User extends BaseCreatedTimeEntity {
     private String userProfileImg;  // 사용자 프로필 이미지 URL
 
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "preferId.user")
     @PrimaryKeyJoinColumn
     List<Prefer> articleFiles = new ArrayList<>();
 

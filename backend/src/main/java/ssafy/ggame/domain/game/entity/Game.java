@@ -69,8 +69,8 @@ public class Game {
     @Temporal(TemporalType.DATE)
     private LocalDate updatedDt;
 
-    @OneToMany(mappedBy = "gameId")
-    private List<Prefer> likes;
+    @OneToMany(mappedBy = "preferId.game")
+    private List<Prefer> prefers;
 
 
     /*
