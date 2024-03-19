@@ -2,6 +2,8 @@ package ssafy.ggame.domain.user.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ssafy.ggame.domain.game.dto.GameCardDto;
+import ssafy.ggame.domain.prefer.entity.Prefer;
 import ssafy.ggame.domain.user.dto.UserDetailResDto;
 import ssafy.ggame.domain.user.dto.UserDto;
 import ssafy.ggame.domain.user.entity.User;
@@ -11,6 +13,7 @@ import ssafy.ggame.global.exception.BaseException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +59,12 @@ public class UserService {
     // 마이 페이지
     public UserDetailResDto userDetail(Integer userId){
         User user = userRepository.findById(userId).orElseThrow(()->new BaseException(StatusCode.USER_NOT_FOUND));
+
+        List<Prefer> prefers = user.getPrefers();
+        List<GameCardDto> gameCardDtos = new ArrayList<>();
+
+
+        for(Prefer prefer: prefers) System.out.println(prefer.getPreferId().getGame().getGameId());
 
         // 지금 년도
         int year = LocalDate.now().getYear();
