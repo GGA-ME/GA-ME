@@ -41,11 +41,8 @@ public class UserService {
                 .createdDttm(userDto.getCreatedDttm())
                 .build();
 
-        if(findById(user.getUserId()).isPresent()){
-            user.setUserLastLoginDt(LocalDate.now());
-            return userRepository.save(user);
-        }
-        else return userRepository.save(user);
+        if(findById(user.getUserId()).isPresent()) user.setUserLastLoginDt(LocalDate.now());
+        return userRepository.save(user);
     }
 
     // 사용자 삭제
