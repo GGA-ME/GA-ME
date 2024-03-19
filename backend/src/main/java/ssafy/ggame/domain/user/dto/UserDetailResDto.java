@@ -1,6 +1,10 @@
 package ssafy.ggame.domain.user.dto;
 
 import lombok.*;
+import ssafy.ggame.domain.game.dto.GameCardDto;
+import ssafy.ggame.domain.userTag.dto.UserTagDto;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,8 +27,8 @@ public class UserDetailResDto {
     Integer userAge;
 
     // 선호게임 출력을 위한 리스트
-//    List<GameCardDto> preferList;
+    List<GameCardDto> preferList;
 
     // 선호 태그와 나의 취향 분석 그래프 표시를 위한 리스트
-//    List<tagWeight> tagWeightList;
+    List<UserTagDto> tagWeightList;
 }

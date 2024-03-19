@@ -1,28 +1,33 @@
 package ssafy.ggame.domain.user.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ssafy.ggame.domain.game.dto.GameCardDto;
+import ssafy.ggame.domain.game.entity.Game;
+import ssafy.ggame.domain.gameTag.entity.GameTag;
+import ssafy.ggame.domain.prefer.entity.Prefer;
+import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.user.dto.UserDetailResDto;
 import ssafy.ggame.domain.user.dto.UserDto;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
+import ssafy.ggame.domain.userTag.dto.UserTagDto;
+import ssafy.ggame.domain.userTag.entity.UserTag;
+import ssafy.ggame.domain.userTag.repository.UserTagRepository;
 import ssafy.ggame.global.common.StatusCode;
 import ssafy.ggame.global.exception.BaseException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserTagRepository userTagRepository;
 
     // 사용자 ID로 사용자 찾기
     public Optional<User> findById(Integer id) {
@@ -57,14 +62,58 @@ public class UserService {
     public UserDetailResDto userDetail(Integer userId){
         User user = userRepository.findById(userId).orElseThrow(()->new BaseException(StatusCode.USER_NOT_FOUND));
 
-        // 지금 년도
+        List<Prefer> prefers = user.getPrefers();
+        List<GameCardDto> gameCardDtos = new ArrayList<>();
+
         int year = LocalDate.now().getYear();
+
+        for(Prefer prefer: prefers) {
+            Game game = prefer.getPreferId().getGame();
+            List<TagDto> tagDtoList = new ArrayList<>();
+            List<GameTag> gameTagList = game.getGameTags();
+            for(GameTag gameTag: gameTagList){
+                TagDto tagDto = TagDto.builder()
+                        .tagId(gameTag.getTag().getTagId().getTagId())
+                        .codeId(gameTag.getTag().getTagName())
+                        .tagName(gameTag.getGame().getGameName())
+                        .build();
+                tagDtoList.add(tagDto);
+            }
+            GameCardDto gameCardDto = GameCardDto.builder()
+                    .gameId(game.getGameId())
+                    .gameName(game.getGameName())
+                    .gameHeaderImg(game.getGameHeaderImg())
+                    .gamePriceInitial(game.getGamePriceInitial())
+                    .gamePriceFinal(game.getGamePriceFinal())
+                    .gameDeveloper(game.getGameDeveloper())
+                    .isPrefer(true)
+                    .tagList(tagDtoList)
+                    .build();
+
+            gameCardDtos.add(gameCardDto);
+        }
+
+
+        List<UserTag> userTagList = this.userTagRepository.findFirst10ByUserTagId_UserOrderByUserTagWeight(user);
+        List<UserTagDto> userTagDtoList = new ArrayList<>();
+        // 지금 년도
+        for(UserTag userTag: userTagList){
+            UserTagDto userTagDto = UserTagDto.builder()
+                    .tagId(userTag.getUserTagId().getTag().getTagId().getTagId())
+                    .codeId(userTag.getUserTagId().getTag().getTagId().getCode().getCodeId())
+                    .userTagWeight(userTag.getUserTagWeight())
+                    .tagName(userTag.getUserTagId().getTag().getTagName())
+                    .build();
+            userTagDtoList.add(userTagDto);
+        }
 
         UserDetailResDto userDetailResDto = UserDetailResDto.builder()
                 .userId(user.getUserId())
                 .userName(user.getUserName())
                 .userProfileImg(user.getUserProfileImg())
                 .userAge(year - user.getUserBirth())
+                .preferList(gameCardDtos)
+                .tagWeightList(userTagDtoList)
                 .build();
 
         return userDetailResDto;
