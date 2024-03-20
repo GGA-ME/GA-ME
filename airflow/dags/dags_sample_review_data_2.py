@@ -216,7 +216,7 @@ def process_reviews(num_batches, index, **kwargs):
             cursor.close()
             conn.close()
             
-with DAG('dags_get_save_data', 
+with DAG('dags_sample_review_data_2', 
          default_args=default_args, 
          schedule_interval='@daily', 
          catchup=False) as dag:

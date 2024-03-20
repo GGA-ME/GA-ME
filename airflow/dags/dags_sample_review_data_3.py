@@ -28,7 +28,7 @@ def load_reviews_with_retry(game_id, max_reviews):
     while retry_count < MAX_RETRIES:
         try:
             review_loader = ReviewLoader().set_language('english')
-            reviews_en = review_loader.load_from_api(game_id, max_reviews)
+            reviews_en = review_loader.load_from_api(game_id, max_reviews) ## 여기 맥스 값 설정
         
             return reviews_en
         except requests.exceptions.SSLError as e:
@@ -40,7 +40,7 @@ def load_reviews_with_retry(game_id, max_reviews):
     return None
 
 
-def get_game_ids(**kwargs):
+def get_game_ids():
     mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
     conn = mysql_hook.get_conn()
     cursor = conn.cursor()
@@ -50,19 +50,16 @@ def get_game_ids(**kwargs):
     cursor.close()
     conn.close()
     
-    kwargs['ti'].xcom_push(key='game_ids', value=game_ids)
     return game_ids
 
 
 
-def process_reviews(**kwargs):
-    ti = kwargs['ti']
-    game_ids = ti.xcom_pull(task_ids='get_game_ids', key='game_ids')
 
+def process_reviews(game_id_batch):
     analyzer = SentimentIntensityAnalyzer()
     cnt = 0
 
-    for game_id in game_ids:
+    for game_id in game_id_batch:
         mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
         conn = mysql_hook.get_conn()
         cursor = conn.cursor()
@@ -73,7 +70,7 @@ def process_reviews(**kwargs):
 
         max_reviews = 10000
         reviews_en = load_reviews_with_retry(game_id, max_reviews)
-
+        
         if reviews_en is not None:
             print("리뷰를 성공적으로 불러왔습니다.")
             print('game_id =', game_id)
@@ -216,23 +213,20 @@ def process_reviews(**kwargs):
             cursor.close()
             conn.close()
             
-with DAG('dags_get_review_data', 
+
+with DAG('dags_sample_review_data_3', 
          default_args=default_args, 
          schedule_interval='@daily', 
          catchup=False) as dag:
 
-    get_game_ids_task = PythonOperator(
-        task_id='get_game_ids',
-        python_callable=get_game_ids,
-        provide_context=True,
-        dag=dag
-    )
+    num_batches = 100  # 등분할 개수
+    game_ids = get_game_ids()
 
-    process_reviews_task = PythonOperator(
-        task_id='process_reviews',
-        python_callable=process_reviews,
-        provide_context=True,
-        dag=dag
-    )
-
-    get_game_ids_task >> process_reviews_task
+    for i in range(num_batches):
+        game_id_batch = game_ids[i::num_batches]
+        process_reviews_task = PythonOperator(
+            task_id=f'process_reviews_batch_{i+1}',
+            python_callable=process_reviews,
+            op_kwargs={'game_id_batch': game_id_batch},
+            dag=dag
+        )

@@ -50,10 +50,15 @@ def get_game_ids(**kwargs):
     print(game_ids)
     cursor.close()
     conn.close()
+    # 현재 날짜와 시간을 가져옴
+    current_date = datetime.now().date()
+
+    # 문자열 형식으로 변환 ('YYYY-MM-DD' 형식)
+    current_date_str = current_date.strftime('%Y-%m-%d')
     
-    kwargs['ti'].xcom_push(key='started_dt', value=datetime.now().date())
+    kwargs['ti'].xcom_push(key='started_dt', value=current_date_str)
     kwargs['ti'].xcom_push(key='game_ids', value=game_ids)
-    return game_ids
+    return
 
 
 
@@ -62,7 +67,7 @@ def process_reviews(num_batches, index, **kwargs):
     analyzer = SentimentIntensityAnalyzer()
     cnt = 0
     updated_dt = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='started_dt')
-    game_ids = kwargs['ti'].xcom_pull(task_ids='dags_get_split_task1', key='game_ids')
+    game_ids = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='game_ids')
     game_id_batch = game_ids[index::num_batches]
     
     mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
@@ -72,7 +77,7 @@ def process_reviews(num_batches, index, **kwargs):
     for game_id in game_id_batch:
 
 
-        sql = f"SELECT MAX(review_created_dt) FROM review WHERE game_id = {game_id}"
+        sql = f"SELECT MAX(review_updated_dt) FROM review WHERE game_id = {game_id}"
         cursor.execute(sql)
         latest_review_date = cursor.fetchone()[0]
 
@@ -127,10 +132,10 @@ def process_reviews(num_batches, index, **kwargs):
             timestamp_created = review['timestamp_updated'] ## 컬럼 updated로 바꿔 줘야할 듯 ? db 날리고
             # UNIX timestamp를 datetime -> date 객체로 변환
             review_datetime = datetime.fromtimestamp(timestamp_created)
-            review_created_dt = review_datetime.date()
+            review_updated_dt = review_datetime.date()
             
             
-            # game_id, review_id, review_content, review_is_good, review_created_dt, 
+            # game_id, review_id, review_content, review_is_good, review_updated_dt, 
             # review_playtime_at, review_playtime_total, review_playtime_recent
             # review_is_use, updated_dttm
             game_id = int(game_id)
@@ -150,8 +155,8 @@ def process_reviews(num_batches, index, **kwargs):
                 # 평균 플탐에 비해 10%이하인 댓글 배제 
                 continue
 
-            if latest_review_date is None or review_created_dt > latest_review_date:
-                print('시간시간', review_created_dt, latest_review_date)
+            if latest_review_date is None or review_updated_dt > latest_review_date:
+                print('시간시간', review_updated_dt, latest_review_date)
                 # 리뷰 저장 코드 작성
                 scores = analyzer.polarity_scores(review_content)
                 # {'neg': 0.0, 'neu': 0.308, 'pos': 0.692, 'compound': 0.6249}
@@ -174,9 +179,9 @@ def process_reviews(num_batches, index, **kwargs):
                     review_is_use = False
                 
 
-                # print(game_id, review_id, review_content, review_is_good, review_created_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm)
-                sql = """INSERT INTO review (game_id, review_id, review_content, review_is_good, review_created_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-                cursor.execute(sql, (game_id, review_id, review_content, review_is_good, review_created_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm))
+                # print(game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm)
+                sql = """INSERT INTO review (game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+                cursor.execute(sql, (game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm))
                 
                 conn.commit()
 
@@ -200,7 +205,7 @@ def process_reviews(num_batches, index, **kwargs):
                     review_is_use = False
 
         try:
-            # print(game_id, review_content, review_is_good, review_created_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm)
+            # print(game_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm)
             sql = """
                 INSERT INTO game_score_info (game_id, game_review_cnt, game_review_like_cnt, game_review_unlike_cnt, updated_dt) 
                 VALUES (%s, %s, %s, %s, %s) 
@@ -226,7 +231,7 @@ def process_reviews(num_batches, index, **kwargs):
 def process_statistics(num_batches, index, **kwargs):
     cnt = 0
     statistics_base_dt = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='started_dt')
-    game_ids = kwargs['ti'].xcom_pull(task_ids='dags_get_split_task1', key='game_ids')
+    game_ids = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='game_ids')
     game_id_batch = game_ids[index::num_batches]
 
     # MySQL 연결 설정
@@ -242,41 +247,86 @@ def process_statistics(num_batches, index, **kwargs):
         reviews = cursor.fetchall()
         
         # result가 비어 있는 경우 처리
-        if not reviews:
-            print(f"No reviews found for game ID: {game_id}")
+        if reviews is not None:
+            print("리뷰를 성공적으로 불러왔습니다.")
+            print('game_id =', game_id)
+        else:
+            print("리뷰를 불러오지 못했습니다.")
+            print('game_id =', game_id)
             continue
         
+        if not reviews or len(reviews) < 1:
+            print(f"No reviews found for game ID: {game_id}")
+            continue
+        else:
+            print('리뷰 데이터', reviews)
+            print('리뷰길이', len(reviews))
+            
         # 불러온 리뷰 리스트에서 game_review_is_use_cnt의 합계를 계산
-        total_game_review_is_use_cnt = sum(review['game_review_is_use_cnt'] for review in reviews)
+        total_game_review_is_use_cnt = sum(review[2] for review in reviews)
         print("game_review_is_use_cnt의 총합:", total_game_review_is_use_cnt)
         
         query = f"UPDATE game_score_info SET game_review_is_use_cnt = {total_game_review_is_use_cnt} WHERE game_id = {game_id}"
         cursor.execute(query)
         conn.commit()
         
-        # 리뷰 데이터##################
-        reviews = [
-            {'review_playtime_at': 25, 'review_is_good': True},
-            {'review_playtime_at': 35, 'review_is_good': False},
-            {'review_playtime_at': 55, 'review_is_good': True},
-            # 이하 생략...
-        ]
+        # review_playtime_recent의 총합 계산
+        total_playtime_recent = sum(review[1] for review in reviews)
+        # 값이 0 이상인 리뷰의 개수 계산
+        positive_reviews_count = sum(1 for review in reviews if review[1] >= 0)
+
+        print("review_playtime_recent의 총합:", total_playtime_recent)
+        print("값이 0 이상인 리뷰의 개수:", positive_reviews_count)
+        
+        
+        recent_score = total_playtime_recent + positive_reviews_count*100
+        
+        query = """
+            UPDATE game
+            SET game_recent_score = %s
+            WHERE game_id = %s
+        """
+
+        # 쿼리 실행
+        cursor.execute(query, (recent_score, game_id))
+        conn.commit()
+        
+        
 
         # 리뷰의 평균 플레이타임 계산
-        total_playtime = sum(review['review_playtime_at'] for review in reviews)
-        average_playtime = total_playtime / len(reviews)
+        print(reviews)
+        total_playtime = sum(review[0] for review in reviews)
+        game_standard_playtime = total_playtime // len(reviews)
+        if game_standard_playtime < 1:
+            continue
+        print('game_standard 계산 전', total_playtime, len(reviews))
 
         # 시간대별로 긍정/부정 개수 계산
-        positive_counts, negative_counts = count_reviews_by_time_bins(reviews, average_playtime)
+        positive_counts, negative_counts = count_reviews_by_time_bins(reviews, game_standard_playtime)
         print("시간대별 긍정 리뷰 개수:", positive_counts)
         print("시간대별 부정 리뷰 개수:", negative_counts)
 
+        # SQL 쿼리 작성
+        sql = """
+            INSERT INTO statistics (
+                statistics_like_0, statistics_like_10, statistics_like_20, statistics_like_30,
+                statistics_like_40, statistics_like_50, statistics_like_60, statistics_like_70,
+                statistics_like_80, statistics_like_90,
+                statistics_unlike_0, statistics_unlike_10, statistics_unlike_20, statistics_unlike_30,
+                statistics_unlike_40, statistics_unlike_50, statistics_unlike_60, statistics_unlike_70,
+                statistics_unlike_80, statistics_unlike_90,
+                game_standard_playtime, statistics_base_dt, game_id, created_dttm
+            ) VALUES (
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,
+                %s, %s, %s, NOW()
+            )
+        """
 
-        # 각 리뷰의 정보를 변수에 담음
-        # for row in reviews:
-            # review_playtime_at = row[0]
-            # review_playtime_recent = row[1]
-            # review_is_use = row[2]
+        # SQL 쿼리 실행
+        cursor.execute(sql, (
+            *positive_counts, *negative_counts, game_standard_playtime, statistics_base_dt, game_id
+        ))
 
     # 연결 종료
     cursor.close()
@@ -285,23 +335,28 @@ def process_statistics(num_batches, index, **kwargs):
 
 # 리뷰 데이터에서 시간대별 긍정/부정 개수를 계산하는 함수
 def count_reviews_by_time_bins(reviews, average_playtime):
+    
     # 평균 플레이타임을 기준으로 시간대를 분할
-    time_bin = math.ceil(average_playtime / 10)
-
+    length = len(str(average_playtime))  # 숫자의 길이를 구함
+    if length == 1:
+        time_bin = average_playtime
+    else:
+        time_bin = round(average_playtime, -length + 2) // 5  # 첫 번째 자리를 제외하고 반올림
+    
     # 시간대별로 긍정/부정 개수를 저장할 리스트 초기화
     positive_counts = [0] * 10
     negative_counts = [0] * 10
 
     # 리뷰를 순회하면서 시간대별로 개수를 세기
     for review in reviews:
-        playtime = review['review_playtime_at']
-        is_good = review['review_is_good']
+        review_playtime_at = review[0]  # 리뷰의 플레이타임
+        review_is_good = review[3]  # 리뷰의 긍정/부정 여부
         
         # 플레이타임을 시간대로 변환
-        time_index = min(math.ceil(playtime / time_bin), 10) - 1
+        time_index = min(math.ceil(review_playtime_at / time_bin), 10) - 1
 
         # 리뷰가 긍정인 경우 해당 시간대의 긍정 개수를 증가
-        if is_good:
+        if review_is_good:
             positive_counts[time_index] += 1
         # 리뷰가 부정인 경우 해당 시간대의 부정 개수를 증가
         else:
@@ -313,7 +368,7 @@ with DAG('dags_get_save_data_statis',
          default_args=default_args, 
          schedule_interval='@daily', 
          catchup=False) as dag:
-
+    
     num_batches = 100  # 등분할 개수
     game_ids_task = PythonOperator(
         task_id='game_ids_task',
@@ -339,3 +394,4 @@ with DAG('dags_get_save_data_statis',
         )
 
         game_ids_task >> process_reviews_task >> process_statistics_task
+        # game_ids_task >> process_statistics_task
