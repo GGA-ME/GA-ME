@@ -21,7 +21,11 @@ public enum StatusCode {
     GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),
 
     //좋아요 : 600
-    PREFER_CANNOT_SAVE(false,600,"좋아요를 등록할 수 없습니다.")
+    PREFER_CANNOT_SAVE(false,600,"좋아요를 등록할 수 없습니다."),
+
+    // 태그 : 700
+    CODE_NOT_EXIST(false, 700, "해당 코드가 존재하지 않습니다."),
+    TAG_NOT_EXIST(false, 701, "해당 태그가 존재하지 않습니다.")
     ;
 
     private final boolean isSuccess;

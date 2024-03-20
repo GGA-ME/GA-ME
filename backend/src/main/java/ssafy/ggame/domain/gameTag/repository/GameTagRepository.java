@@ -10,7 +10,6 @@ import java.util.List;
 public interface GameTagRepository extends JpaRepository<GameTag, Long> {
     List<GameTag> findByGame_GameId(Long gameId);
 
-
-    @Query("SELECT game g FROM GameTag gt WHERE gt.tag.tagId.code.codeId = :codeId AND gt.tag.tagId.tagId = :tagId order by g.gameFinalScore")
-    List<Game> findAllByCodeIdAndTagId(String codeId, Short tagId);
+    @Query("SELECT gt FROM GameTag gt WHERE gt.tag.tagId.code.codeId = :codeId AND gt.tag.tagId.tagId = :tagId")
+    GameTag findByCodeIdAndTagId(String codeId, Short tagId);
 }
