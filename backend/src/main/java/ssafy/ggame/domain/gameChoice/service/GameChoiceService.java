@@ -17,10 +17,12 @@ public class GameChoiceService {
     private final GameChoiceRepository gameChoiceRepository;
     private final GameRepository gameRepository;
 
+    // 취향조사할 고정된 게임 전부 조회
     public List<GameChoice> getGameList(){
         return this.gameChoiceRepository.findAll();
     }
 
+    // gameId를 입력하면 해당 게임의 정보를 game_choice 테이블에 저장
     public boolean saveChoiceGame(Long gameId){
         Game game = this.gameRepository.findById(gameId).orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
         GameChoice gameChoice = GameChoice.builder()
