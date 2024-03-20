@@ -25,12 +25,13 @@ public class CrawlingController {
         options.addArguments("headless");
 
         System.out.println("Crawling Start: " + keyword);
-        String URL = "https://www.gamemeca.com/search.php?gc=news&q=" + keyword;
+
         WebDriver driver = new ChromeDriver(options);
-        driver.get(URL);
-        String url = "https://www.gamemeca.com/search.php?gc=news&q=" + keyword;
+
         // driver.get 하는 과정이 오래 걸림.. ㅠㅠ
-        driver.get(url);
+        String URL = "https://www.gamemeca.com/search.php?gc=news&q=" + keyword;
+        driver.get(URL);
+
         // 크롤링하려는 웹 페이지가 로딩 되는 시간을 기다림
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
 
