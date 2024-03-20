@@ -1,6 +1,7 @@
 package ssafy.ggame.domain.crawling;
 
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.openqa.selenium.By;
@@ -15,11 +16,16 @@ import java.util.List;
 @Controller
 @RequestMapping("/api/crawling")
 public class CrawlingController {
+    // 크롬 창을 띄우지 않는 드라이버 옵션
+    ChromeOptions options = new ChromeOptions().addArguments("headless");
+    WebDriver driver = new ChromeDriver(options);
     @GetMapping("/{keyword}")
     public void getCrawling(@PathVariable String keyword) {
         System.out.println("Crawling Start: " + keyword);
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.gamemeca.com/search.php?gc=news&q=" + keyword);
+        String url = "https://www.gamemeca.com/search.php?gc=news&q=" + keyword;
+        // driver.get 하는 과정이 오래 걸림.. ㅠㅠ
+        driver.get(url);
+        // 크롤링하려는 웹 페이지가 로딩 되는 시간을 기다림
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
 
         List<WebElement> news = driver.findElements(By.cssSelector("#content > div.news-list > div.content-left > ul > li"));
@@ -33,18 +39,6 @@ public class CrawlingController {
             System.out.println(sb.toString());
             sb.setLength(0);
         }
-
-//        System.out.println(text);
-//        for (WebElement e : weekend) {
-//            WebElement weekendTitle = e.findElement(By.className("WeekdayMainView__heading--tHIYj"));
-//            System.out.println(weekendTitle.getText());
-//
-//            List<WebElement> title = e.findElements(By.className("text"));
-//            List<WebElement> src = e.findElements(By.className("Poster__image--d9XTI"));
-//
-//            for (WebElement t : title) System.out.println(t.getText());
-//        }
-
 
         driver.quit();
     }
