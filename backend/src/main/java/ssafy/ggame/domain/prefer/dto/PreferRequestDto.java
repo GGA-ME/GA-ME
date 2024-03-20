@@ -9,5 +9,5 @@ import lombok.*;
 @Builder
 public class PreferRequestDto {
     private Integer userId;
-    private Integer gameId;
+    private Long gameId;
 }
