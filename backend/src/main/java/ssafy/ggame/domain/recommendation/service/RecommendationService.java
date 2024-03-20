@@ -7,6 +7,7 @@ import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.game.repository.GameRepository;
 import ssafy.ggame.domain.gameTag.entity.GameTag;
+import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
 import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.tag.entity.Tag;
 import ssafy.ggame.domain.code.repository.CodeRepository;
@@ -24,6 +25,7 @@ public class RecommendationService {
     private final CodeRepository codeRepository;
     private final TagRepository tagRepository;
     private final GameRepository gameRepository;
+    private final GameTagRepository gameTagRepository;
     public List<GameCardDto> getPopularList(Integer userId, String codeId, Integer tagId) {
         // 전체 게임 인기 순위
         // TODO:
@@ -78,6 +80,7 @@ public class RecommendationService {
         if(!codeId.equals("0") && tagId != 0){
 //            List<Game> gameList = gameRepository.findAllByGCodeIdAndTagIdOrderByGameFinalScore(codeId, tagId);
             List<Game> gameList = null;
+            gameTagRepository.findAllByCodeIdAndTagId(codeId, tagId);
             gameCardDtoList = makeGameCardDtoList(gameList);
         }
 
