@@ -21,7 +21,8 @@ public enum StatusCode {
     GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),
 
     //좋아요 : 600
-    PREFER_CANNOT_SAVE(false,600,"좋아요를 등록할 수 없습니다.")
+    PREFER_CANNOT_SAVE(false,600,"좋아요를 등록할 수 없습니다."),
+    PREFER_NOT_FOUND(false,601,"등록된 좋아요 정보가 없습니다.")
     ;
 
     private final boolean isSuccess;
