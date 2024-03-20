@@ -14,4 +14,9 @@ public class UserTag {
 
     @Column(name = "user_tag_weight")
     private Short userTagWeight; // 회원-태그 가중치
+
+    // userTagWeight 필드에 대한 setter 메서드
+    public void setUserTagWeight(Short userTagWeight) {
+        this.userTagWeight = userTagWeight;
+    }
 }
