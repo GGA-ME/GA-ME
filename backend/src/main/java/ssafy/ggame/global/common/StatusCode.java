@@ -15,6 +15,7 @@ public enum StatusCode {
     USER_NOT_FOUND(false,301,"유저를 찾을 수 없습니다."),
 
     //회원-태그: 400
+    USER_TAG_NOT_FOUND(false, 400, "회원에게서 태그를 찾을 수 없습니다."),
 
     //게임 : 500
     GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),
