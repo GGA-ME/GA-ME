@@ -26,7 +26,11 @@ public enum StatusCode {
 
 
     //태그: 700
-    TAG_NOT_FOUND(false, 700, "태그를 찾을 수 없습니다.")
+    TAG_NOT_FOUND(false, 700, "태그를 찾을 수 없습니다."),
+
+    // 크롤링: 800
+    CRAWLING_FAILED(false, 800, "크롤링이 실패하였습니다."),
+    CRAWLING_NOT_FOUND(false, 801, "검색 결과가 없습니다.");
     ;
 
     private final boolean isSuccess;
