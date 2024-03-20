@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ssafy.ggame.global.common.BaseCreatedTimeEntity;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Builder
@@ -66,6 +68,6 @@ public class Statistics extends BaseCreatedTimeEntity {
     @Column(name = "game_standard_playtime")
     private Integer gameStandardPlaytime;
     @Column(name = "statistics_base_dt")
-    private Integer statisticsBaseDt;
+    private LocalDate statisticsBaseDt;
 
 }
