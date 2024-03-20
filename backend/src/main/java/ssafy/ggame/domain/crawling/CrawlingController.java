@@ -17,10 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/crawling")
-@RequiredArgsConstructor
 public class CrawlingController {
-    // spring Bean으로 만들어서 스프링이 driver를 관리하게 만들어줌
-    private final WebDriver driver;
 
     @GetMapping("/{keyword}")
     public void getCrawling(@PathVariable String keyword) {
