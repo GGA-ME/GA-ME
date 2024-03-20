@@ -1,7 +1,9 @@
 package ssafy.ggame.domain.crawling;
 
+import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.openqa.selenium.By;
@@ -15,10 +17,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/crawling")
+@RequiredArgsConstructor
 public class CrawlingController {
-    // 크롬 창을 띄우지 않는 드라이버 옵션
-    ChromeOptions options = new ChromeOptions().addArguments("headless");
-    WebDriver driver = new ChromeDriver(options);
+    // spring Bean으로 만들어서 스프링이 driver를 관리하게 만들어줌
+    private final WebDriver driver;
+
     @GetMapping("/{keyword}")
     public void getCrawling(@PathVariable String keyword) {
         System.out.println("Crawling Start: " + keyword);
