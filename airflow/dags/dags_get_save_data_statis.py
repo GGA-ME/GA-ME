@@ -9,8 +9,11 @@ from time import sleep
 import nltk
 nltk.download('vader_lexicon')
 import math
+import logging
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+log = logging.getLogger(__name__)
 
 
 # MySQL 연결 설정
@@ -84,7 +87,7 @@ def process_reviews(num_batches, index, **kwargs):
         max_reviews = 10000
         reviews_en = load_reviews_with_retry(game_id, max_reviews)
 
-        if reviews_en is not None:
+        if len(reviews_en):
             print("리뷰를 성공적으로 불러왔습니다.")
             print('game_id =', game_id)
         else:
@@ -365,6 +368,70 @@ def count_reviews_by_time_bins(reviews, average_playtime):
 
     return positive_counts, negative_counts
 
+
+def get_game_final_score(index, num_batches, **kwargs):
+        game_ids = kwargs["ti"].xcom_pull(task_ids = 'game_ids_task', key="game_ids")
+
+        if not game_ids:
+            print('applist :', game_ids)
+            return
+        else:
+            print('applist 존재')
+
+        game_id_batch = game_ids[index::num_batches]
+
+        try:
+            # MySQL 연결 설정
+            mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
+            conn = mysql_hook.get_conn()
+            cursor = conn.cursor()
+
+            for game_id in game_id_batch:
+
+                print("################### CALCULATE GAME SCORE!!!#######################")
+
+                # 가장 최근 갱신된 점수 정보 가져오기
+                select_query = f'''select 
+                game_id
+                , game_review_cnt
+                , game_review_like_cnt
+                , game_review_unlike_cnt
+                , game_review_is_use_cnt
+                , updated_dt
+                from game_score_info
+                where game_id ={game_id}
+                order by updated_dt desc'''
+
+                cursor.execute(select_query) 
+
+                select_result = cursor.fetchall()
+                print("SELECT_RESULT:: " ,select_result)
+
+                # 필요한 값 추출
+                game_id = select_result[0][0]
+                game_review_cnt = select_result[0][1]
+                game_review_like_cnt = select_result[0][2]
+                game_review_unlike_cnt = select_result[0][3]
+                game_review_is_use_cnt = select_result[0][4]
+
+                # 점수 계산
+                review_cnt_score = 100 * (1 - 1 / (1 + math.log(game_review_cnt + 1))) # 리뷰 개수 점수
+                review_like_score = (game_review_like_cnt / (game_review_like_cnt + game_review_unlike_cnt)) * 100 # 댓글 선호도 점수
+                in_use_score = (game_review_is_use_cnt / (game_review_like_cnt + game_review_unlike_cnt)) * 100 # 증가한 사용자 비율 점수
+
+                game_final_score = review_cnt_score * 0.3 + review_like_score * 0.3 + in_use_score * 0.4 # 최종 점수
+
+
+                # game db에 점수 저장하기
+                update_query = f"""update game set game_final_score ={game_final_score} where game_id ={game_id}"""
+                cursor.execute(update_query)
+                conn.commit()
+                print("game_final_score 업데이트 완료!")
+
+        except Exception as e:
+            log.fetal("get_game_score에서 예외 발생:: ", e)
+
+
 with DAG('dags_get_save_data_statis', 
          default_args=default_args, 
          schedule_interval='@daily', 
@@ -394,5 +461,14 @@ with DAG('dags_get_save_data_statis',
             dag=dag
         )
 
-        game_ids_task >> process_reviews_task >> process_statistics_task
+        get_game_final_score_task = PythonOperator(
+            task_id=f'get_game_final_score_batch_{i+1}',
+            python_callable=get_game_final_score,
+            op_kwargs={'index': i, 'num_batches':num_batches},
+            provide_context=True,
+            dag=dag
+        )
+
+        game_ids_task >> process_reviews_task >> process_statistics_task >> get_game_final_score_task
+        # game_ids_task >> process_reviews_task >> process_statistics_task 
         # game_ids_task >> process_statistics_task
