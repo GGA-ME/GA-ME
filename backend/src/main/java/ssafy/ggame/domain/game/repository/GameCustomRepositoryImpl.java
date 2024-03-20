@@ -1,15 +1,16 @@
 package ssafy.ggame.domain.game.repository;
 
-import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ssafy.ggame.domain.game.dto.GameCardDto;
-import ssafy.ggame.domain.game.entity.Game;
+import ssafy.ggame.domain.game.dto.GameTagsDto;
 import ssafy.ggame.domain.search.dto.SearchLikeRequestDto;
+import ssafy.ggame.domain.tag.dto.TagDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ssafy.ggame.domain.game.entity.QGame.game;
@@ -56,16 +57,36 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
                 ).from(prefer)
                 .where(prefer.preferId.game.gameId.in(ids).and(prefer.preferId.user.userId.eq(dto.getUserId())))
                 .fetch();
-        //prefer에 해당하는 애들만 true로 설정 하기
-        searchGames.forEach(game -> game.updateIsPrefer(preferIds.contains(game.getGameId())));
         //해당하는 게임들 태그 가져오기
-        List<Tuple> fetch = queryFactory.select(
-                        game.gameId,
-                        tag.tagName
+        List<GameTagsDto> gameTags = queryFactory.select(
+                Projections.constructor(
+                        GameTagsDto.class,
+                        game.gameId.as("gameId"),
+                        tag.tagId.code.codeId.as("codeId"),
+                        tag.tagId.tagId.as("tagId"),
+                        tag.tagName.as("tagName")
+                )
                 ).from(gameTag)
                 .join(gameTag.game, game)
                 .join(gameTag.tag, tag)
                 .where(gameTag.game.gameId.in(ids)).distinct().fetch();
+
+        //게임Id를 기준으로 tags 묶어서 가져옴.
+        Map<Long, List<TagDto>> tagsMap = gameTags.stream()
+                .collect(Collectors.groupingBy(GameTagsDto::getGameId,
+                        Collectors.mapping(
+                                gameTagsDto ->
+                                        TagDto.builder()
+                                                .codeId(gameTagsDto.getCodeId())
+                                                .tagId(gameTagsDto.getTagId())
+                                                .tagName(gameTagsDto.getTagName())
+                                                .build()
+                                , Collectors.toList())));
+        //게임에 매칭( tag, prefer )
+        searchGames.forEach(game -> {
+            game.updateTagList(tagsMap.get(game.getGameId()));
+            game.updateIsPrefer(preferIds.contains(game.getGameId()));
+        });
 
         return searchGames;
     }
