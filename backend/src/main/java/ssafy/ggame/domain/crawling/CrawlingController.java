@@ -1,6 +1,7 @@
 package ssafy.ggame.domain.crawling;
 
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.openqa.selenium.By;
@@ -17,9 +18,13 @@ import java.util.List;
 public class CrawlingController {
     @GetMapping("/{keyword}")
     public void getCrawling(@PathVariable String keyword) {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("headless");
+
         System.out.println("Crawling Start: " + keyword);
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.gamemeca.com/search.php?gc=news&q=" + keyword);
+        String URL = "https://www.gamemeca.com/search.php?gc=news&q=" + keyword;
+        WebDriver driver = new ChromeDriver(options);
+        driver.get(URL);
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
 
         List<WebElement> news = driver.findElements(By.cssSelector("#content > div.news-list > div.content-left > ul > li"));
@@ -33,19 +38,6 @@ public class CrawlingController {
             System.out.println(sb.toString());
             sb.setLength(0);
         }
-
-//        System.out.println(text);
-//        for (WebElement e : weekend) {
-//            WebElement weekendTitle = e.findElement(By.className("WeekdayMainView__heading--tHIYj"));
-//            System.out.println(weekendTitle.getText());
-//
-//            List<WebElement> title = e.findElements(By.className("text"));
-//            List<WebElement> src = e.findElements(By.className("Poster__image--d9XTI"));
-//
-//            for (WebElement t : title) System.out.println(t.getText());
-//        }
-
-
         driver.quit();
     }
 }
