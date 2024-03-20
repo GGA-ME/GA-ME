@@ -39,7 +39,8 @@ const Banner = () => {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        {...(thumbsSwiper && { thumbs: { swiper: thumbsSwiper } })}
+        // {...(thumbsSwiper && { thumbs: { swiper: thumbsSwiper } })}
+        thumbs={{ swiper: thumbsSwiper }}
         pagination={{ clickable: true }}
       >
         {games.map((game, index) => (
@@ -57,7 +58,7 @@ const Banner = () => {
         ))}
       </Swiper>
       <Swiper
-      onSwiper={setThumbsSwiper}
+      // onSwiper={setThumbsSwiper} => 왜안돼?ㅠㅠㅠㅠㅠ
       loop={true}
       spaceBetween={10}
       slidesPerView={6}
