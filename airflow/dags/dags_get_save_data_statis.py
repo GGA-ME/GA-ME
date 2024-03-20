@@ -281,15 +281,16 @@ def process_statistics(num_batches, index, **kwargs):
         
         recent_score = total_playtime_recent + positive_reviews_count*100
         
-        query = """
-            UPDATE game
-            SET game_recent_score = %s
-            WHERE game_id = %s
-        """
+        if recent_score > 0:
+            query = """
+                UPDATE game
+                SET game_recent_score = %s
+                WHERE game_id = %s
+            """
 
-        # 쿼리 실행
-        cursor.execute(query, (recent_score, game_id))
-        conn.commit()
+            # 쿼리 실행
+            cursor.execute(query, (recent_score, game_id))
+            conn.commit()
         
         
 
