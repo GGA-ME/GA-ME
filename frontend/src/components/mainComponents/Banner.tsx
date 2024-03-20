@@ -1,15 +1,21 @@
 import { useState } from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper as SwiperClass } from 'swiper/types';
 import { Autoplay, Pagination, Navigation, Thumbs, FreeMode } from 'swiper/modules';
 import style from './Banner.module.css'
 import 'swiper/css';
-import 'swiper/css/autoplay';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import 'swiper/css/pagination';
 
 
-const games = [
+interface Game {
+  title: string;
+  imageUrl: string;
+  backgroundUrl: string;
+}
+
+const games: Game[] = [
   // Add 6 game information objects here
   { title: 'Game Title 1', imageUrl: '/TestGameImg.jpg', backgroundUrl: '/TestGameImg.jpg' },
   { title: 'Game Title 2', imageUrl: '/TestGameImg2.jpg', backgroundUrl: '/TestGameImg2.jpg' },
@@ -21,19 +27,15 @@ const games = [
 ];
 
 const Banner: React.FC = () => {
-  const [thumbsSwiper, setThumbsSwiper] = useState(null); // 썸네일 슬라이더의 인스턴스를 저장할 상태
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   return (
     <div className={`${style.bannerContainer}`}> {/* 이 div는 Swiper 컨테이너의 전체 크기를 결정합니다. */}
-    <div className={`${style.titleContainer} text-2xl`}>
+      <div className={`${style.titleContainer} text-2xl`}>
         <h2>인기게임</h2>
       </div>
 
       <Swiper
-      style={{
-        '--swiper-navigation-color': '#fff',
-        '--swiper-pagination-color': '#fff',
-      }}
-        className={style.swiper}
+        className={`${style.swiper} ${style.swiperCustom} `}
         modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
         spaceBetween={0}
         slidesPerView={1}
@@ -43,15 +45,14 @@ const Banner: React.FC = () => {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        // {...(thumbsSwiper && { thumbs: { swiper: thumbsSwiper } })}
-        thumbs={{ swiper: thumbsSwiper }}
+        {...(thumbsSwiper && { thumbs: { swiper: thumbsSwiper } })}
         pagination={{ clickable: true }}
       >
         {games.map((game, index) => (
           <SwiperSlide key={index} className={`${style.swiperSlide}`}>
             {/* 블러 처리된 배경을 위한 div */}
-            <div 
-              className={style.background} 
+            <div
+              className={style.background}
               style={{ backgroundImage: `url(${game.backgroundUrl})` }}
             ></div>
             {/* 실제 보여질 이미지 */}
@@ -62,17 +63,17 @@ const Banner: React.FC = () => {
         ))}
       </Swiper>
       <Swiper
-      // onSwiper={setThumbsSwiper} => 왜안돼?ㅠㅠㅠㅠㅠ
-      loop={true}
-      spaceBetween={10}
-      slidesPerView={6}
-      watchSlidesProgress={true}
-      modules={[FreeMode, Navigation, Thumbs]}
+        onSwiper={setThumbsSwiper}
+        loop={true}
+        spaceBetween={10}
+        slidesPerView={6}
+        watchSlidesProgress={true}
+        modules={[FreeMode, Navigation, Thumbs]}
+        className="thumbsContainer" // 여기에 클래스 이름을 추가합니다.
       >
         {games.map((game, index) => (
-          <SwiperSlide key={index} >
-            {/* 실제 보여질 이미지 */}
-              <img  className={`${style.Thumb}`} src={game.imageUrl} alt={game.title} />
+          <SwiperSlide key={index}>
+            <img className={`${style.Thumb}`} src={game.imageUrl} alt={game.title} />
           </SwiperSlide>
         ))}
       </Swiper>
