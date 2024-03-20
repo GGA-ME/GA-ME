@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import ssafy.ggame.domain.game.entity.Game;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Embeddable
 @NoArgsConstructor
@@ -16,9 +17,8 @@ import java.io.Serializable;
 @Builder
 public class StatisticsId implements Serializable {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "statistics_id")
-    private Integer statisticsId;
+    @Column(name = "statistics_base_dt")
+    private LocalDate statisticsBaseDt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
