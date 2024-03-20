@@ -24,7 +24,13 @@ public class CrawlingController {
 
     @GetMapping("/{keyword}")
     public void getCrawling(@PathVariable String keyword) {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("headless");
+
         System.out.println("Crawling Start: " + keyword);
+        String URL = "https://www.gamemeca.com/search.php?gc=news&q=" + keyword;
+        WebDriver driver = new ChromeDriver(options);
+        driver.get(URL);
         String url = "https://www.gamemeca.com/search.php?gc=news&q=" + keyword;
         // driver.get 하는 과정이 오래 걸림.. ㅠㅠ
         driver.get(url);
@@ -42,7 +48,6 @@ public class CrawlingController {
             System.out.println(sb.toString());
             sb.setLength(0);
         }
-
         driver.quit();
     }
 }
