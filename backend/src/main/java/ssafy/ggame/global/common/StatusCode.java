@@ -19,6 +19,7 @@ public enum StatusCode {
 
     //게임 : 500
     GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),
+    GAME_SAVE(true, 501, "정상적으로 저장 되었습니다."),
 
     //좋아요 : 600
     PREFER_CANNOT_SAVE(false,600,"좋아요를 등록할 수 없습니다."),
