@@ -1,4 +1,4 @@
-package ssafy.ggame.domain.crawling.dto;
+package ssafy.ggame.domain.topic.dto;
 
 import lombok.Builder;
 import lombok.Getter;
