@@ -15,6 +15,8 @@ public interface UserTagRepository extends JpaRepository<UserTag, UserTagId> {
     @Query("SELECT ut FROM UserTag ut WHERE ut.userTagId.user.userId = :userId AND ut.userTagId.tag.tagId.tagId = :tagId AND ut.userTagId.tag.tagId.code.codeId = :codeId")
     Optional<UserTag> findByUserIdAndTagIdAndCodeId(@Param("userId") Integer userId, @Param("tagId") Short tagId, @Param("codeId") String codeId);
 
-    List<UserTag> findFirst10ByUserTagId_UserOrderByUserTagWeight(User userTagId_user);
+
+    // 유저의 태그 가중치 중 내림차순으로 10개를 가져옴
+    List<UserTag> findFirst10ByUserTagId_UserOrderByUserTagWeightDesc(User userTagId_user);
 }
 
