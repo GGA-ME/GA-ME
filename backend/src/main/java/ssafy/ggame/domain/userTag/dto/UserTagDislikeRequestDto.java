@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class UserTagDislikeRequest {
+public class UserTagDislikeRequestDto {
     private Integer userId;
     private List<TagCodePair> tags;
 

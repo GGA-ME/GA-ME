@@ -1,6 +1,7 @@
 package ssafy.ggame.domain.userTag.service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.ggame.domain.gameTag.entity.GameTag;
@@ -9,9 +10,8 @@ import ssafy.ggame.domain.tag.entity.TagId;
 import ssafy.ggame.domain.tag.repository.TagRepository;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
-import ssafy.ggame.domain.userTag.dto.UserTagDislikeRequest;
+import ssafy.ggame.domain.userTag.dto.UserTagDislikeRequestDto;
 import ssafy.ggame.domain.userTag.entity.UserTag;
-import ssafy.ggame.domain.userTag.entity.UserTagId;
 import ssafy.ggame.domain.userTag.repository.UserTagRepository;
 import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
 import ssafy.ggame.global.common.StatusCode;
@@ -21,20 +21,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserTagService {
-
     private final UserTagRepository userTagRepository;
     private final GameTagRepository gameTagRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
 
-    @Autowired
-    public UserTagService(UserTagRepository userTagRepository, UserRepository userRepository, GameTagRepository gameTagRepository, TagRepository tagRepository) {
-        this.userTagRepository = userTagRepository;
-        this.gameTagRepository = gameTagRepository;
-        this.tagRepository = tagRepository;
-        this.userRepository = userRepository;
-    }
 
     // 게임에 대한 사용자 행동 패턴 기반 가중치 업데이트
     @Transactional
@@ -65,11 +58,11 @@ public class UserTagService {
 
     // '관심없음' 태그 가중치 -20
     @Transactional
-    public void dislikeUserTagWeight(Integer userId, List<UserTagDislikeRequest.TagCodePair> tags) throws BaseException {
+    public void dislikeUserTagWeight(Integer userId, List<UserTagDislikeRequestDto.TagCodePair> tags) throws BaseException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
 
-        for (UserTagDislikeRequest.TagCodePair tagPair : tags) {
+        for (UserTagDislikeRequestDto.TagCodePair tagPair : tags) {
             Tag tag = tagRepository.findByCodeIdAndTagId(tagPair.getCodeId(), tagPair.getTagId())
                     .orElseThrow(() -> new BaseException(StatusCode.TAG_NOT_FOUND));
 
