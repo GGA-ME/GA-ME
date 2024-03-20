@@ -22,7 +22,6 @@ public class Statistics extends BaseCreatedTimeEntity {
 
     @Column(name = "statistics_like_0")
     private Integer statisticsLike0;
-
     @Column(name = "statistics_like_10")
     private Integer statisticsLike10;
     @Column(name = "statistics_like_20")
@@ -41,6 +40,32 @@ public class Statistics extends BaseCreatedTimeEntity {
     private Integer statisticsLike80;
     @Column(name = "statistics_like_90")
     private Integer statisticsLike90;
+
+
+    @Column(name = "statistics_unlike_0")
+    private Integer statisticsUnlike0;
+    @Column(name = "statistics_unlike_10")
+    private Integer statisticsUnlike10;
+    @Column(name = "statistics_unlike_20")
+    private Integer statisticsUnlike20;
+    @Column(name = "statistics_unlike_30")
+    private Integer statisticsUnlike30;
+    @Column(name = "statistics_unlike_40")
+    private Integer statisticsUnlike40;
+    @Column(name = "statistics_unlike_50")
+    private Integer statisticsUnlike50;
+    @Column(name = "statistics_unlike_60")
+    private Integer statisticsUnlike60;
+    @Column(name = "statistics_unlike_70")
+    private Integer statisticsUnlike70;
+    @Column(name = "statistics_unlike_80")
+    private Integer statisticsUnlike80;
+    @Column(name = "statistics_unlike_90")
+    private Integer statisticsUnlike90;
+
+    @Column(name = "game_standard_playtime")
+    private Integer gameStandardPlaytime;
+
     @Column(name = "game_max_playtime")
     private Integer gameMaxPlaytime;
     @Column(name = "statistics_base_dt")
