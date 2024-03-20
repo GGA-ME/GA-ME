@@ -1,10 +1,53 @@
+import React, { useState }  from 'react'
+import style from './Select.module.css'
 
-function Select() {
 
+const Select: React.FC = () => {
+  const categorys = ['ALL', '맞춤']
+  const [nowCategory, setNotCategory] = useState<string>('ALL')
+  const allTags = [ 'FPS', 'RPG', 'a', 'b', 'c', 'd', 'e', 'f']
+  const myTags = [ 'ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ' ]
+  const [selectedTagId, setSelectedTagId] = useState<string>('');
   return (
-        <div>
-          태그셀렉
-        </div>
+    <>
+    <div className="flex space-x-2 p-4">
+      {categorys.map((category:string, index:number) => (
+        <button
+          key={index}
+          className={`px-3 py-1 rounded-full border-2 border-transparent text-3xl   ${
+            nowCategory === category ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
+          }`}
+          onClick={() => setNotCategory(category)}
+        >
+          {category}
+        </button>
+      ))}
+    </div>
+    <div className="flex space-x-2 p-4">
+      {nowCategory === "ALL" ? allTags.map((tag: string, index: number) => (
+        <button
+          key={index}
+          className={`ml-6 px-3 py-1 rounded-full border-2 border-transparent  ${
+            selectedTagId === tag ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
+          }`}
+          onClick={() => setSelectedTagId(tag)}
+        >
+          {tag}
+        </button>
+      )) : nowCategory === "맞춤" ? myTags.map((tag: string, index: number) => (
+        <button 
+          key={index}
+          className={`ml-6 px-3 py-1 rounded-full border-2 border-transparent ${
+            selectedTagId === tag ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
+          }`}
+          onClick={() => setSelectedTagId(tag)}
+        >
+          {tag}
+        </button>
+      )) : null}
+    </div>
+    </>
   );
-}
+};
+
 export default Select;

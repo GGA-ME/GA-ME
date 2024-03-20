@@ -20,7 +20,7 @@ const games = [
 
 ];
 
-const Banner = () => {
+const Banner: React.FC = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null); // 썸네일 슬라이더의 인스턴스를 저장할 상태
   return (
     <div className={`${style.bannerContainer}`}> {/* 이 div는 Swiper 컨테이너의 전체 크기를 결정합니다. */}
@@ -29,6 +29,10 @@ const Banner = () => {
       </div>
 
       <Swiper
+      style={{
+        '--swiper-navigation-color': '#fff',
+        '--swiper-pagination-color': '#fff',
+      }}
         className={style.swiper}
         modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
         spaceBetween={0}

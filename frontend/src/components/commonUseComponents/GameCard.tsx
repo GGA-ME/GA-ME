@@ -48,25 +48,25 @@ const GameCard: React.FC<GameCardProps> = ({ imageUrl, title, price, tags, likes
         >
           <div className="flex justify-center items-center space-x-2">
             {/* Icons */}
-            <button className="bg-white rounded-full p-2">
+            <button className="rounded-full p-2">
               {/* Heart Icon */}
-              🎈
+              <img src={'./Like.png'} alt={'Like'}></img>
             </button>
-            <button className="bg-white rounded-full p-2">
+            <button className="rounded-full p-2">
               {/* Save Icon */}
-              🛒
+              <img src={'./Cart.png'} alt={'Cart'}></img>
             </button>
-            <button className="bg-white rounded-full p-2">
+            <button className="rounded-full p-2">
               {/* Remove Icon */}
-              💣
+              <img src={'./NotLike.png'} alt={'NotLike'}></img>
             </button>
           </div>
           <div className="flex justify-center items-center">
             {/* Tag container */}
-            <div className="bg-black bg-opacity-50 rounded px-2 py-1">
+            <div >
               {/* Tags */}
               {tags.map((tag: string, index: number) => (
-                <span key={index} className="text-xs font-semibold mx-1">{`#${tag}`}</span>
+                <span key={index} className=" bg-black bg-opacity-50 rounded px-2 py-1 text-xs font-semibold mx-1">{`#${tag}`}</span>
               ))}
             </div>
           </div>

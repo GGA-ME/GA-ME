@@ -1,228 +1,79 @@
+import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion'
-import style from './Navbar.module.css'
+import { motion } from 'framer-motion';
+import style from './Navbar.module.css';
 
+// 네비게이션 링크를 위한 타입 정의
+interface NavLinkItem {
+    path: string;
+    label: string;
+    icon: string;
+    activeIcon: string;
+}
 
-function Navbar() {
-
-    // 호버시 효과를 주기위한 함수인데.. 이동이 부드럽지도 않고 클릭시 버튼이 한순간 크기가 작아지는게 거슬려서 일단 보류
-    // 사용법은 className 에 onMouseOver={hoverHotTopicIcon} onMouseOut={leaveHotTopicIcon} 식으로 선언해서 사용
-    // 메인
-    // const hoverGameIcon = () => {
-    //     const imgElement = document.getElementById('gameIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/Gameicon.gif'; // 호버
-    //         imgElement.style.width = '50px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-    // const leaveGameIcon = () => {
-    //     const imgElement = document.getElementById('gameIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/Gameicon.png'; // 호버 out
-    //         imgElement.style.width = '30px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-
-    // // 서치
-    // const hoverSearchIcon = () => {
-    //     const imgElement = document.getElementById('searchIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/SearchIcon.gif'; // 호버
-    //         imgElement.style.width = '50px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-    // const leaveSearchIcon = () => {
-    //     const imgElement = document.getElementById('searchIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/SearchIcon.png'; // 호버 out
-    //         imgElement.style.width = '30px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-
-    // // 핫토픽
-    // const hoverHotTopicIcon = () => {
-    //     const imgElement = document.getElementById('hotTopicIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/FireIcon.gif'; // 호버
-    //         imgElement.style.width = '50px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-    // const leaveHotTopicIcon = () => {
-    //     const imgElement = document.getElementById('hotTopicIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/FireIcon.png'; // 호버 out
-    //         imgElement.style.width = '30px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-
-    // // 프로필
-    // const hoverProfileIcon = () => {
-    //     const imgElement = document.getElementById('profileIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/ProfileIcon.gif'; // 호버
-    //         imgElement.style.width = '50px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-    // const leaveProfileIcon = () => {
-    //     const imgElement = document.getElementById('profileIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/ProfileIcon.png'; // 호버 out
-    //         imgElement.style.width = '30px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-
-    // // 로그인
-    // const hoverLoginIcon = () => {
-    //     const imgElement = document.getElementById('loginIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/LoginIcon.gif'; // 호버
-    //         imgElement.style.width = '50px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-    // const leaveLoginIcon = () => {
-    //     const imgElement = document.getElementById('loginIcon')
-    //     if (imgElement instanceof HTMLImageElement) { // imgElement가 null이 아닌지 확인
-    //         imgElement.src = '/LoginIcon.png'; // 호버 out
-    //         imgElement.style.width = '30px'; // 너비 조정
-    //         imgElement.style.height = 'auto'; // 높이 자동 조정
-    //     }
-    // }
-
+const Navbar: React.FC = () => {
     const location = useLocation();
-    // 현재 경로가 각 NavLink의 경로와 일치하는지 확인
     const isActive = (path: string) => location.pathname === path;
 
-    // const userId = '123'; // => 유저 아이디 받아오기 나중에 프로필과 연결
+    const navLinkYPositions: number[] = [0, 65, 130, 195]; // 각 네비게이션 항목에 대한 Y 위치
+
+    // 로컬 스토리지에서 indicatorY 상태를 읽어옵니다.
+    const initialY: number = localStorage.getItem('indicatorY') ? Number(localStorage.getItem('indicatorY')) : navLinkYPositions[0];
+    const [indicatorY, setIndicatorY] = useState<number>(initialY);
+
+    const navLinks: NavLinkItem[] = [
+        { path: "/Main", label: "Main", icon: '/Gameicon.png', activeIcon: '/Gameicon.gif' },
+        { path: "/search", label: "Search", icon: '/SearchIcon.png', activeIcon: '/SearchIcon.gif' },
+        { path: "/topic", label: "Hot Topic", icon: '/FireIcon.png', activeIcon: '/FireIcon.gif' },
+        { path: "/myPage", label: "My Page", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif' }
+    ];
+
+    useEffect(() => {
+        const activeLinkIndex = navLinks.findIndex(link => isActive(link.path));
+        if (activeLinkIndex !== -1) {
+            const newY = navLinkYPositions[activeLinkIndex];
+            setIndicatorY(newY);
+            // 상태를 로컬 스토리지에 저장합니다.
+            localStorage.setItem('indicatorY', newY.toString());
+        }
+    }, [location.pathname]); // location.pathname이 변경될 때마다 실행
+
+    const variants = {
+        active: { y: indicatorY },
+    };
 
     return (
         <>
             <div className="fixed top-0 left-0 flex flex-col items-center px-8 h-screen py-20 bg-gray-900 text-white">
-                {/* Navbar heading or logo */}
-                <div className="mb-10">
-                    {/* Replace with your logo */}
-                    <span className="text-2xl icon-custom">GGA:ME</span>
+                <div className="mb-24">
+                    <img className="w-24" src='./GGAME.gif' alt='GGAMELOGO' />
                 </div>
 
-                {/* 메인 */}
-                <div className="space-y-3">
+                <div className="relative pl-8">
                     <motion.div
-                        layout
+                        className="absolute left-0 px-2 py-1 border-2 border-cyan-500 rounded-full"
+                        style={{ width: 'calc(120% - 1rem)', maxWidth: '300px' }}
+                        variants={variants}
                         initial={false}
-                        animate={{
-                            borderColor: isActive('/Main') ? '#81BECE' : 'transparent',
-                            borderWidth: isActive('/Main') ? 2 : 0,
-                        }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className="flex items-center space-x-2 px-2 py-1 rounded-full"
-                    >
-                        <NavLink to="/Main" className="flex items-center space-x-2">
-                            <img
-                                id="gameIcon"
-                                src={isActive('/Main') ? '/Gameicon.gif' : '/Gameicon.png'}
-                                className="transition-all duration-300 ease-in-out"
-                                style={{ width: '30px', height: 'auto', filter: "brightness(0) invert(1)" }}
-                                alt="Game Icon"
-                            />
-                            <span className={style.neonNormal}>Main</span>
-                        </NavLink>
-                    </motion.div>
+                        animate="active"
+                        transition={{ type: "spring", stiffness: 100 }}
+                    >▷</motion.div>
 
-                    {/* 서치 */}
-                    <motion.div
-                        layout
-                        initial={false}
-                        animate={{
-                            borderColor: isActive('/search') ? '#81BECE' : 'transparent',
-                            borderWidth: isActive('/search') ? 2 : 0,
-                        }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className="flex items-center space-x-2 px-2 py-1 rounded-full"
-                    >
-                        <NavLink to="/search" className="flex items-center space-x-2">
+                    {navLinks.map((link, index) => (
+                        <NavLink key={index} to={link.path} className="flex items-center space-x-2 mb-8">
                             <img
-                                id="searchIcon"
-                                src={isActive('/search') ? '/SearchIcon.gif' : '/SearchIcon.png'}
+                                src={isActive(link.path) ? link.activeIcon : link.icon}
                                 className="transition-all duration-300 ease-in-out"
                                 style={{ width: '30px', height: 'auto', filter: "brightness(0) invert(1)" }}
-                                alt="Search Icon"
+                                alt={`${link.label} Icon`}
                             />
-                            <span className={style.neonNormal}>Search</span>
+                            <span className={`${style.neonNormal} text-2xl`}>{link.label}</span>
                         </NavLink>
-                    </motion.div>
-
-                    {/* 핫토픽 */}
-                    <motion.div
-                        layout
-                        initial={false}
-                        animate={{
-                            borderColor: isActive('/topic') ? '#81BECE' : 'transparent',
-                            borderWidth: isActive('/topic') ? 2 : 0,
-                        }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className="flex items-center space-x-2 px-2 py-1 rounded-full"
-                    >
-                        <NavLink to="/topic" className="flex items-center space-x-2">
-                            <img
-                                id="hotTopicIcon"
-                                src={isActive('/topic') ? '/FireIcon.gif' : '/FireIcon.png'}
-                                className="transition-all duration-300 ease-in-out"
-                                style={{ width: '30px', height: 'auto', filter: "brightness(0) invert(1)" }}
-                                alt="HotTopic Icon"
-                            />
-                            <span className={style.neonNormal}>Hot Topic</span>
-                        </NavLink>
-                    </motion.div>
-
-                    {/* 프로필 */}
-                    <motion.div
-                        layout
-                        initial={false}
-                        animate={{
-                            borderColor: isActive('/myPage') ? '#81BECE' : 'transparent',
-                            borderWidth: isActive('/myPage') ? 2 : 0,
-                        }}
-                        transition={{ type: "spring", stiffness: 300 }}
-                        className="flex items-center space-x-2 px-2 py-1 rounded-full"
-                    >
-                        <NavLink to="/myPage" className="flex items-center space-x-2">
-                            <img
-                                id="profileIcon"
-                                src={isActive('/myPge') ? '/ProfileIcon.gif' : '/ProfileIcon.png'}
-                                className="transition-all duration-300 ease-in-out"
-                                style={{ width: '30px', height: 'auto', filter: "brightness(0) invert(1)" }}
-                                alt="Profile Icon"
-                            />
-                            <span className={style.neonNormal}>My Page</span>
-                        </NavLink>
-                    </motion.div>
-
-                    {/* 로그인 */}
-                    <motion.div>
-                        <NavLink to="/login" className={({ isActive }) => isActive ? "flex items-center space-x-2 border border-white px-2 py-1 rounded-full" : "flex items-center space-x-2 "}
-                        >
-                            <img
-                                id="loginIcon"
-                                src='/LoginIcon.png'
-                                className="transition-all duration-300 ease-in-out"
-                                style={{ width: '30px', height: 'auto', filter: "brightness(0) invert(1)" }}
-                                alt="Login Icon"
-                            />
-                            <span className={`${style.neonNormal}`}>Login</span>
-                        </NavLink>
-                    </motion.div>
+                    ))}
                 </div>
             </div>
         </>
-
     );
 }
+
 export default Navbar;
