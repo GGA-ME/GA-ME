@@ -10,17 +10,19 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/tracking?")
+@RequestMapping("/api/tracking")
 public class UserTagController {
-    /*@Autowired
+    @Autowired
     private UserTagService userTagService;
 
-    @GetMapping("/userId={userId}&gameId={gameId}&action={action}")
-    public ResponseEntity<UserTag> updateWeight(@RequestParam Integer userId, @RequestParam Long gameId, @RequestParam String action) {
-        // UserTagService의 메서드 호출
-        userTagService.updateWeightByAction(userId, gameId, action);
+    // 게임에 대한 사용자 패턴 기반 가중치 업데이트
+    @PutMapping()
+    public ResponseEntity<Object> updateUserTagWeight(@RequestParam("userId") Integer userId,
+                                                      @RequestParam("gameId") Long gameId,
+                                                      @RequestParam("action") String action) {
+        userTagService.updateUserTagWeight(userId, gameId, action);
         return ResponseEntity.ok().build(); // 성공적으로 처리되었음을 응답
-    }*/
+    }
 
     //관심없음 URL 따로 추가
     //@GetMapping("")

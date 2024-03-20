@@ -1,7 +1,9 @@
 package ssafy.ggame.domain.crawling;
 
+import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.openqa.selenium.By;
@@ -15,7 +17,11 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/crawling")
+@RequiredArgsConstructor
 public class CrawlingController {
+    // spring Bean으로 만들어서 스프링이 driver를 관리하게 만들어줌
+    private final WebDriver driver;
+
     @GetMapping("/{keyword}")
     public void getCrawling(@PathVariable String keyword) {
         ChromeOptions options = new ChromeOptions();
@@ -25,6 +31,10 @@ public class CrawlingController {
         String URL = "https://www.gamemeca.com/search.php?gc=news&q=" + keyword;
         WebDriver driver = new ChromeDriver(options);
         driver.get(URL);
+        String url = "https://www.gamemeca.com/search.php?gc=news&q=" + keyword;
+        // driver.get 하는 과정이 오래 걸림.. ㅠㅠ
+        driver.get(url);
+        // 크롤링하려는 웹 페이지가 로딩 되는 시간을 기다림
         driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
 
         List<WebElement> news = driver.findElements(By.cssSelector("#content > div.news-list > div.content-left > ul > li"));
