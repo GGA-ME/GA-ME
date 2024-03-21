@@ -26,7 +26,10 @@ public enum StatusCode {
 
 
     //태그: 700
-    TAG_NOT_FOUND(false, 700, "태그를 찾을 수 없습니다.")
+    TAG_NOT_FOUND(false, 700, "태그를 찾을 수 없습니다."),
+
+    //로그: 800
+    JSON_TRANS_FAIL(false, 800, "행동에 대해 JSON 변환에 실패했습니다.")
     ;
 
     private final boolean isSuccess;

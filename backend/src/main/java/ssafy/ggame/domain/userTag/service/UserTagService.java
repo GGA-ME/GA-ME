@@ -2,7 +2,6 @@ package ssafy.ggame.domain.userTag.service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ssafy.ggame.domain.gameTag.entity.GameTag;
 import ssafy.ggame.domain.tag.entity.Tag;
@@ -27,7 +26,6 @@ public class UserTagService {
     private final GameTagRepository gameTagRepository;
     private final TagRepository tagRepository;
     private final UserRepository userRepository;
-
 
     // 게임에 대한 사용자 행동 패턴 기반 가중치 업데이트
     @Transactional
@@ -75,7 +73,6 @@ public class UserTagService {
             userTagRepository.save(userTag);
         }
     }
-
 
     private short determineWeightToAdd(String action) {
         short weightToAdd = 0;
