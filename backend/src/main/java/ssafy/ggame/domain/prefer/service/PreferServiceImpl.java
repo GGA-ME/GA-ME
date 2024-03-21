@@ -25,7 +25,7 @@ public class PreferServiceImpl implements PreferService{
     private final GameRepository gameRepository;
 
 
-    @Override
+//    @Override
     public boolean savePrefer(PreferRequestDto requestDto) {
         User user = userRepository.findById(requestDto.getUserId()).orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
         Game game = gameRepository.findById(requestDto.getGameId()).orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
