@@ -48,7 +48,15 @@ const Navbar: React.FC = () => {
         <>
             <div className="fixed top-0 left-0 flex flex-col items-center px-8 h-screen py-20 bg-gray-900 text-white">
                 <div className="mb-24">
-                    <img className="w-24" src='./GGAME.gif' alt='GGAMELOGO' />
+                    <NavLink to="/Main">
+                        <motion.img
+                            className="w-24"
+                            src='./GGAME.gif'
+                            alt='GGAMELOGO'
+                            whileHover={{ y: -20 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        />
+                    </NavLink>
                 </div>
 
                 <div className="relative pl-8">
