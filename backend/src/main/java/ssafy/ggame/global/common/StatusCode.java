@@ -25,13 +25,16 @@ public enum StatusCode {
     PREFER_CANNOT_SAVE(false,600,"좋아요를 등록할 수 없습니다."),
     PREFER_NOT_FOUND(false,601,"등록된 좋아요 정보가 없습니다."),
 
-
-    //태그: 700
-    TAG_NOT_FOUND(false, 700, "태그를 찾을 수 없습니다."),
+    // 태그 : 700
+    CODE_NOT_EXIST(false, 700, "해당 코드가 존재하지 않습니다."),
+    TAG_NOT_EXIST(false, 701, "해당 태그가 존재하지 않습니다."),
 
     // 크롤링: 800
     CRAWLING_FAILED(false, 800, "크롤링이 실패하였습니다."),
-    CRAWLING_NOT_FOUND(false, 801, "검색 결과가 없습니다.");
+    CRAWLING_NOT_FOUND(false, 801, "검색 결과가 없습니다."),
+
+    //로그: 900
+    JSON_TRANS_FAIL(false, 900, "행동에 대해 JSON 변환에 실패했습니다.")
     ;
 
     private final boolean isSuccess;

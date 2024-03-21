@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 public class UserTagDislikeRequestDto {
     private Integer userId;
+    private String page;
     private List<TagCodePair> tags;
 
     @Getter

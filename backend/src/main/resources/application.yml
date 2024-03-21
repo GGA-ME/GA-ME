@@ -21,5 +21,14 @@ spring:
             client-id: ${OAUTH_CLIENT_ID}
             client-secret: ${OAUTH_CLIENT_SECRET}
             scope: ${OAUTH_CLIENT_SCOPE}
+  cassandra:
+    keyspace-name: ${CASSANDRA_KEYSPACE}
+    contact-points: ${CASSANDRA_CONTACT_POINTS}
+    port: ${CASSANDRA_PORT}
+    local-datacenter: datacenter1
+    schema-action: create_if_not_exists
 server:
   port: ${SERVER_PORT}
+
+selenium:
+    driver: ${CHROME_DRIVER_PATH}
