@@ -1,3 +1,5 @@
+// 장현욱
+
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 import style from './Statistics.module.css'
