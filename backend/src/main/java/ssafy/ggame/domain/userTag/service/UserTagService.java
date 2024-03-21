@@ -66,6 +66,7 @@ public class UserTagService {
             Tag tag = tagRepository.findByCodeIdAndTagId(tagPair.getCodeId(), tagPair.getTagId())
                     .orElseThrow(() -> new BaseException(StatusCode.TAG_NOT_EXIST));
 
+
             UserTag userTag = userTagRepository.findByUserIdAndTagIdAndCodeId(user.getUserId(), tag.getTagId().getTagId(), tag.getTagId().getCode().getCodeId())
                     .orElseThrow(() -> new BaseException(StatusCode.USER_TAG_NOT_FOUND));
 

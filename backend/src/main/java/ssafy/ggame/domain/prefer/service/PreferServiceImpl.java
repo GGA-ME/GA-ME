@@ -45,4 +45,16 @@ public class PreferServiceImpl implements PreferService{
         // 여기까지 성공적 처리시 true
         return true;
     }
+
+    @Override
+    public boolean deletePrefer(PreferRequestDto requestDto) {
+        //1. 선호 삭제
+        User user = userRepository.findById(requestDto.getUserId()).orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
+        Game game = gameRepository.findById(requestDto.getGameId()).orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
+
+        Prefer result = preferRepository.findByPreferIdUserAndPreferIdGame(user, game).orElseThrow(()->new BaseException(StatusCode.PREFER_NOT_FOUND));
+        preferRepository.delete(result);
+        // 여기까지 성공적 처리시 true
+        return true;
+    }
 }

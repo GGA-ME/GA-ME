@@ -3,6 +3,7 @@ package ssafy.ggame.domain.prefer.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ssafy.ggame.domain.game.entity.Game;
 import org.springframework.data.jpa.repository.Query;
+import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.prefer.entity.Prefer;
 import ssafy.ggame.domain.prefer.entity.PreferId;
 import ssafy.ggame.domain.user.entity.User;
