@@ -2,10 +2,8 @@ package ssafy.ggame.domain.userTag.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-@Setter
 @Builder
 public class UserTagDto {
     private Integer userId;

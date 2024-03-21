@@ -1,6 +1,8 @@
 package ssafy.ggame.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.entity.Game;
@@ -14,6 +16,7 @@ import ssafy.ggame.domain.user.repository.UserRepository;
 import ssafy.ggame.domain.userTag.dto.UserTagDto;
 import ssafy.ggame.domain.userTag.entity.UserTag;
 import ssafy.ggame.domain.userTag.repository.UserTagRepository;
+import ssafy.ggame.global.common.BaseResponse;
 import ssafy.ggame.global.common.StatusCode;
 import ssafy.ggame.global.exception.BaseException;
 
@@ -59,7 +62,7 @@ public class UserService {
     }
 
     // 마이 페이지
-    public UserDetailResDto userDetail(Integer userId){
+    public ResponseEntity<Object> userDetail(Integer userId){
         User user = userRepository.findById(userId).orElseThrow(()->new BaseException(StatusCode.USER_NOT_FOUND));
         // 해당 유저의 좋아요 리스트
         List<Prefer> prefers = user.getPrefers();
@@ -125,7 +128,7 @@ public class UserService {
                 .tagWeightList(userTagDtoList)
                 .build();
 
-        return userDetailResDto;
+        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(userDetailResDto));
     }
 }
 
