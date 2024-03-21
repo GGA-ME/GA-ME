@@ -76,6 +76,7 @@ public class Game extends BaseUpdatedEntity {
                 .gamePriceInitial(this.gamePriceInitial)
                 .gamePriceFinal(this.gamePriceFinal)
                 .gameDeveloper(this.gameDeveloper)
+                .isPrefer(false)
                 .build();
     }
 }
