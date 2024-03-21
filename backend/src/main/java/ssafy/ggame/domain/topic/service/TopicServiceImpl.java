@@ -7,7 +7,10 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.springframework.stereotype.Service;
+import ssafy.ggame.domain.game.dto.GameSaleCardDto;
+import ssafy.ggame.domain.game.repository.GameCustomRepository;
 import ssafy.ggame.domain.prefer.repository.PreferCustomRepository;
+import ssafy.ggame.domain.topic.dto.SaleGameDto;
 import ssafy.ggame.domain.topic.dto.TopicNewsResDto;
 import ssafy.ggame.global.common.StatusCode;
 import ssafy.ggame.global.exception.BaseException;
@@ -22,6 +25,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class TopicServiceImpl implements TopicService {
     private final PreferCustomRepository preferRepository;
+    private final GameCustomRepository gameCustomRepository;
     private final WebDriver driver;
 
     //선호 게임 기사 가져오기
@@ -46,6 +50,24 @@ public class TopicServiceImpl implements TopicService {
         return hotTopicDtoList;
     }
 
+    @Override
+    public List<SaleGameDto> salesInfo(Integer userId) {
+        //repo에서 세일하는 게임들을 가져온다.
+        Map<Integer, List<GameSaleCardDto>> saleGames = gameCustomRepository.findSaleGames(userId);
+        List<SaleGameDto> result = new ArrayList<>();
+        //SaleGameDto에 알맞게 담아냄
+        saleGames.keySet().forEach(percent ->
+                result.add(
+                        SaleGameDto.builder()
+                                .salePercent(percent)
+                                .cardDtoList(saleGames.get(percent))
+                                .build()
+                )
+        );
+        return result;
+    }
+
+    //크롤링 데이터
     public void getCrawlingData(String keyword, int size, List<TopicNewsResDto> hotTopicDtoList) {
         try {
             //시작 URL

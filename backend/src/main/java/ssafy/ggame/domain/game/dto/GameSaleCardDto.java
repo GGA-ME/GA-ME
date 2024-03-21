@@ -1,6 +1,5 @@
 package ssafy.ggame.domain.game.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,13 +12,14 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GameCardDto {
+public class GameSaleCardDto {
     Long gameId;
     String gameName;
     String gameHeaderImg;
     Integer gamePriceInitial;
     Integer gamePriceFinal;
     String gameDeveloper;
+    Byte gameDiscountPercent;
     Boolean isPrefer;
     List<TagDto> tagList;
 
@@ -35,13 +35,15 @@ public class GameCardDto {
         this.gamePriceInitial/=100;
         this.gamePriceFinal/=100;
     }
-    @Builder //QueryDsl에서 Constructor 사용때문에 추가
-    public GameCardDto(Long gameId, String gameName, String gameHeaderImg, Integer gamePriceInitial, Integer gamePriceFinal, String gameDeveloper) {
+
+    @Builder
+    public GameSaleCardDto(Long gameId, String gameName, String gameHeaderImg, Integer gamePriceInitial, Integer gamePriceFinal, String gameDeveloper, Byte gameDiscountPercent) {
         this.gameId = gameId;
         this.gameName = gameName;
         this.gameHeaderImg = gameHeaderImg;
         this.gamePriceInitial = gamePriceInitial;
         this.gamePriceFinal = gamePriceFinal;
         this.gameDeveloper = gameDeveloper;
+        this.gameDiscountPercent = gameDiscountPercent;
     }
 }

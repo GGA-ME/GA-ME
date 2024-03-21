@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ssafy.ggame.domain.topic.dto.HotTopicRequestDto;
+import ssafy.ggame.domain.topic.dto.SaleGameDto;
 import ssafy.ggame.domain.topic.dto.TopicNewsResDto;
 import ssafy.ggame.domain.topic.service.TopicService;
 import ssafy.ggame.global.common.BaseResponse;
@@ -26,4 +27,11 @@ public class TopicController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponse<>(topicNewsResDtos));
 
     }
+        @PostMapping("/discount")
+    public ResponseEntity<Object> discountGame(@RequestBody HotTopicRequestDto dto){
+            List<SaleGameDto> saleGameDtos = topicService.salesInfo(dto.getUserId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponse<>(saleGameDtos));
+
+    }
+
 }
