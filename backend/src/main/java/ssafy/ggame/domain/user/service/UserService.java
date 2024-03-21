@@ -42,25 +42,6 @@ public class UserService {
         return userRepository.findByUserEmail(email);
     }
 
-    // 사용자 저장 또는 업데이트
-    // 로그인과 회원가입 모두 처리?
-    public User saveOrUpdateUser(UserDto userDto) {
-        User user = User.builder()
-                .userBirth(userDto.getUserBirth())
-                .userName(userDto.getUserName())
-                .userEmail(userDto.getUserEmail())
-                .userLastLoginDt(userDto.getUserLastLoginDt())
-                .build();
-
-        if(findById(user.getUserId()).isPresent()) user.setUserLastLoginDt(LocalDate.now());
-        return userRepository.save(user);
-    }
-
-    // 사용자 삭제
-    public void deleteUser(Integer id) {
-        userRepository.deleteById(id);
-    }
-
     // 마이 페이지
     public ResponseEntity<Object> userDetail(Integer userId){
         User user = userRepository.findById(userId).orElseThrow(()->new BaseException(StatusCode.USER_NOT_FOUND));

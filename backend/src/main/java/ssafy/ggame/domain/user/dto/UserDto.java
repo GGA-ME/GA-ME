@@ -19,8 +19,5 @@ public class UserDto {
     private String userProfileImg;
     private LocalDate userLastLoginDt;
     private LocalDateTime createdDttm;
-    // Getter, Setter 생략
-    // 생성자 생략, ToString 생략
-
-
+    private boolean isNewUser;
 }
