@@ -10,7 +10,6 @@ import ssafy.ggame.domain.gameTag.entity.GameTag;
 import ssafy.ggame.domain.prefer.entity.Prefer;
 import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.user.dto.UserDetailResDto;
-import ssafy.ggame.domain.user.dto.UserDto;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
 import ssafy.ggame.domain.userTag.dto.UserTagDto;
