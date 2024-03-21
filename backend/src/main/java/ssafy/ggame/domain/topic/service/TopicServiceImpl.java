@@ -1,42 +1,61 @@
 package ssafy.ggame.domain.topic.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.springframework.cglib.core.Local;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import ssafy.ggame.domain.prefer.repository.PreferCustomRepository;
 import ssafy.ggame.domain.topic.dto.TopicNewsResDto;
-import ssafy.ggame.global.common.BaseResponse;
 import ssafy.ggame.global.common.StatusCode;
 import ssafy.ggame.global.exception.BaseException;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class CrawlingService {
-
+public class TopicServiceImpl implements TopicService {
+    private final PreferCustomRepository preferRepository;
     private final WebDriver driver;
 
-    public ResponseEntity<Object> getCrawlingData(String keyword){
+    //선호 게임 기사 가져오기
+
+    @Override
+    public List<TopicNewsResDto> hotTopic(Integer userId) {
+        List<String> preferGameNames = preferRepository.findPreferGameNames(userId);
         List<TopicNewsResDto> hotTopicDtoList = new ArrayList<>();
+        if (preferGameNames.isEmpty()) {//선호 게임이 없으면
+            //인기게임 10개 조회해서 가져옴
+            //인기게임 추가 로직 필요
+        } else {//있으면
+            int size = preferGameNames.size();
+            int newsSize = size > 10 ? 5 : 10;
+            for (String gameName : preferGameNames) { //데이터 추가
+                getCrawlingData(gameName, newsSize, hotTopicDtoList);
+            }
+        }
+        //날짜기준 내림차순 정렬
+        hotTopicDtoList.sort(Comparator.comparing(TopicNewsResDto::getHotTopicDate).reversed());
 
+        return hotTopicDtoList;
+    }
+
+    public void getCrawlingData(String keyword, int size, List<TopicNewsResDto> hotTopicDtoList) {
         try {
-
             //시작 URL
             String URL = "https://www.gamemeca.com/search.php?q=" + keyword;
             driver.get(URL);
 
             // 크롤링하려는 웹 페이지가 로딩 되는 시간을 기다림
             driver.manage().timeouts().implicitlyWait(Duration.ofMillis(10));
+
+
             // 게임 정보로 이동
             WebElement elements = driver.findElement(By.cssSelector("#content > div.news-list > div.content-left > ul.list_gamedata.search > li > a"));
             elements.click();
@@ -49,11 +68,12 @@ public class CrawlingService {
             gameNew.click();
 
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
 
             List<WebElement> news = driver.findElements(By.cssSelector("#content > div.content-left > div.news-list > ul > li"));
-            for (WebElement n : news) {
+            for (int i = 0; i < size; i++) {
+                WebElement n = news.get(i);
                 String link = n.findElement(By.cssSelector("a")).getAttribute("href");
                 String img = n.findElement(By.cssSelector("a > img")).getAttribute("src");
                 String title = n.findElement(By.cssSelector("div.cont_thumb > strong > a")).getText();
@@ -69,11 +89,11 @@ public class CrawlingService {
                         .build();
                 hotTopicDtoList.add(hotTopicDto);
             }
-        } catch(Exception e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseException(StatusCode.CRAWLING_FAILED));
+        } catch (NoSuchElementException e) {
+            return; //해당하는 요소들이 없으면 그냥 return
+        } catch (Exception e) {
+            throw new BaseException(StatusCode.CRAWLING_FAILED);
         }
-        if(hotTopicDtoList.isEmpty()) throw new BaseException(StatusCode.CRAWLING_NOT_FOUND);
-        return ResponseEntity.status(HttpStatus.OK).body(new BaseResponse<>(hotTopicDtoList));
 
     }
 
@@ -94,5 +114,4 @@ public class CrawlingService {
             }
         }
     }
-
 }
