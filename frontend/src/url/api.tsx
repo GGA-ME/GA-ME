@@ -1,15 +1,18 @@
+// src/url/api.tsx
 import axios from 'axios';
 
 const api = axios.create({
-    // URL주소 입력
-    baseURL: 'http://API주소'
+  baseURL: '/api'     // 기본 api 주소
 });
 
-export const fetchProtectedData = async () => {
-    try {
-        const response = await api.get('/protected');
-        return response.data;
-    } catch (error) { console.log(error); }
+// 로그인 요청을 처리하는 함수
+export const login = async () => {
+  try {
+    const response = await api.post('/login');
+    return response.data;
+  } catch (error) {
+    console.log('로그인 실패!', error);
+  }
 };
 
 export { api };

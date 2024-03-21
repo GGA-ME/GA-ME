@@ -2,18 +2,22 @@ import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import style from './Navbar.module.css';
+import { login } from '../../url/api'; // login 함수 임포트
+import useUserStore, { UserStore } from '../../stores/useUserStore';
 
 // 네비게이션 링크를 위한 타입 정의
 interface NavLinkItem {
-    path: string;
+    path?: string;      // 구글 로그인 링크를 위해 선택적으로 변경
     label: string;
     icon: string;
     activeIcon: string;
+    action?: () => void; // 클릭 시 실행할 액션(함수) 추가
 }
 
 const Navbar: React.FC = () => {
     const location = useLocation();
     const isActive = (path: string) => location.pathname === path;
+    const { setIsLoggedIn } = useUserStore();
 
     const navLinkYPositions: number[] = [0, 65, 130, 195]; // 각 네비게이션 항목에 대한 Y 위치
 
@@ -21,22 +25,37 @@ const Navbar: React.FC = () => {
     const initialY: number = localStorage.getItem('indicatorY') ? Number(localStorage.getItem('indicatorY')) : navLinkYPositions[0];
     const [indicatorY, setIndicatorY] = useState<number>(initialY);
 
+    // 로그인 되었는지 확인
+    const isLoggedIn = useUserStore((state: UserStore) => state.isLoggedIn);
+    const handleLoginClick = async () => {
+        console.log("로그인 호출");
+        // login 함수 호출
+        await login();
+        // 성공적으로 로그인 처리가 되면 상태 업데이트
+        setIsLoggedIn(true);
+    };
+
     const navLinks: NavLinkItem[] = [
         { path: "/Main", label: "Main", icon: '/Gameicon.png', activeIcon: '/Gameicon.gif' },
         { path: "/search", label: "Search", icon: '/SearchIcon.png', activeIcon: '/SearchIcon.gif' },
         { path: "/topic", label: "Hot Topic", icon: '/FireIcon.png', activeIcon: '/FireIcon.gif' },
-        { path: "/myPage", label: "My Page", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif' }
+        // 로그인 상태에 따라 분기 처리
+        isLoggedIn ? 
+            { path: "/myPage", label: "My Page", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif' } :
+            { label: "Login", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif', action: handleLoginClick }, 
     ];
 
     useEffect(() => {
-        const activeLinkIndex = navLinks.findIndex(link => isActive(link.path));
+        // path가 정의된 링크만 찾기
+        const activeLinkIndex = navLinks.findIndex(link => link.path && isActive(link.path));
         if (activeLinkIndex !== -1) {
             const newY = navLinkYPositions[activeLinkIndex];
             setIndicatorY(newY);
-            // 상태를 로컬 스토리지에 저장합니다.
+            // 상태를 로컬 스토리지에 저장
             localStorage.setItem('indicatorY', newY.toString());
         }
     }, [location.pathname]); // location.pathname이 변경될 때마다 실행
+      
 
     const variants = {
         active: { y: indicatorY },
@@ -59,17 +78,36 @@ const Navbar: React.FC = () => {
                         transition={{ type: "spring", stiffness: 100 }}
                     >▷</motion.div>
 
-                    {navLinks.map((link, index) => (
+                    {navLinks.map((link, index) => {
+                    // path가 있는 경우 NavLink 컴포넌트 사용
+                    if (link.path) {
+                        return (
                         <NavLink key={index} to={link.path} className="flex items-center space-x-2 mb-8">
                             <img
-                                src={isActive(link.path) ? link.activeIcon : link.icon}
-                                className="transition-all duration-300 ease-in-out"
-                                style={{ width: '30px', height: 'auto', filter: "brightness(0) invert(1)" }}
-                                alt={`${link.label} Icon`}
+                            src={isActive(link.path) ? link.activeIcon : link.icon}
+                            className="transition-all duration-300 ease-in-out"
+                            style={{ width: '30px', height: 'auto', filter: "brightness(0) invert(1)" }}
+                            alt={`${link.label} Icon`}
                             />
                             <span className={`${style.neonNormal} text-2xl`}>{link.label}</span>
                         </NavLink>
-                    ))}
+                        );
+                    } else {
+                        // path가 없는 경우 (예: 로그인 버튼), div와 onClick 이벤트를 사용
+                        return (
+                        <div key={index} onClick={link.action} className="flex items-center space-x-2 mb-8 cursor-pointer">
+                            <img
+                            src={link.icon}
+                            className="transition-all duration-300 ease-in-out"
+                            style={{ width: '30px', height: 'auto', filter: "brightness(0) invert(1)" }}
+                            alt={`${link.label} Icon`}
+                            />
+                            <span className={`${style.neonNormal} text-2xl`}>{link.label}</span>
+                        </div>
+                        );
+                    }
+                    })}
+
                 </div>
             </div>
         </>
