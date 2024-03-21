@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 import style from './Statistics.module.css'
+import ApexCharts from 'apexcharts';
+
 
 const Statistics: React.FC = () => {
+
     const series = [{
         name: "선호도 비율",
         data: [{
@@ -82,7 +85,7 @@ const Statistics: React.FC = () => {
         xaxis: {
             type: 'category',
             labels: {
-                formatter: function (val) {
+                formatter: function (val:string) {
                     return val + '시간';
                 },
                 style: {
@@ -120,7 +123,7 @@ const Statistics: React.FC = () => {
                 fontSize: '12px',
             },
             y: {
-                formatter: function (val) {
+                formatter: function (val: number) { // 타입스크립트 정의
                     if (val === maxY) {
                         return `${val}% - 대유쾌마운틴`; // 가장 높은 값을 가진 데이터 포인트에 "Best" 추가
                     } else if (val === minY) {
@@ -137,9 +140,9 @@ const Statistics: React.FC = () => {
             //   textAnchor: 'start', 텍스트 위치
             style: {
                 colors: ['#FFF'],  // 그래프 안의 숫자 색
-                fontSize: 11
+                fontSize: '12px'
             },
-            formatter: function (val, opt) {
+            formatter: function (val: number) { // 타입스크립트 형식 구성
                 return `${val}%`
             },
             offsetX: 0, // 왼쪽 마진
