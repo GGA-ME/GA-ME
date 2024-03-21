@@ -1,13 +1,14 @@
-import Navbar from "../components/commonUseComponents/Navbar";
+import Statistics from "../components/detailComponents/Statistics";
 
 
 function Detail() {
 
     return (
       <>
-      <Navbar />
         <h1>Detail</h1>
+        <Statistics />
       </>
     );
   }
   export default Detail;
+  
