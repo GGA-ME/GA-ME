@@ -8,14 +8,19 @@ import ssafy.ggame.domain.prefer.dto.PreferRequestDto;
 import ssafy.ggame.domain.prefer.service.PreferService;
 import ssafy.ggame.global.common.BaseResponse;
 import ssafy.ggame.global.common.StatusCode;
-import ssafy.ggame.global.exception.BaseException;
 
 
 @RestController
 @RequestMapping("/api/game/prefer")
 @RequiredArgsConstructor
 public class PreferController {
+    /*
+        가중치 감소는 다른 URL에서 합니둥
+     */
     private final PreferService preferService;
+    /*
+        선호도 저장
+     */
     @PostMapping
     public ResponseEntity<Object> savePrefer(@RequestBody PreferRequestDto saveRequestDto) {
         boolean result = preferService.savePrefer(saveRequestDto);
@@ -25,12 +30,17 @@ public class PreferController {
             return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponse<>(StatusCode.SUCCESS));
         }
     }
-
+    /*
+        선호도 삭제
+     */
     @DeleteMapping
-    public ResponseEntity<Object> deletePrefer(@RequestBody PreferRequestDto preferRequestDto){
+    public ResponseEntity<Object> deletePrefer(@RequestBody PreferRequestDto unPreferTagsRequestDto){
+        // List<Tag정보> return 필요
+        preferService.deletePrefer(unPreferTagsRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
-    
+
+
 
 
 }

@@ -59,6 +59,9 @@ public class Game extends BaseUpdatedEntity {
     @Column(name = "game_final_score")
     private Byte gameFinalScore;
 
+    @Column(name = "game_recent_score")
+    private Integer gameRecentScore;
+
     @Column(name = "game_word_cloud_url")
     private String gameWordCloudUrl;
 

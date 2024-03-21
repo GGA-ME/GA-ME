@@ -3,7 +3,6 @@ package ssafy.ggame.domain.userTag.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import ssafy.ggame.domain.tag.entity.Tag;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.userTag.entity.UserTag;
 import ssafy.ggame.domain.userTag.entity.UserTagId;
