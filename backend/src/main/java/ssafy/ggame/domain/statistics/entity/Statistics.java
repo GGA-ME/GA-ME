@@ -67,7 +67,6 @@ public class Statistics extends BaseCreatedTimeEntity {
 
     @Column(name = "game_standard_playtime")
     private Integer gameStandardPlaytime;
-    @Column(name = "statistics_base_dt")
-    private LocalDate statisticsBaseDt;
+
 
 }
