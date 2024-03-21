@@ -9,6 +9,7 @@ import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.game.repository.GameCustomRepository;
 import ssafy.ggame.domain.game.repository.GameRepository;
 import ssafy.ggame.domain.game.service.GameService;
+import ssafy.ggame.domain.search.dto.SearchLikeRequestDto;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.List;
 public class SearchServiceImpl implements SearchService{
     private final GameCustomRepository gameRepository;
     @Override
-    public List<GameCardDto> searchLikeGame(String keyword) {
-        return gameRepository.findByGameNameContaining(keyword);
+    public List<GameCardDto> searchLikeGame(SearchLikeRequestDto dto) {
+        return gameRepository.findByGameNameContaining(dto);
     }
 }
