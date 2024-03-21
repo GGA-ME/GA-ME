@@ -6,6 +6,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
 import ssafy.ggame.domain.game.dto.GameSaleCardDto;
 import ssafy.ggame.domain.game.repository.GameCustomRepository;
@@ -26,7 +28,6 @@ import java.util.*;
 public class TopicServiceImpl implements TopicService {
     private final PreferCustomRepository preferRepository;
     private final GameCustomRepository gameCustomRepository;
-    private final WebDriver driver;
 
     //선호 게임 기사 가져오기
 
@@ -69,6 +70,11 @@ public class TopicServiceImpl implements TopicService {
 
     //크롤링 데이터
     public void getCrawlingData(String keyword, int size, List<TopicNewsResDto> hotTopicDtoList) {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("headless");
+
+        // ChromeDriver 생성
+        WebDriver driver = new ChromeDriver(options);
         try {
             //시작 URL
             String URL = "https://www.gamemeca.com/search.php?q=" + keyword;
@@ -83,7 +89,7 @@ public class TopicServiceImpl implements TopicService {
             elements.click();
 
             //새창으로 이동
-            changeWindow();
+            changeWindow(driver);
 
             //뉴스로 이동
             WebElement gameNew = driver.findElement(By.cssSelector("#content > div.content-left > div.db-sub-menu > ul > li:nth-child(2) > a"));
@@ -119,7 +125,7 @@ public class TopicServiceImpl implements TopicService {
 
     }
 
-    private void changeWindow() {
+    private void changeWindow(WebDriver driver) {
         // 현재 창의 핸들을 저장
         String currentWindowHandle = driver.getWindowHandle();
 
