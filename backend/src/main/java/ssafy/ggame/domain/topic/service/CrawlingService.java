@@ -1,4 +1,4 @@
-package ssafy.ggame.domain.crawling.service;
+package ssafy.ggame.domain.topic.service;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -8,7 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import ssafy.ggame.domain.crawling.dto.HotTopicDto;
+import ssafy.ggame.domain.topic.dto.HotTopicDto;
 import ssafy.ggame.global.common.BaseResponse;
 import ssafy.ggame.global.common.StatusCode;
 import ssafy.ggame.global.exception.BaseException;

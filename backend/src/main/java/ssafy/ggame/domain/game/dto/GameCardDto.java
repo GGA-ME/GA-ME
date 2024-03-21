@@ -30,5 +30,13 @@ public class GameCardDto {
     public void updateTagList(List<TagDto> tagList){
         this.tagList = tagList;
     }
-
+    @Builder //QueryDsl에서 Constructor 사용때문에 추가
+    public GameCardDto(Long gameId, String gameName, String gameHeaderImg, Integer gamePriceInitial, Integer gamePriceFinal, String gameDeveloper) {
+        this.gameId = gameId;
+        this.gameName = gameName;
+        this.gameHeaderImg = gameHeaderImg;
+        this.gamePriceInitial = gamePriceInitial;
+        this.gamePriceFinal = gamePriceFinal;
+        this.gameDeveloper = gameDeveloper;
+    }
 }
