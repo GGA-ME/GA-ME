@@ -12,18 +12,14 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class WebDriverConfig {
 
-    @Value("${selenium.driver}")
-    private String path;
-    @Bean
-    public WebDriver chromeDriver() {
-        System.out.println("드라이버 탐색");
-        System.out.println(path);
-        System.setProperty("webdriver.chrome.driver",path);
-        // ChromeOptions 설정 (예: 헤드리스 모드)
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");
-
-        // ChromeDriver 생성
-        return new ChromeDriver(options);
-    }
+//    @Bean
+//    public WebDriver chromeDriver() {
+//
+//        // ChromeOptions 설정 (예: 헤드리스 모드)
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("headless");
+//
+//        // ChromeDriver 생성
+//        return new ChromeDriver(options);
+//    }
 }
