@@ -20,6 +20,7 @@ public enum StatusCode {
     //게임 : 500
     GAME_NOT_FOUND(false, 500,"게임을 찾을 수 없습니다." ),
     GAME_SAVE(true, 501, "정상적으로 저장 되었습니다."),
+    GAME_STATISTICS_NOT_FOUNT(false, 502, "통계 데이터가 없습니다."),
 
     //좋아요 : 600
     PREFER_CANNOT_SAVE(false,600,"좋아요를 등록할 수 없습니다."),
@@ -33,6 +34,7 @@ public enum StatusCode {
     CRAWLING_FAILED(false, 800, "크롤링이 실패하였습니다."),
     CRAWLING_NOT_FOUND(false, 801, "검색 결과가 없습니다.");
     ;
+
 
     private final boolean isSuccess;
     private final int code;
