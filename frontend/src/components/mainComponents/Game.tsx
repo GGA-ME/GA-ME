@@ -87,7 +87,7 @@ function Game() {
             imageUrl="/TestGameImg.jpg"
             title={game.title}
             price={`₩ ${game.price}`}
-            tags={['액션',' 슈팅', '개그']}
+            tags={['액션',' 슈팅', '개그','추리', '공포']}
             likes={34}
           />
         </motion.li>

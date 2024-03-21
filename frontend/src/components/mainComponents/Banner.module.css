@@ -1,0 +1,73 @@
+.bannerContainer {
+    position: relative;
+    width: 100%;
+    height: 40vw; /* Make the swiper fill the .bannerContainer */
+    overflow: hidden;
+}
+
+.swiper {
+    width: 100%;
+    height: 100%; /* Make the swiper fill the .bannerContainer */
+}
+
+.swiperSlide {
+    position: relative;
+    height: 100%; /* Make each slide fill the swiper */
+}
+
+.background {
+    position: absolute;
+    width: 100%; /* Fill the width of the slide */
+    height: 100%; /* Fill the height of the slide */
+    background-size: cover;
+    background-position: center;
+    filter: blur(8px);
+    z-index: -99; /* Ensure it's behind the image and game info */
+}
+
+.imageContainer {
+    position: relative;
+    width: 100%; /* Ensure it doesn't overflow the container */
+    height: 70%; /* Ensure it doesn't exceed the container's height */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* 이미지를 맨 위로 정렬 */
+    z-index: 2; /* Above the background */
+}
+
+.image {
+    width: 90%; /* Ensure it doesn't overflow the container */
+    height: 100%; /* Ensure it doesn't exceed the container's height */
+    object-fit: fill; /* Maintain aspect ratio while covering the area */
+}
+
+.gameInfo {
+    position: absolute;
+    bottom: 0;
+    width: 100%; /* Stretch across the bottom of the slide */
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    color: white;
+    text-align: center;
+    z-index: 3; /* Ensure it's above the image and background */
+}
+
+.titleContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 16px; /* 원하는 여백 조절 */
+    z-index: 10; /* 다른 요소 위에 표시되도록 z-index 설정 */
+  }
+
+  .Thumb {
+    position: absolute;
+    width: 100%; /* 이미지가 컨테이너의 전체 너비를 차지하도록 설정 */
+    height: auto; /* 이미지의 높이를 자동으로 설정하여 비율을 유지 */
+    object-fit: cover; /* 이미지가 컨테이너를 가득 채우도록 설정, 필요에 따라 다른 값으로 조정 가능 */
+  }
+  
+  .swiperCustom {
+    --swiper-navigation-color: #fff;
+    --swiper-pagination-color: #fff;
+  }
