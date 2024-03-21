@@ -1,6 +1,8 @@
 package ssafy.ggame.domain.recommendation.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ssafy.ggame.domain.code.entity.Code;
 import ssafy.ggame.domain.game.dto.GameCardDto;
@@ -31,13 +33,13 @@ public class RecommendationService {
     private final GameRepository gameRepository;
     private final GameTagRepository gameTagRepository;
     private final PreferRepository preferRepository;
-    public List<GameCardDto> getPopularList(Integer userId, String codeId, Short tagId) {
+    public List<GameCardDto> getPopularList(Integer userId, String codeId, Short tagId, int page, int size) {
         List<GameCardDto> gameCardDtoList = null;
         // 전체 게임 인기 순위
         // 로그인 전
         if(userId == 0){
             // codeId, tagId에 따라 인기게임 가져오기
-            gameCardDtoList = getGameCardList(codeId, tagId);
+            gameCardDtoList = getGameCardList(codeId, tagId, page, size);
         }
         // 로그인 후
         else{
@@ -45,7 +47,7 @@ public class RecommendationService {
             User user = userRepository.findById(userId).orElseThrow(()->new BaseException(StatusCode.USER_NOT_FOUND));
 
             // codeId, tagId에 따라 인기게임 가져오기
-            gameCardDtoList = getGameCardList(codeId, tagId);
+            gameCardDtoList = getGameCardList(codeId, tagId, page, size);
 
             // userId에 따라  isPrefer 가져와 업데이트 하기
             // - 유저가 선호하는 게임 아이디 목록 가져오기
@@ -66,7 +68,10 @@ public class RecommendationService {
     }
 
 
-    private List<GameCardDto> getGameCardList(String codeId, Short tagId){
+    private List<GameCardDto> getGameCardList(String codeId, Short tagId, int page, int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+
         List<GameCardDto> gameCardDtoList = new ArrayList<>();
         // codeId, tagId에 따른 gameCardList 만들기
         // codeId 가 없을 때,
@@ -84,14 +89,14 @@ public class RecommendationService {
 
         // codeId, tagId가 둘 다 0일떄
         if(codeId.equals("0") && tagId == 0){
-            List<Game> gameList = gameRepository.findAllByOrderByGameFinalScore();
+            List<Game> gameList = gameRepository.findAllByOrderByGameFinalScore(pageable);
             gameCardDtoList = makeGameCardDtoList(gameList);
         }
 
         // codeId, tagId 둘 다 0이 아닐 때
         if(!codeId.equals("0") && tagId != 0){
             // game을 인기순으로 가져온다
-            List<Game> gameList = gameRepository.findAllByOrderByGameFinalScore();
+            List<Game> gameList = gameRepository.findAllByOrderByGameFinalScore(pageable);
             // 거기서 코드아이디(gen), tagId 로 필터링 한다.
             // - 입력으로 받은 게임태그 가져오기
             GameTag gameTag = gameTagRepository.findByCodeIdAndTagId(codeId, tagId);

@@ -23,11 +23,14 @@ public class RecommendationController {
     private final RecommendationService recommendationService;
 
     @GetMapping("/popular")
-    ResponseEntity<BaseResponse<List<GameCardDto>>> getPopularGameList(@RequestParam(required=true, defaultValue = "0") Integer userId
-            ,@RequestParam(required =true, defaultValue = "0") String codeId
-            , @RequestParam(required = true, defaultValue = "0") Short tagId){
+    ResponseEntity<BaseResponse<List<GameCardDto>>> getPopularGameList(
+            @RequestParam(required=true, defaultValue = "0") Integer userId,
+            @RequestParam(required =true, defaultValue = "0") String codeId,
+            @RequestParam(required = true, defaultValue = "0") Short tagId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name="size", defaultValue = "100") int size){
 
-        List<GameCardDto> resultList = recommendationService.getPopularList(userId, codeId, tagId);
+        List<GameCardDto> resultList = recommendationService.getPopularList(userId, codeId, tagId, page, size);
         System.out.println("resultList.size() = " + resultList.size());
 
         return ResponseEntity.ok(new BaseResponse<List<GameCardDto>>(resultList));
