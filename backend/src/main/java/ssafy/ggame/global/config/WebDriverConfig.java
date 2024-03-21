@@ -18,7 +18,7 @@ public class WebDriverConfig {
     public WebDriver chromeDriver() {
         System.out.println("드라이버 탐색");
         System.out.println(path);
-//        System.setProperty("webdriver.chrome.driver", webDriverProperties.getDriver());
+        System.setProperty("webdriver.chrome.driver",path);
         // ChromeOptions 설정 (예: 헤드리스 모드)
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
