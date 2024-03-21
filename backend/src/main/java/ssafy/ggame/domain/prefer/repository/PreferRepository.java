@@ -13,7 +13,13 @@ import java.util.Optional;
 import java.util.List;
 
 public interface PreferRepository extends JpaRepository<Prefer, PreferId> {
+
+    // 사용자와 게임으로 선호게임 찾기
     Optional<Prefer> findByPreferIdUserAndPreferIdGame(User user, Game game);
+
+    // 사용자와 게임으로 선호게임 찾기
+    Boolean existsByPreferId_User_UserIdAndPreferId_Game_GameId(Integer userId, Long gameId);
+
 
     @Query("SELECT p FROM Prefer p where p.preferId.user.userId = :userId")
     List<Prefer> findByUserId(Integer userId);

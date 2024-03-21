@@ -18,6 +18,8 @@ import ssafy.ggame.domain.code.repository.CodeRepository;
 import ssafy.ggame.domain.tag.repository.TagRepository;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
+import ssafy.ggame.domain.userTag.entity.UserTag;
+import ssafy.ggame.domain.userTag.repository.UserTagRepository;
 import ssafy.ggame.global.common.StatusCode;
 import ssafy.ggame.global.exception.BaseException;
 
@@ -33,6 +35,7 @@ public class RecommendationService {
     private final GameRepository gameRepository;
     private final GameTagRepository gameTagRepository;
     private final PreferRepository preferRepository;
+    private final UserTagRepository userTagRepository;
     public List<GameCardDto> getPopularList(Integer userId, String codeId, Short tagId, int page, int size) {
         List<GameCardDto> gameCardDtoList = null;
         // 전체 게임 인기 순위
@@ -66,7 +69,6 @@ public class RecommendationService {
         }
         return gameCardDtoList;
     }
-
 
     private List<GameCardDto> getGameCardList(String codeId, Short tagId, int page, int size){
 
@@ -125,6 +127,67 @@ public class RecommendationService {
             gameCardDto.updateTagList(tagDtoList);
             gameCardDtoList.add(gameCardDto);
         }
+        return gameCardDtoList;
+    }
+
+    public List<GameCardDto> getPersonalList(Integer userId) {
+        // 사용자 존재 유무 확인
+        User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
+
+        // 사용자 가중치 top 20개 태그 가져오기
+        List<UserTag> topUsertagList = userTagRepository.findFirst20ByUserTagId_UserOrderByUserTagWeightDesc(user);
+
+        // 게임별 개인 가중치의 합을 저장할 맵 (게임 아이디 - 가중치 합)
+        Map<Long, Double> gameWeightMap = new HashMap<>();
+
+        // 게임별 개인 가중치 합 구하기(gameWeightMap 완성하기)
+        // 전체 게임에서 태그가 포함된 게임 가져오기
+        for (UserTag userTag : topUsertagList) {
+
+            // 해당 태그의 가중치
+            Short userTagWeight = userTag.getUserTagWeight();
+
+            // 해당 태그를 포함한 게임 아이디 리스트
+            List<GameTag> gameListContainingTag = gameTagRepository.findAllByTag_TagId_Code_CodeIdAndTag_TagId_TagId(
+                    userTag.getUserTagId().getTag().getTagId().getCode().getCodeId(),
+                    userTag.getUserTagId().getTag().getTagId().getTagId());
+
+            // 각 게임 아이디에 대해 가중치 점수 더해주기
+            for (GameTag gameTag : gameListContainingTag) {
+                Long gameId = gameTag.getGame().getGameId();
+                gameWeightMap.put(gameId, gameWeightMap.getOrDefault(gameId, 0.0) + userTagWeight);
+            }
+        }
+
+        // 게임점수 계산해서 정렬한 후 내림차순 TOP 100만 가져오기
+        // 게임점수 계산
+        for (Long key : gameWeightMap.keySet()) {
+            double score1 = Math.log(gameWeightMap.get(key) + 100) * 0.7;
+            Game game = gameRepository.findById(key).orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
+            double score2 = game.getGameFinalScore() * 0.3;
+
+            gameWeightMap.put(key, (score1 + score2));
+        }
+
+        // 맵 value에 따른 내림차순 정렬 후 100개 가져오기
+        List<Map.Entry<Long, Double>> gameWeightList = new ArrayList<>(gameWeightMap.entrySet());
+        gameWeightList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        // 상위 100개의 항목 가져오기
+        List<Map.Entry<Long, Double>> top100List = gameWeightList.subList(0, Math.min(100, gameWeightList.size()));
+
+        // 결과 출력
+        List<GameCardDto> gameCardDtoList = new ArrayList<>();
+        for (Map.Entry<Long, Double> entry : top100List) {
+            Game game = gameRepository.findById(entry.getKey()).orElseThrow(()->new BaseException(StatusCode.GAME_NOT_FOUND));
+            GameCardDto gameCardDto = game.converToGameCardDto();
+            // 선호 여부 업데이트
+            if(preferRepository.existsByPreferId_User_UserIdAndPreferId_Game_GameId(userId, game.getGameId())){
+                gameCardDto.updateIsPrefer(true);
+            }
+            gameCardDtoList.add(gameCardDto);
+        }
+
         return gameCardDtoList;
     }
 }
