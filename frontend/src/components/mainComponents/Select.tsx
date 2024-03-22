@@ -3,7 +3,7 @@ import style from './Select.module.css'
 
 
 const Select: React.FC = () => {
-  const categorys = ['ALL', '맞춤']
+  const categorys = ['전체 인기', '취향 저격']
   const [nowCategory, setNotCategory] = useState<string>('ALL')
   const allTags = [ 'FPS', 'RPG', 'a', 'b', 'c', 'd', 'e', 'f']
   const myTags = [ 'ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ' ]

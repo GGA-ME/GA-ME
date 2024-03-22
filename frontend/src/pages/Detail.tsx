@@ -8,6 +8,7 @@ function Detail() {
         <BackButton />
         <h1>Detail</h1>
         <Statistics />
+
       </>
     );
   }
