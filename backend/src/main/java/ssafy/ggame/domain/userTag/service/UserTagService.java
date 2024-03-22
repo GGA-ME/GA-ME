@@ -9,7 +9,8 @@ import ssafy.ggame.domain.tag.entity.TagId;
 import ssafy.ggame.domain.tag.repository.TagRepository;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
-import ssafy.ggame.domain.userTag.dto.UserTagDislikeRequestDto;
+import ssafy.ggame.domain.userTag.dto.UserTagDislikeReqDto;
+import ssafy.ggame.domain.userTag.dto.UserTagResDto;
 import ssafy.ggame.domain.userTag.entity.UserTag;
 import ssafy.ggame.domain.userTag.repository.UserTagRepository;
 import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
@@ -29,7 +30,8 @@ public class UserTagService {
 
     // 게임에 대한 사용자 행동 패턴 기반 가중치 업데이트
     @Transactional
-    public void updateUserTagWeight(Integer userId, Long gameId, String action) {
+    public List<UserTagResDto> updateUserTagWeight(Integer userId, Long gameId, String action) {
+        List<UserTagResDto> resDto = null;
         short weightToAdd = determineWeightToAdd(action);
 
         // 해당 게임의 모든 태그를 조회
@@ -50,17 +52,31 @@ public class UserTagService {
             short newWeight = (short) (userTag.getUserTagWeight() + weightToAdd);
             userTag.setUserTagWeight(newWeight);
 
+            UserTagResDto subDto = UserTagResDto.builder()
+                    .userId(userId)
+                    .tagId(tagIdValue)
+                    .codeId(codeIdValue)
+                    .tagName(userTag.getUserTagId().getTag().getTagName())
+                    .userTagWeight(userTag.getUserTagWeight())
+                    .build();
+
+            resDto.add(subDto);
+            
             userTagRepository.save(userTag); // 변경된 가중치 저장
         }
+
+        return resDto;
     }
 
     // '관심없음' 태그 가중치 -20
     @Transactional
-    public void dislikeUserTagWeight(Integer userId, List<UserTagDislikeRequestDto.TagCodePair> tags) throws BaseException {
+    public List<UserTagResDto> dislikeUserTagWeight(Integer userId, List<UserTagDislikeReqDto.TagCodePair> tags) throws BaseException {
+        List<UserTagResDto> resDto = null;
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
 
-        for (UserTagDislikeRequestDto.TagCodePair tagPair : tags) {
+        for (UserTagDislikeReqDto.TagCodePair tagPair : tags) {
             Tag tag = tagRepository.findByCodeIdAndTagId(tagPair.getCodeId(), tagPair.getTagId())
                     .orElseThrow(() -> new BaseException(StatusCode.TAG_NOT_EXIST));
 
@@ -71,8 +87,19 @@ public class UserTagService {
             short newWeight = (short) (userTag.getUserTagWeight() - 20);    // '관심 없음' 태그에 대한 가중치 -20
             userTag.setUserTagWeight(newWeight);
 
+            UserTagResDto subDto = UserTagResDto.builder()
+                    .userId(userId)
+                    .tagId(tag.getTagId().getTagId())
+                    .codeId(tag.getTagId().getCode().getCodeId())
+                    .tagName(tag.getTagName())
+                    .userTagWeight(userTag.getUserTagWeight())
+                    .build();
+            resDto.add(subDto);
+
             userTagRepository.save(userTag);
         }
+
+        return resDto;
     }
 
     private short determineWeightToAdd(String action) {

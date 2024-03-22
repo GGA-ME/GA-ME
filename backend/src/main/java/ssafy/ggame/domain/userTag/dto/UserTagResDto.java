@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserTagDto {
+public class UserTagResDto {
     @Schema(description = "사용자 아이디", example = "1")
     private Integer userId;
     @Schema(description = "태그 아이디", example = "123456")

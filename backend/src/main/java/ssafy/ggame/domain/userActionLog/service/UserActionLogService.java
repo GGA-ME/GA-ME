@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ssafy.ggame.domain.userActionLog.dto.UserActionLogResponseDto;
+import ssafy.ggame.domain.userActionLog.dto.UserActionLogResDto;
 import ssafy.ggame.domain.userActionLog.entity.UserActionLog;
 import ssafy.ggame.domain.userActionLog.entity.UserActionLogKey;
 import ssafy.ggame.domain.userActionLog.repository.UserActionLogRepository;
@@ -27,7 +27,7 @@ public class UserActionLogService {
 
     // 사용자 행동 패턴에 대한 로그
     @Transactional
-    public UserActionLogResponseDto loggingUserTagWeight(Integer userId, String page, String action, List<Map<String, Object>> args) {
+    public UserActionLogResDto loggingUserTagWeight(Integer userId, String page, String action, List<Map<String, Object>> args) {
         List<String> jsonParams = new ArrayList<>();
         try {
             // 각 요소를 JSON 문자열로 변환하여 jsonParams에 추가합니다.
@@ -52,12 +52,13 @@ public class UserActionLogService {
         userActionLogRepository.save(log); // DB에 저장
 
         // UserActionLogResponseDto 생성 시 수정된 내용 반영
-        UserActionLogResponseDto responseDto = new UserActionLogResponseDto(
-                log.getKey().getUserId(),
-                log.getKey().getActionTime(),
-                log.getPageName(),
-                log.getActionType(),
-                log.getActionParams());
+        UserActionLogResDto responseDto = UserActionLogResDto.builder()
+                .userId(log.getKey().getUserId())
+                .actionTime(log.getKey().getActionTime())
+                .pageName(log.getPageName())
+                .actionType(log.getActionType())
+                .actionParams(log.getActionParams())
+                .build();
 
         return responseDto;
     }
