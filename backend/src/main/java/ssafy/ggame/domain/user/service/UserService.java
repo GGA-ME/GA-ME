@@ -42,7 +42,7 @@ public class UserService {
     }
 
     // 마이 페이지
-    public ResponseEntity<Object> userDetail(Integer userId){
+    public ResponseEntity<BaseResponse<UserDetailResDto>> userDetail(Integer userId){
         User user = userRepository.findById(userId).orElseThrow(()->new BaseException(StatusCode.USER_NOT_FOUND));
         // 해당 유저의 좋아요 리스트
         List<Prefer> prefers = user.getPrefers();

@@ -23,7 +23,7 @@ public class GameChoiceService {
     private final GameRepository gameRepository;
 
     // 취향조사할 고정된 게임 전부 조회
-    public ResponseEntity<Object> getGameList(){
+    public ResponseEntity<BaseResponse<List<GameChoiceDto>>> getGameList(){
         List<GameChoice> gameChoiceList = this.gameChoiceRepository.findAll();
 
         if(gameChoiceList.isEmpty()) throw new BaseException(StatusCode.GAME_NOT_FOUND);
