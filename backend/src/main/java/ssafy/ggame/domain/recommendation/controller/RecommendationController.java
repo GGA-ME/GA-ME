@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssafy.ggame.domain.game.dto.GameCardDto;
+import ssafy.ggame.domain.recommendation.dto.GameIdAndTagDto;
+import ssafy.ggame.domain.recommendation.dto.SearchGameRequestDto;
 import ssafy.ggame.domain.recommendation.service.RecommendationService;
 import ssafy.ggame.global.common.BaseResponse;
 import ssafy.ggame.global.common.StatusCode;
@@ -41,6 +43,13 @@ public class RecommendationController {
     }
 
 
+    @PostMapping("/search")
+    ResponseEntity<BaseResponse<List<GameCardDto>>> searchGameList(@RequestBody SearchGameRequestDto searchGameRequestDto){
+        List<GameCardDto> resultList = recommendationService.searchGameList(searchGameRequestDto);
+
+        return ResponseEntity.ok(new BaseResponse<List<GameCardDto>>(resultList));
+
+    }
 
 
 }
