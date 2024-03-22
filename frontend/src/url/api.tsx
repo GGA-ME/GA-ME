@@ -2,12 +2,12 @@
 import axios from 'axios';
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
-const REDIRECT_URI = 'http://localhost:5173/auth/google/callback';
+const BASE_URL = "https://j10e105.p.ssafy.io/api";
+const REDIRECT_URI = BASE_URL+'/auth/google/callback';
 const SCOPE = 'profile email';
 
 const api = axios.create({
-  baseURL: 'https://j10e105.p.ssafy.io/api' // 기본 api 주소
-  //baseURL: 'http://localhost:8000/api' // 기본 api 주소
+  baseURL: BASE_URL // 기본 api 주소
 });
 
 // 사용자를 구글 로그인 페이지로 리디렉트하는 함수
