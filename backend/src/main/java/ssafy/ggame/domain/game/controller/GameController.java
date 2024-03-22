@@ -83,28 +83,34 @@ public class GameController {
 
         // 최신 통계 정보 조회
         Optional<Statistics> optionalStatistics = statisticsRepository.findFirstByStatisticsIdGameOrderByStatisticsIdStatisticsBaseDtDesc(game);
-
-
         // 통계 정보 DTO 생성
-        // 빌더 사용
-        StatisticsDto statisticsDto = optionalStatistics.map(statistics -> StatisticsDto.builder()
-                .gameId(statistics.getStatisticsId().getGame().getGameId())
-                .statisticsBaseAt(statistics.getStatisticsId().getStatisticsBaseDt())
-                .timeValues(getTimeValues(statistics))
-                .positiveCounts(getPositiveCounts(statistics))
-                .negativeCounts(getNegativeCounts(statistics))
-                .build()).orElseGet(StatisticsDto.builder()::build);
-
+        StatisticsDto statisticsDto = null;
+        if (optionalStatistics.isPresent()) {
+            statisticsDto = optionalStatistics.map(statistics -> {
+                if (statistics.getGameStandardPlaytime() < 10) {
+                    return null;
+                }
+                return StatisticsDto.builder()
+                        .gameId(statistics.getStatisticsId().getGame().getGameId())
+                        .statisticsBaseAt(statistics.getStatisticsId().getStatisticsBaseDt())
+                        .timeValues(getTimeValues(statistics))
+                        .positiveCounts(getPositiveCounts(statistics))
+                        .negativeCounts(getNegativeCounts(statistics))
+                        .build();
+            }).orElse(null);
+        }
         // 게임 통계 응답 DTO 생성
-        GameStatisticsResDto responseDto = new GameStatisticsResDto(gameWordCloudUrl, statisticsDto);
-
+        GameStatisticsResDto responseDto;
+        if (statisticsDto != null) {
+            responseDto = new GameStatisticsResDto(gameWordCloudUrl, statisticsDto);
+        } else {
+            responseDto = new GameStatisticsResDto(gameWordCloudUrl);
+        }
         // 최소한 하나의 값이 존재하는지 확인하여 응답 반환
-        if (gameWordCloudUrl != null || optionalStatistics.isPresent()) {
+        if (gameWordCloudUrl != null || statisticsDto != null) {
             return ResponseEntity.ok(new BaseResponse<>(responseDto));
         } else {
             throw new BaseException(StatusCode.GAME_STATISTICS_NOT_FOUNT);
         }
-
-
     }
 }
