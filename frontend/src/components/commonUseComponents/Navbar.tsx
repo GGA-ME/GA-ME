@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
 
     return (
         <>
-            <div className="fixed top-0 left-0 flex flex-col items-center px-8 h-screen py-20 bg-gray-900 text-white">
+            <div className={`${style.neonBorder} fixed top-0 left-0 flex flex-col items-center px-8 h-screen py-20 border-r-2 bg-gray-900 text-white z-40`}>
                 <div className="mb-24">
                     <NavLink to="/Main">
                         <motion.img
