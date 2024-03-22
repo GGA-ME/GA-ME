@@ -3,6 +3,7 @@ package ssafy.ggame.domain.recommendation.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +64,15 @@ public class RecommendationController {
         return ResponseEntity.ok(new BaseResponse<List<GameCardDto>>(resultList));
 
     }
+
+    @GetMapping("/recent-popular")
+    @Operation(description = "메인 배너에 걸릴 최신 인기 게임 10개")
+    ResponseEntity<BaseResponse<List<GameCardDto>>> getRecentPopularGameList(){
+        List<GameCardDto> resultList = recommendationService.getRecentPopularGameList();
+
+        return ResponseEntity.ok(new BaseResponse<List<GameCardDto>>(resultList));
+    }
+
 
 
 }
