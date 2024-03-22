@@ -2,6 +2,7 @@ package ssafy.ggame.domain.userActionLog.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
@@ -9,8 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Data // Lombok이 getter, setter, toString 등을 자동으로 생성
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class UserActionLogResDto {
     @Schema(description = "사용자 아이디", example = "1")
     private Integer userId;

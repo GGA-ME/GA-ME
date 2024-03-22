@@ -52,12 +52,13 @@ public class UserActionLogService {
         userActionLogRepository.save(log); // DB에 저장
 
         // UserActionLogResponseDto 생성 시 수정된 내용 반영
-        UserActionLogResDto responseDto = new UserActionLogResDto(
-                log.getKey().getUserId(),
-                log.getKey().getActionTime(),
-                log.getPageName(),
-                log.getActionType(),
-                log.getActionParams());
+        UserActionLogResDto responseDto = UserActionLogResDto.builder()
+                .userId(log.getKey().getUserId())
+                .actionTime(log.getKey().getActionTime())
+                .pageName(log.getPageName())
+                .actionType(log.getActionType())
+                .actionParams(log.getActionParams())
+                .build();
 
         return responseDto;
     }
