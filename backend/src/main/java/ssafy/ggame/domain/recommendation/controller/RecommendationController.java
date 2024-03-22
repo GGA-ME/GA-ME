@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.recommendation.dto.GameIdAndTagDto;
+import ssafy.ggame.domain.recommendation.dto.PersonalRecommendationResponseDto;
 import ssafy.ggame.domain.recommendation.dto.SearchGameRequestDto;
 import ssafy.ggame.domain.recommendation.service.RecommendationService;
 import ssafy.ggame.global.common.BaseResponse;
@@ -47,10 +48,10 @@ public class RecommendationController {
 
     @GetMapping("/personal/{userId}")
     @Operation(description = "사용자 가중치 기반 인기 게임 추천")
-    ResponseEntity<BaseResponse<List<GameCardDto>>> getPersonalGameList(@PathVariable Integer userId){
-       List<GameCardDto> resultList =  recommendationService.getPersonalList(userId);
+    ResponseEntity<BaseResponse<PersonalRecommendationResponseDto>> getPersonalGameList(@PathVariable Integer userId){
+        PersonalRecommendationResponseDto resultList = recommendationService.getPersonalList(userId);
 
-       return ResponseEntity.ok(new BaseResponse<List<GameCardDto>>(resultList));
+        return ResponseEntity.ok(new BaseResponse<PersonalRecommendationResponseDto>(resultList));
     }
 
 
