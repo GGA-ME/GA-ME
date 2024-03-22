@@ -7,6 +7,8 @@ import Detail from './pages/Detail';
 import MyPage from './pages/MyPage';
 import Topic from './pages/HotTopic';
 import Suvey from './pages/Suvey';
+// Google OAuth callback 처리 컴포넌트
+import CallbackComponent from './components/commonUseComponents/CallbackComponent'; 
 
 
 const router = createBrowserRouter([
@@ -23,7 +25,8 @@ const router = createBrowserRouter([
   { path: 'topic', element: <Topic/>},
   // 선호도 조사 페이지
   { path: 'suvey', element: <Suvey/> }, // 날짜,차량,시간,위치,짐종류 같은거 제출
-
+  // Google OAuth 리다이렉트 처리
+  { path: 'auth/google/callback', element: <CallbackComponent /> },
 ]);
 export const PRIMARY_COLOR = '#4A3AFF';
 function App() {

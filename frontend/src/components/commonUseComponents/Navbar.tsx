@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import style from './Navbar.module.css';
-import { login } from '../../url/api'; // login 함수 임포트
-import useUserStore, { UserStore } from '../../stores/useUserStore';
+import { redirectToGoogleOAuth } from '../../url/api'; // login 함수 임포트
+import useUserStore from '../../stores/userStore';
 
 // 네비게이션 링크를 위한 타입 정의
 interface NavLinkItem {
@@ -26,11 +26,11 @@ const Navbar: React.FC = () => {
     const [indicatorY, setIndicatorY] = useState<number>(initialY);
 
     // 로그인 되었는지 확인
-    const isLoggedIn = useUserStore((state: UserStore) => state.isLoggedIn);
+    const isLoggedIn = useUserStore(state => state.isLoggedIn);
     const handleLoginClick = async () => {
         console.log("로그인 호출");
         // login 함수 호출
-        await login();
+        await redirectToGoogleOAuth();
         // 성공적으로 로그인 처리가 되면 상태 업데이트
         setIsLoggedIn(true);
     };
