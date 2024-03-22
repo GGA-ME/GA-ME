@@ -1,6 +1,5 @@
 import './App.css';
 import { RouterProvider, createBrowserRouter,} from 'react-router-dom';
-import Landing from './pages/Landing'
 import Main from './pages/Main';
 import Search from './pages/Search';
 import Detail from './pages/Detail';
@@ -10,9 +9,8 @@ import Suvey from './pages/Suvey';
 
 
 const router = createBrowserRouter([
-  { path: '/', element: <Landing />,},
   // 메인
-  { path: 'Main', element: <Main/>},
+  { path: '/', element: <Main />,},
   // 검색 페이지
   { path: 'search', element: <Search /> },
   // 게임 디테일 페이지
