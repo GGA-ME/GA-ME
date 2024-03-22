@@ -283,4 +283,16 @@ public class RecommendationService {
     private Comparator<Map.Entry<Long, Double>> valueComparator = (e1, e2) -> {
         return e2.getValue().compareTo(e1.getValue()); // 내림차순으로 정렬;
     };
+
+    public List<GameCardDto> getRecentPopularGameList() {
+        List<Game> recentTop10 = gameRepository.findFirst10ByOrderByGameFinalRecentScoreDesc();
+
+        System.out.println("recentTop10.size() = " + recentTop10.size());
+
+        List<GameCardDto> gameCardDtoList = new ArrayList<>();
+        for(Game game : recentTop10){
+            gameCardDtoList.add(game.converToGameCardDto());
+        }
+        return gameCardDtoList;
+    }
 }

@@ -68,6 +68,8 @@ public class Game extends BaseUpdatedEntity {
     @OneToMany(mappedBy = "game")
     private List<GameTag> gameTags;
 
+    private Byte gameFinalRecentScore;
+
     public GameCardDto converToGameCardDto(){
         return GameCardDto.builder()
                 .gameId(this.gameId)
