@@ -12,6 +12,8 @@ import ssafy.ggame.domain.gameTag.entity.GameTag;
 import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
 import ssafy.ggame.domain.prefer.entity.Prefer;
 import ssafy.ggame.domain.prefer.repository.PreferRepository;
+import ssafy.ggame.domain.recommendation.dto.GameIdAndTagDto;
+import ssafy.ggame.domain.recommendation.dto.SearchGameRequestDto;
 import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.tag.entity.Tag;
 import ssafy.ggame.domain.code.repository.CodeRepository;
@@ -134,11 +136,11 @@ public class RecommendationService {
         // 사용자 존재 유무 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
 
-        // 사용자 가중치 top 20개 태그 가져오기
+        // 1. 사용자 가중치 top 20개 태그 가져오기
         List<UserTag> topUsertagList = userTagRepository.findFirst20ByUserTagId_UserOrderByUserTagWeightDesc(user);
 
-        // 게임별 개인 가중치의 합을 저장할 맵 (게임 아이디 - 가중치 합)
-        Map<Long, Double> gameWeightMap = new HashMap<>();
+        // 게임별 점수를 저장할 맵 (게임 아이디 - 가중치 합)
+        Map<Long, Double> gameScoreMap = new TreeMap<>();
 
         // 게임별 개인 가중치 합 구하기(gameWeightMap 완성하기)
         // 전체 게임에서 태그가 포함된 게임 가져오기
@@ -148,37 +150,94 @@ public class RecommendationService {
             Short userTagWeight = userTag.getUserTagWeight();
 
             // 해당 태그를 포함한 게임 아이디 리스트
-            List<GameTag> gameListContainingTag = gameTagRepository.findAllByTag_TagId_Code_CodeIdAndTag_TagId_TagId(
+            List<GameTag> gameTagList = gameTagRepository.findAllByTag_TagId_Code_CodeIdAndTag_TagId_TagId(
                     userTag.getUserTagId().getTag().getTagId().getCode().getCodeId(),
                     userTag.getUserTagId().getTag().getTagId().getTagId());
 
             // 각 게임 아이디에 대해 가중치 점수 더해주기
-            for (GameTag gameTag : gameListContainingTag) {
+            for (GameTag gameTag : gameTagList) {
                 Long gameId = gameTag.getGame().getGameId();
-                gameWeightMap.put(gameId, gameWeightMap.getOrDefault(gameId, 0.0) + userTagWeight);
+                gameScoreMap.put(gameId, gameScoreMap.getOrDefault(gameId, 0.0) + userTagWeight);
             }
         }
 
         // 게임점수 계산해서 정렬한 후 내림차순 TOP 100만 가져오기
         // 게임점수 계산
-        for (Long key : gameWeightMap.keySet()) {
-            double score1 = Math.log(gameWeightMap.get(key) + 100) * 0.7;
-            Game game = gameRepository.findById(key).orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
-            double score2 = game.getGameFinalScore() * 0.3;
-
-            gameWeightMap.put(key, (score1 + score2));
-        }
+        gameScoreMap = calculateGameScore(gameScoreMap);
 
         // 맵 value에 따른 내림차순 정렬 후 100개 가져오기
-        List<Map.Entry<Long, Double>> gameWeightList = new ArrayList<>(gameWeightMap.entrySet());
-        gameWeightList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+//        List<Map.Entry<Long, Double>> gameWeightList = new ArrayList<>(gameScoreMap.entrySet());
+
+        // TreeMap을 List로 변환
+        List<Map.Entry<Long, Double>> sortedGameScoreList = new ArrayList<>(gameScoreMap.entrySet());
+
+        // 값으로 내림차순으로 정렬
+        Collections.sort(sortedGameScoreList, valueComparator);
+//        gameWeightList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
 
         // 상위 100개의 항목 가져오기
-        List<Map.Entry<Long, Double>> top100List = gameWeightList.subList(0, Math.min(100, gameWeightList.size()));
+//        List<Map.Entry<Long, Double>> top100List = gameWeightList.subList(0, Math.min(100, gameWeightList.size()));
+        List<Map.Entry<Long, Double>> top100List = sortedGameScoreList.subList(0, Math.min(100, sortedGameScoreList.size()));
 
         // 결과 출력
+        List<GameCardDto> gameCardDtoList = sortedGameCardDtoList(userId, top100List);
+
+        return gameCardDtoList;
+    }
+
+
+    public List<GameCardDto> searchGameList(SearchGameRequestDto searchGameRequestDto) {
+
+        // 게임 아이디, 게임 태그 리스트
+        List<GameIdAndTagDto> gameIdAndTagDtoList = searchGameRequestDto.getGameIdAndTagDtoList();
+
+        // 1. 담은 게임의 태그별 빈도수 세기(가중치)
+        Map<TagDto,Long> tagCntMap = new HashMap<>();
+        for(GameIdAndTagDto gameIdAndTagDto : gameIdAndTagDtoList){
+            for(TagDto tagDto : gameIdAndTagDto.getTagList()){
+                tagCntMap.put(tagDto, tagCntMap.getOrDefault(tagDto, 0L) + 1L);
+            }
+        }
+
+        // 게임별 빈도수 점수 (gameId - 빈도수 점수)
+        Map<Long, Double> gameScoreMap = new TreeMap<>();
+
+        // 각 태그를 포함한 게임에 빈도수 더하기 => 각 게임의 점수가 나오게 됨
+        for(Map.Entry<TagDto, Long> entry : tagCntMap.entrySet()){
+
+            // 해당 태그를 가진 게임 아이디 리스트
+            List<GameTag> gameTagList = gameTagRepository.findAllByTag_TagId_Code_CodeIdAndTag_TagId_TagId(
+                    entry.getKey().getCodeId(),
+                    entry.getKey().getTagId());
+
+            // 각 게임 아이디에 대해 가중치 점수 더해주기
+            for(GameTag gameTag : gameTagList){
+                Long gameId = gameTag.getGame().getGameId();
+                gameScoreMap.put(gameId, gameScoreMap.getOrDefault(gameId, 0.0) + entry.getValue());
+            }
+        }
+        // 게임 점수 저장 후 게임 점수로 내림차순 정렬
+        // 게임 점수 저장
+        gameScoreMap = calculateGameScore(gameScoreMap);
+
+        // TreeMap을 List로 변환
+        List<Map.Entry<Long, Double>> sortedGameScoreList = new ArrayList<>(gameScoreMap.entrySet());
+
+        // 값으로 내림차순으로 정렬
+        Collections.sort(sortedGameScoreList, valueComparator);
+
+        //원하는 갯수만큼 Dto로 변환하여 결과 리턴
+        Integer userId = searchGameRequestDto.getUserId();
+        List<GameCardDto> gameCardDtoList = sortedGameCardDtoList( userId, sortedGameScoreList);
+
+        return gameCardDtoList;
+
+    }
+
+    private List<GameCardDto> sortedGameCardDtoList(Integer userId, List<Map.Entry<Long, Double>> list){
         List<GameCardDto> gameCardDtoList = new ArrayList<>();
-        for (Map.Entry<Long, Double> entry : top100List) {
+
+        for (Map.Entry<Long, Double> entry : list) {
             Game game = gameRepository.findById(entry.getKey()).orElseThrow(()->new BaseException(StatusCode.GAME_NOT_FOUND));
             GameCardDto gameCardDto = game.converToGameCardDto();
             // 선호 여부 업데이트
@@ -187,7 +246,21 @@ public class RecommendationService {
             }
             gameCardDtoList.add(gameCardDto);
         }
-
         return gameCardDtoList;
     }
+
+    private Map<Long, Double> calculateGameScore(Map<Long, Double> gameScoreMap) {
+        for (Long key : gameScoreMap.keySet()) {
+            double score1 = Math.log(gameScoreMap.get(key) + 100) * 0.7;
+            Game game = gameRepository.findById(key).orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
+            double score2 = game.getGameFinalScore() * 0.3;
+
+            gameScoreMap.put(key, (score1 + score2));
+        }
+        return gameScoreMap;
+    }
+
+    private Comparator<Map.Entry<Long, Double>> valueComparator = (e1, e2) -> {
+        return e2.getValue().compareTo(e1.getValue()); // 내림차순으로 정렬;
+    };
 }
