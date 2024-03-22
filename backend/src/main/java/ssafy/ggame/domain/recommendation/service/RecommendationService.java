@@ -13,6 +13,7 @@ import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
 import ssafy.ggame.domain.prefer.entity.Prefer;
 import ssafy.ggame.domain.prefer.repository.PreferRepository;
 import ssafy.ggame.domain.recommendation.dto.GameIdAndTagDto;
+import ssafy.ggame.domain.recommendation.dto.PersonalRecommendationResponseDto;
 import ssafy.ggame.domain.recommendation.dto.SearchGameRequestDto;
 import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.tag.entity.Tag;
@@ -132,12 +133,27 @@ public class RecommendationService {
         return gameCardDtoList;
     }
 
-    public List<GameCardDto> getPersonalList(Integer userId) {
+    public PersonalRecommendationResponseDto getPersonalList(Integer userId) {
         // 사용자 존재 유무 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
 
         // 1. 사용자 가중치 top 20개 태그 가져오기
         List<UserTag> topUsertagList = userTagRepository.findFirst20ByUserTagId_UserOrderByUserTagWeightDesc(user);
+
+        // 사용자 관심 태그 9개 가져오기 (메인 필터링을 위해)
+        List<TagDto> tagDtoList = new ArrayList<>();
+        for(int i = 0; i< Math.min(9, topUsertagList.size()) ;i++){
+            Tag tag = topUsertagList.get(i).getUserTagId().getTag();
+            short tagId = tag.getTagId().getTagId();
+            String codeId = tag.getTagId().getCode().getCodeId();
+            String tagName = tag.getTagName();
+            tagDtoList.add(TagDto.builder()
+                            .codeId(codeId)
+                            .tagId(tagId)
+                            .tagName(tagName)
+                    .build());
+        }
+
 
         // 게임별 점수를 저장할 맵 (게임 아이디 - 가중치 합)
         Map<Long, Double> gameScoreMap = new TreeMap<>();
@@ -182,7 +198,11 @@ public class RecommendationService {
         // 결과 출력
         List<GameCardDto> gameCardDtoList = sortedGameCardDtoList(userId, top100List);
 
-        return gameCardDtoList;
+
+        return PersonalRecommendationResponseDto.builder()
+                .tagDtoList(tagDtoList)
+                .gameCardDtoList(gameCardDtoList)
+                .build();
     }
 
 
