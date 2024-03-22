@@ -166,7 +166,7 @@ public class RecommendationService {
         gameScoreMap = calculateGameScore(gameScoreMap);
 
         // 맵 value에 따른 내림차순 정렬 후 100개 가져오기
-        List<Map.Entry<Long, Double>> gameWeightList = new ArrayList<>(gameScoreMap.entrySet());
+//        List<Map.Entry<Long, Double>> gameWeightList = new ArrayList<>(gameScoreMap.entrySet());
 
         // TreeMap을 List로 변환
         List<Map.Entry<Long, Double>> sortedGameScoreList = new ArrayList<>(gameScoreMap.entrySet());
@@ -177,7 +177,7 @@ public class RecommendationService {
 
         // 상위 100개의 항목 가져오기
 //        List<Map.Entry<Long, Double>> top100List = gameWeightList.subList(0, Math.min(100, gameWeightList.size()));
-        List<Map.Entry<Long, Double>> top100List = gameWeightList.subList(0, Math.min(100, sortedGameScoreList.size()));
+        List<Map.Entry<Long, Double>> top100List = sortedGameScoreList.subList(0, Math.min(100, sortedGameScoreList.size()));
 
         // 결과 출력
         List<GameCardDto> gameCardDtoList = sortedGameCardDtoList(userId, top100List);
