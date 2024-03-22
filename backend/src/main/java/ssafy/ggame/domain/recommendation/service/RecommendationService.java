@@ -13,7 +13,7 @@ import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
 import ssafy.ggame.domain.prefer.entity.Prefer;
 import ssafy.ggame.domain.prefer.repository.PreferRepository;
 import ssafy.ggame.domain.recommendation.dto.GameIdAndTagDto;
-import ssafy.ggame.domain.recommendation.dto.PersonalRecommendationResponseDto;
+import ssafy.ggame.domain.recommendation.dto.RecommendationResponseDto;
 import ssafy.ggame.domain.recommendation.dto.SearchGameRequestDto;
 import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.tag.entity.Tag;
@@ -133,7 +133,7 @@ public class RecommendationService {
         return gameCardDtoList;
     }
 
-    public PersonalRecommendationResponseDto getPersonalList(Integer userId) {
+    public RecommendationResponseDto getPersonalList(Integer userId) {
         // 사용자 존재 유무 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
 
@@ -199,7 +199,7 @@ public class RecommendationService {
         List<GameCardDto> gameCardDtoList = sortedGameCardDtoList(userId, top100List);
 
 
-        return PersonalRecommendationResponseDto.builder()
+        return RecommendationResponseDto.builder()
                 .tagDtoList(tagDtoList)
                 .gameCardDtoList(gameCardDtoList)
                 .build();

@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonalRecommendationResponseDto {
+public class RecommendationResponseDto {
     @Schema(description = "사용자의 관심 태그상위 9개")
     List<TagDto> tagDtoList;
 
