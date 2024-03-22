@@ -58,6 +58,7 @@ const Banner: React.FC = () => {
         ))}
       </Swiper>
 
+
       <Swiper
         onSwiper={setThumbsSwiper}
         loop={true}

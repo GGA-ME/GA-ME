@@ -1,48 +1,49 @@
-import GameCard from '../commonUseComponents/GameCard'
-import { motion } from 'framer-motion'
-import { useEffect } from 'react'
-import useStoreMain from "../../stores/mainStore"
-function Game() {
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import GameCard from '../commonUseComponents/GameCard';
+import useStoreMain from "../../stores/mainStore";
+import { AxiosError } from 'axios';
 
-  // 스토어 정리
-  const { data, loading, error, fetchData, userId, codeId, tagId, size, page } = useStoreMain();
+// 사용 스토어의 구조를 기반으로 하는 구조
+interface Game {
+  gameId: number;
+  gameName: string;
+  gameHeaderImg: string;
+  gamePriceFinal: number;
+// 각 태그를 기준으로 각 태그 및 이름을 가진 경우 선언방법
+tagList: Array<{ codeId: string; tagName: string }>;
+}
+
+const GameComponent: React.FC = () => {
+  const { data, loading, error, fetchData } = useStoreMain();
 
   useEffect(() => {
-    fetchData() // 컴포넌트 마운트 시 데이터를 가져옵니다.
-    console.log(data)
-  }, [fetchData, page]); // fetchData가 변경될 때마다 호출됩니다.
+    fetchData(); // 마운트시 데이터 가져오기
+  }, [fetchData]); // 데이터 변경시 재랜더링
 
-  // 데이터 로딩 중이면 로딩 인디케이터를 표시합니다.
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  // 에러가 있으면 에러 메시지를 표시합니다.
   if (error) {
-    return <div>Error: {error.message}</div>;
+    const axiosError = error as AxiosError;
+    return <div>Error: {axiosError.message}</div>;
   }
 
-  // data 또는 data.result가 없는 경우 추가 처리를 할 수 있습니다.
-if (!data || !data.result) {
-  return <div>No data available</div>;
-}
-
-  const allResult = data.result
-  console.log(allResult);
-
-
+  if (!data || !data.result.length) {
+    return <div>No data available</div>;
+  }
 
   return (
-    <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5
-    "
+    <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
       variants={{
         hidden: {},
-        visible: { transition: { staggerChildren: 0.1 } } // 각 자식 컴포넌트 사이의 지연시간을 설정합니다.
+        visible: { transition: { staggerChildren: 0.1 } }
       }}
-      initial="hidden" // 초기 상태를 hidden으로 설정
-      animate="visible" // 애니메이션 상태를 visible로 설정하여 애니메이션을 시작합니다.
+      initial="hidden"
+      animate="visible"
     >
-      {allResult.map((game, index) => (
+      {data.result.map((game: Game, index: number) => (
         <motion.li key={index} className="list-none"
           variants={{
             hidden: { x: -60, opacity: 0 },
@@ -61,5 +62,6 @@ if (!data || !data.result) {
       ))}
     </motion.ul>
   );
-}
-export default Game;
+};
+
+export default GameComponent;

@@ -1,5 +1,32 @@
 import { create } from 'zustand';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+
+
+// API 응답 데이터의 타입을 정의합니다.
+interface ApiResponse {
+    isSuccess: boolean;
+    message: string;
+    code: number;
+    result: []; // `any` 대신 더 구체적인 타입을 사용해주세요.
+}
+
+// 스토어 상태의 타입을 정의합니다.
+interface StoreState {
+    data: ApiResponse | null;
+    loading: boolean;
+    error: AxiosError | null;
+    userId: number;
+    codeId: string;
+    tagId: number;
+    page: number;
+    size: number;
+    setUserId: (userId: number) => void;
+    setCodeId: (codeId: string) => void;
+    setTagId: (tagId: number) => void;
+    setPage: (page: number) => void;
+    setSize: (size: number) => void;
+    fetchData: () => Promise<void>;
+}
 
 const api = axios.create({
     baseURL: 'https://j10e105.p.ssafy.io',
@@ -7,52 +34,44 @@ const api = axios.create({
         "Content-Type": `application/json;charset=UTF-8`,
         "Accept": "application/json",      
         // 추가  
-        "Access-Control-Allow-Origin": `http://localhost:3000`,
+        "Access-Control-Allow-Origin": `http://localhost:5173/`,
         'Access-Control-Allow-Credentials':"true",
     }
   });
 
-const useStoreMain = create((set, get) => ({
-    data: {},
+  const useStoreMain = create<StoreState>((set, get) => ({
+    data: null,
     loading: false,
     error: null,
-
-    // 매번 다르게 요청하기위한 변수 설정(예시 : 페이지)
     
     userId: 0,
-    setUserId: (userId:number) => set({ userId }),
+    setUserId: (userId: number) => set({ userId }),
     
     codeId: '0',
-    setCodeId: (codeId:string) => set({ codeId }),
+    setCodeId: (codeId: string) => set({ codeId }),
 
     tagId: 0,
-    setTagId: (tagId:number) => set({ tagId }),
+    setTagId: (tagId: number) => set({ tagId }),
     
     page: 1,
     setPage: (page: number) => set({ page }),
 
     size: 100,
-    setSize: (size:number) => set({ size }),
-
+    setSize: (size: number) => set({ size }),
 
     fetchData: async () => {
-
-        // 다르게 사용할 변수 지정
         const { userId, codeId, tagId, page, size } = get();
-
         set({ loading: true });
         try {
-            // 도메인주소로 할시에는 https로 바꿔줘야함
-            const response = await api.get(
-                `/api/recommendations/popular?userId=${userId}&codeId=${codeId}&tagId=${tagId}&page=${page}&size=${size}`,
-            );
-            set({ data: response.data, loading: false },
-                // 맞게 왔는지 확인 하는 콘솔로그
-                console.log(response.data));
+            const response = await api.get<ApiResponse>(`/api/recommendations/popular?userId=${userId}&codeId=${codeId}&tagId=${tagId}&page=${page}&size=${size}`,);
+            set({ data: response.data, loading: false });
+            console.log(response.data);
         } catch (error) {
-            set({ error, loading: false });
+            if (axios.isAxiosError(error)) {
+                set({ error, loading: false });
+            }
         }
     }
 }));
-// http://j10e105.p.ssafy.io:8000/api/recommendations/popular?userId=0&codeId=0&tagId=0&page=0&size=100
+
 export default useStoreMain;
