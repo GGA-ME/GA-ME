@@ -206,29 +206,48 @@ public class RecommendationService {
     }
 
 
-    public List<GameCardDto> searchGameList(SearchGameRequestDto searchGameRequestDto) {
+    public RecommendationResponseDto searchGameList(SearchGameRequestDto searchGameRequestDto) {
 
         // 게임 아이디, 게임 태그 리스트
         List<GameIdAndTagDto> gameIdAndTagDtoList = searchGameRequestDto.getGameIdAndTagDtoList();
 
-        // 1. 담은 게임의 태그별 빈도수 세기(가중치)
+        // 담은 게임의 태그별 빈도수 세기(가중치)
         Map<TagDto,Long> tagCntMap = new HashMap<>();
         for(GameIdAndTagDto gameIdAndTagDto : gameIdAndTagDtoList){
             for(TagDto tagDto : gameIdAndTagDto.getTagList()){
-                tagCntMap.put(tagDto, tagCntMap.getOrDefault(tagDto, 0L) + 1L);
+                Tag tag = tagRepository.findByCodeIdAndTagId(tagDto.getCodeId(), tagDto.getTagId()).orElseThrow(() -> new BaseException(StatusCode.TAG_NOT_EXIST));
+                tagCntMap.put(tag.convertToTagDto(), tagCntMap.getOrDefault(tagDto, 0L) + 1L);
             }
         }
 
+        // 입력으로 받은 태그를 빈도수 별로 정렬해서 결과로 반환
+        // - tagCntMap을 value 내림차순으로 정렬
+        ArrayList<Map.Entry<TagDto, Long>> tagCntList = new ArrayList<>(tagCntMap.entrySet());
+        Collections.sort(tagCntList, (e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+        
+        // List<TagDto> tagDtoList 지정
+        // TODO: 반환할 태그 개수 정해주기!(현재는 모두 반환함)
+        List<TagDto> tagDtoList = new ArrayList<>();
+        for(Map.Entry<TagDto, Long> tag : tagCntList){
+            tagDtoList.add(tag.getKey());
+        }
+
+        // 추천 게임 리스트 결과로 반환
         // 게임별 빈도수 점수 (gameId - 빈도수 점수)
         Map<Long, Double> gameScoreMap = new TreeMap<>();
 
         // 각 태그를 포함한 게임에 빈도수 더하기 => 각 게임의 점수가 나오게 됨
         for(Map.Entry<TagDto, Long> entry : tagCntMap.entrySet()){
 
+            // 태그 존재 여부 확인
+            Tag tag = tagRepository.findByCodeIdAndTagId(
+                    entry.getKey().getCodeId(),
+                    entry.getKey().getTagId()).orElseThrow(()->new BaseException(StatusCode.TAG_NOT_EXIST));
+
             // 해당 태그를 가진 게임 아이디 리스트
             List<GameTag> gameTagList = gameTagRepository.findAllByTag_TagId_Code_CodeIdAndTag_TagId_TagId(
-                    entry.getKey().getCodeId(),
-                    entry.getKey().getTagId());
+                    tag.getTagId().getCode().getCodeId(),
+                    tag.getTagId().getTagId());
 
             // 각 게임 아이디에 대해 가중치 점수 더해주기
             for(GameTag gameTag : gameTagList){
@@ -247,10 +266,15 @@ public class RecommendationService {
         Collections.sort(sortedGameScoreList, valueComparator);
 
         //원하는 갯수만큼 Dto로 변환하여 결과 리턴
+        // TODO: 반환할 추천 게임 개수 정해주기(현재는 모두 반환함)
         Integer userId = searchGameRequestDto.getUserId();
         List<GameCardDto> gameCardDtoList = sortedGameCardDtoList( userId, sortedGameScoreList);
 
-        return gameCardDtoList;
+        System.out.println("gameCardDtoList.size() = " + gameCardDtoList.size());
+        return RecommendationResponseDto.builder()
+                .tagDtoList(tagDtoList)
+                .gameCardDtoList(gameCardDtoList)
+                .build();
 
     }
 
