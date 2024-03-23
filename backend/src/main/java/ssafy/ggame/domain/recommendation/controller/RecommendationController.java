@@ -58,10 +58,10 @@ public class RecommendationController {
 
     @PostMapping("/search")
     @Operation(description = "게임 검색 추천")
-    ResponseEntity<BaseResponse<List<GameCardDto>>> searchGameList(@RequestBody SearchGameRequestDto searchGameRequestDto){
-        List<GameCardDto> resultList = recommendationService.searchGameList(searchGameRequestDto);
+    ResponseEntity<BaseResponse<RecommendationResponseDto>> searchGameList(@RequestBody SearchGameRequestDto searchGameRequestDto){
+       RecommendationResponseDto resultList = recommendationService.searchGameList(searchGameRequestDto);
 
-        return ResponseEntity.ok(new BaseResponse<List<GameCardDto>>(resultList));
+        return ResponseEntity.ok(new BaseResponse<RecommendationResponseDto>(resultList));
 
     }
 
