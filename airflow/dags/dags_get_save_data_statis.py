@@ -424,6 +424,7 @@ def get_game_final_score(index, num_batches, **kwargs):
                 , game_review_like_cnt
                 , game_review_unlike_cnt
                 , game_review_is_use_cnt
+                , game_recent_score,
                 , updated_dt
                 from game_score_info
                 where game_id ={game_id}
@@ -440,18 +441,22 @@ def get_game_final_score(index, num_batches, **kwargs):
                 game_review_like_cnt = select_result[0][2]
                 game_review_unlike_cnt = select_result[0][3]
                 game_review_is_use_cnt = select_result[0][4]
+                game_recent_score = select_result[0][5]
 
                 # 점수 계산
                 review_cnt_score = 100 * (1 - 1 / (1 + math.log(game_review_cnt + 1))) # 리뷰 개수 점수
                 review_like_score = (game_review_like_cnt / (game_review_like_cnt + game_review_unlike_cnt)) * 100 # 댓글 선호도 점수
                 in_use_score = (game_review_is_use_cnt / (game_review_like_cnt + game_review_unlike_cnt)) * 100 # 증가한 사용자 비율 점수
 
-                game_final_score = review_cnt_score * 0.3 + review_like_score * 0.3 + in_use_score * 0.4 # 최종 점수
+                game_final_score = round(review_cnt_score * 0.3 + review_like_score * 0.3 + in_use_score * 0.4, 4) # 최종 점수(소숫점 아래 4째 자리까지)
+
+                # game_final_recent_score 점수 계산
+                game_final_recent_score = round(game_final_score * 0.5 + game_recent_score * 0.5, 4) # 최신 게임 가치 점수(수숫점 아래 4쨰 자리까지 )
 
 
                 # game db에 점수 저장하기
-                update_query = f"""update game set game_final_score ={game_final_score} where game_id ={game_id}"""
-                cursor.execute(update_query)
+                update_query = """update game set game_final_score =%s, game_final_recent_score = %s where game_id =%s"""
+                cursor.execute(update_query, (game_final_score, game_final_recent_score, game_id))
                 conn.commit()
                 #print("game_final_score 업데이트 완료!")
 
