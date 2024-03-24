@@ -44,7 +44,7 @@ default_args = {
     'start_date': datetime(2024, 1, 1, tzinfo=timezone('Asia/Seoul')),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 1,
+    'retries': 2,
     'retry_delay': timedelta(minutes=5),
 }
 
@@ -62,17 +62,17 @@ conn = mysql.connector.connect(
 cursor = conn.cursor()
 
 
-MAX_RETRIES = 3
+MAX_RETRIES = 5
 
 def load_game_detail_retry(app, game_datail_url):
     retry_count = 0
     while retry_count < MAX_RETRIES:
         try:
+            time.sleep(180)
             detail_res = requests.get(game_datail_url)
             if detail_res.status_code != 200:
                 # 다시 받아오는데 실패를 하면 재시도
                 log.info(f"[{app.get('appid')}] - {retry_count}번쨰 시도도 실패했습니다")
-                time.sleep(5)
                 retry_count += 1
             else:
                 insert_game_data(app, detail_res)
@@ -209,7 +209,7 @@ def get_game_id_list(**kwargs):
             # 게임 id-name 받아오기
             res_json = res.json()
             applist = res_json.get("applist").get("apps")
-            print(applist[0])
+            # print(applist[0])
             print(len(applist))
             kwargs['ti'].xcom_push(key='game_id_list', value=applist)
             return applist
@@ -433,33 +433,45 @@ def get_game_data(index, num_batches, **kwargs):
     game_id_batch = applist[index::num_batches]
     print("game_id_batch::", game_id_batch)
 
-    try:
         # 받은 리스트 순회하며 상세정보 저장하기
         #for idx, app in enumerate(applist):
-        for idx, app in enumerate(game_id_batch):
-                print("app [%d]: " %idx, app)
+    for idx, app in enumerate(game_id_batch):
+        try:
+            print("app [%d]: " %idx, app)
 
-                # 게임 상세 정보 API 요청
-                game_detail_url = f'https://store.steampowered.com/api/appdetails?appids={app.get("appid")}&l=koreana'
-                detail_res = requests.get(game_detail_url)
+            # appid 변수 설정
+            appid = app.get("appid")
 
-                if detail_res.status_code != 200:
-                    log.info(f"{app.get('appid')}번 게임 상세 정보를 받아오는데 실패했습니다.")
-                    log.info(f"{app.get('appid')}번 게임 상세정보 받기 재시도 시작")
-                    load_game_detail_retry(app, game_detail_url)
-                else: 
-                    insert_game_data(app, detail_res)
-                    
-    # 중복된 키를 발견했을 때 수행할 작업 추가
-    except Exception as e:
-        log.info("게임 상세 정보 받아오기 에서 예외 발생 :: ", e)
-        
-    
-    finally:
-        cursor.close()
-        conn.close()
+            # 게임이 존재하면 다음 함수를 실행하지 않음
+            if check_game_existence(appid):
+                continue
+            
+            # 게임 상세 정보 API 요청
+            game_detail_url = f'https://store.steampowered.com/api/appdetails?appids={app.get("appid")}&l=koreana'
+            detail_res = requests.get(game_detail_url)
 
+            if detail_res.status_code != 200:
+                log.info(f"{app.get('appid')}번 게임 상세 정보를 받아오는데 실패했습니다.")
+                log.info(f"{app.get('appid')}번 게임 상세정보 받기 재시도 시작")
+                load_game_detail_retry(app, game_detail_url)
+            else: 
+                insert_game_data(app, detail_res)      
+        # 중복된 키를 발견했을 때 수행할 작업 추가
+        except Exception as e:
+            log.info("게임 상세 정보 받아오기 에서 예외 발생 :: ", e)
+            
+    cursor.close()
+    conn.close()
 
+def check_game_existence(appid):
+
+    # 게임이 존재하는지 확인하는 쿼리 실행
+    query = f"SELECT COUNT(*) FROM game WHERE game_id = {appid}"
+    cursor.execute(query)
+    result = cursor.fetchone()[0]
+
+    # 게임이 존재하면 True 반환, 존재하지 않으면 False 반환
+    return result > 0
 
 
 
@@ -470,22 +482,11 @@ with DAG(
     catchup=False,
     tags=["please","mysql","test"],
 ) as dag:
-    dags_get_game_data_parallel = TriggerDagRunOperator(
-        task_id="dags_get_game_data_parallel",
+    trigger_statis_dag = TriggerDagRunOperator(
+        task_id="trigger_statis_dag",
         trigger_dag_id="dags_get_save_data_statis",  # 다음 DAG의 ID
         execution_date="{{ execution_date }}"
     )
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     run_get_game_id_list_task = PythonOperator(
         task_id="get_game_id_list_task",
@@ -494,7 +495,7 @@ with DAG(
     )
 
     # 등분할 개수
-    num_batches = 100
+    num_batches = 10
     
     for i in range(num_batches):
         run_get_game_data_task = PythonOperator (
@@ -505,7 +506,7 @@ with DAG(
             },
             provide_context=True
         )
-        run_get_game_id_list_task >> run_get_game_data_task 
+        run_get_game_id_list_task >> run_get_game_data_task >> trigger_statis_dag
 
 
     

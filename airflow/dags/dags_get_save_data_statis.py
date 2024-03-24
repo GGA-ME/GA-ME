@@ -30,10 +30,10 @@ default_args = {
     'start_date': datetime(2024, 1, 1, tzinfo=timezone('Asia/Seoul')),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 1,
+    'retries': 2,
     'retry_delay': timedelta(minutes=5),
 }
-MAX_RETRIES = 3
+MAX_RETRIES = 5
 
 def load_reviews_with_retry(game_id, max_reviews):
     retry_count = 0
@@ -47,7 +47,7 @@ def load_reviews_with_retry(game_id, max_reviews):
             print(f"Error 발생: {e}")
             #print("재시도 중...")
             retry_count += 1
-            sleep(5)  # 재시도 전에 잠시 대기
+            sleep(180)  # 재시도 전에 잠시 대기
     #print(f"최대 재시도 횟수({MAX_RETRIES})를 초과하여 리뷰를 가져오지 못했습니다.")
     return None
 
@@ -99,10 +99,11 @@ def process_reviews(num_batches, index, **kwargs):
         latest_review_date = None
 
         # 각 행을 반복하면서 최신 날짜 갱신
-        for row in rows:
-            review_date = row.review_updated_dt
-            if latest_review_date is None or review_date > latest_review_date:
-                latest_review_date = review_date
+        if rows:
+            for row in rows:
+                review_date = row.review_updated_dt
+                if latest_review_date is None or review_date > latest_review_date:
+                    latest_review_date = review_date
                 
         if latest_review_date is not None:
             latest_review_date = datetime.combine(latest_review_date, datetime.min.time())
@@ -290,7 +291,7 @@ def process_statistics(num_batches, index, **kwargs):
             #print('game_id =', game_id)
             continue
         
-        if not reviews or len(reviews) < 1:
+        if not reviews:
             #print(f"No reviews found for game ID: {game_id}")
             continue
         else:
