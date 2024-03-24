@@ -16,6 +16,7 @@ from cassandra.cluster import Cluster
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import pendulum
+from pytz import timezone
 
 log = logging.getLogger(__name__)
 
@@ -474,7 +475,7 @@ def get_game_final_score(index, num_batches, **kwargs):
 
 with DAG('dags_get_save_data_statis', 
         default_args=default_args, 
-        schedule_interval='@weekly',
+        schedule_interval=None,
         tags=["please","mysql","test"],
         catchup=False) as dag:
     

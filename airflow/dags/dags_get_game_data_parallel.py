@@ -28,6 +28,7 @@ import requests
 import json
 # 문자열을 datetime으로 바꾸기 위해 임포트
 from datetime import datetime, timedelta
+from pytz import timezone
 
 
 # MySQL 연결 정보를 설정합니다.
