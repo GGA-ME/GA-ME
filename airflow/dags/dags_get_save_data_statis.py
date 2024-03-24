@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.mysql_operator import MySqlOperator
@@ -6,13 +6,16 @@ from airflow.hooks.mysql_hook import MySqlHook
 from steam_reviews import ReviewLoader
 import requests
 from time import sleep
+
 import nltk
 nltk.download('vader_lexicon')
+
 import math
 import logging
 from cassandra.cluster import Cluster
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import pendulum
 
 log = logging.getLogger(__name__)
 
@@ -23,9 +26,12 @@ MYSQL_CONN_ID = 'mysql_default'
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2024, 3, 14),
+    'start_date': datetime(2024, 1, 1, tzinfo=timezone('Asia/Seoul')),
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
 }
-
 MAX_RETRIES = 3
 
 def load_reviews_with_retry(game_id, max_reviews):
@@ -36,8 +42,8 @@ def load_reviews_with_retry(game_id, max_reviews):
             reviews_en = review_loader.load_from_api(game_id)
         
             return reviews_en
-        except requests.exceptions.SSLError as e:
-            #print(f"SSLError 발생: {e}")
+        except Exception as e:
+            print(f"Error 발생: {e}")
             #print("재시도 중...")
             retry_count += 1
             sleep(5)  # 재시도 전에 잠시 대기
@@ -467,9 +473,10 @@ def get_game_final_score(index, num_batches, **kwargs):
 
 
 with DAG('dags_get_save_data_statis', 
-         default_args=default_args, 
-         schedule_interval='@daily', 
-         catchup=False) as dag:
+        default_args=default_args, 
+        schedule_interval='@weekly',
+        tags=["please","mysql","test"],
+        catchup=False) as dag:
     
     num_batches = 10  # 등분할 개수
     game_ids_task = PythonOperator(

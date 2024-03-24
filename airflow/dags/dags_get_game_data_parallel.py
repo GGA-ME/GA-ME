@@ -8,7 +8,7 @@ import math
 
 import pendulum
 # import pymysql
-
+from airflow.operators.dagrun_operator import TriggerDagRunOperator
 from airflow.models.dag import DAG
 from airflow.operators.python import (
     PythonOperator
@@ -27,7 +27,7 @@ import requests
 # json 객체 관련 작업을 위해 임포트
 import json
 # 문자열을 datetime으로 바꾸기 위해 임포트
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 # MySQL 연결 정보를 설정합니다.
@@ -37,6 +37,15 @@ MYSQL_USER = 'root'
 MYSQL_PASSWORD = 'GGAME!buk105'
 MYSQL_DATABASE = 'ggame'
 
+default_args = {
+    'owner': 'airflow',
+    'depends_on_past': False,
+    'start_date': datetime(2024, 1, 1, tzinfo=timezone('Asia/Seoul')),
+    'email_on_failure': False,
+    'email_on_retry': False,
+    'retries': 1,
+    'retry_delay': timedelta(minutes=5),
+}
 
 
 # 커넥션 생성
@@ -455,13 +464,16 @@ def get_game_data(index, num_batches, **kwargs):
 
 with DAG(
     dag_id="dags_get_game_data_parallel",
-    schedule="0 0 * * *",
-    start_date=pendulum.datetime(2021, 1, 1, tz="Asia/Seoul"),
+    default_args=default_args, 
+    schedule="@weekly",
     catchup=False,
     tags=["please","mysql","test"],
-):
-    
-
+) as dag:
+    dags_get_game_data_parallel = TriggerDagRunOperator(
+        task_id="dags_get_game_data_parallel",
+        trigger_dag_id="dags_get_save_data_statis",  # 다음 DAG의 ID
+        execution_date="{{ execution_date }}"
+    )
     
     
     
