@@ -149,7 +149,7 @@ def process_reviews(num_batches, index, **kwargs):
         # 평균 playtime_at_review의 10% 계산
         threshold = average_playtime * 0.1
         for review in sorted_reviews:
-            cnt += 1
+            # cnt += 1
             #print('덱이 진행한 리뷰 개수', cnt)
             # 리뷰의 timestamp_created 값
             timestamp_created = review['timestamp_updated'] ## 컬럼 updated로 바꿔 줘야할 듯 ? db 날리고
@@ -206,6 +206,7 @@ def process_reviews(num_batches, index, **kwargs):
 
 
             else:
+                return ## 완탐 로직
                 # 1.3배 이상 늘어난 현재 플탐인 경우 True로 바꿔줌
                 if review_playtime_total is not None and review_playtime_at is not None:
                     if review_playtime_total >= 1.3 * review_playtime_at:
@@ -301,15 +302,16 @@ def process_statistics(num_batches, index, **kwargs):
         # review_playtime_recent의 총합 계산
         total_playtime_recent = sum(review[1] for review in reviews)
         # 값이 0 이상인 리뷰의 개수 계산
-        positive_reviews_count = sum(1 for review in reviews if review[1] >= 0)
+        play_reviews_count = sum(1 for review in reviews if review[1] >= 0)
 
         #print("review_playtime_recent의 총합:", total_playtime_recent)
-        #print("값이 0 이상인 리뷰의 개수:", positive_reviews_count)
+        #print("값이 0 이상인 리뷰의 개수:", play_reviews_count)
         
         
-        recent_score = total_playtime_recent + positive_reviews_count*100
+        recent_score = ((1-(1/(1+math.log(total_playtime_recent + 1)))) + (1-(1/(1+math.log(play_reviews_count*100 + 1)))))*100
         
         if recent_score > 0:
+            recent_score = round(recent_score, 4)
             query = """
                 UPDATE game
                 SET game_recent_score = %s
