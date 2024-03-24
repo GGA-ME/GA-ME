@@ -1,0 +1,12 @@
+
+.title{
+    /* Hot Topic 타이틀 */
+font-family: 'TAEBAEK font TTF';
+font-style: bold;
+font-weight: 400;
+font-size: 20px;
+font-style: italic;
+
+color: #FFFFFF;
+text-shadow: 0px 0px 20px #81BECE, 0px 0px 5px #cece81;
+}

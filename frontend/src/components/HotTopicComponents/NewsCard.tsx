@@ -39,7 +39,7 @@ const NewsCardDto: React.FC<NewsCardProps> = ({ hotTopicLink, hotTopicImg, hotTo
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className={`${style.card}  rounded overflow-hidden text-white text-center`}>
-        <img src={hotTopicImg} alt={hotTopicTitle} className="w-full" />
+        <img src={hotTopicImg} alt={hotTopicTitle} className={`${style.cardImg} w-full`} />
         <div className="p-2">
           <h3 className={`${style.baseFont} text-base`}>{hotTopicTitle}</h3>
           <p className="text-xs">{truncateString(hotTopicShortDesc, 130)}</p>
