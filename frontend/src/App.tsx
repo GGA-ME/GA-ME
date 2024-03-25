@@ -6,6 +6,7 @@ import Detail from './pages/Detail';
 import MyPage from './pages/MyPage';
 import Topic from './pages/HotTopic';
 import Suvey from './pages/Suvey';
+import MixAndMatch from './pages/MixAndMatch'
 
 
 const router = createBrowserRouter([
@@ -13,6 +14,8 @@ const router = createBrowserRouter([
   { path: '/', element: <Main />,},
   // 검색 페이지
   { path: 'search', element: <Search /> },
+  // 믹스&매치 페이지
+  { path: 'mixAndMatch', element: <MixAndMatch /> },
   // 게임 디테일 페이지
   { path: 'detail/:id', element: <Detail/> },
   // 마이페이지

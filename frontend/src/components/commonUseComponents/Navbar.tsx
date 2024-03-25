@@ -40,6 +40,7 @@ const Navbar: React.FC = () => {
     const navLinks: NavLinkItem[] = [
         { path: "/", label: "Main", icon: '/Gameicon.png', activeIcon: '/Gameicon.gif' },
         { path: "/search", label: "Search", icon: '/SearchIcon.png', activeIcon: '/SearchIcon.gif' },
+        { path: "/mixAndMatch", label: "MixAndMatch", icon: '/SearchIcon.png', activeIcon: '/SearchIcon.gif' },
         { path: "/topic", label: "Hot Topic", icon: '/FireIcon.png', activeIcon: '/FireIcon.gif' },
         // 로그인 상태에 따라 분기 처리
         isLoggedIn ? 
