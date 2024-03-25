@@ -19,6 +19,8 @@ public class OAuth2LoginSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // CSRF 보호 비활성화
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         // /user/login 경로에 대한 요청은 누구나 접근할 수 있도록 설정합니다.
                         //.requestMatchers("/user/login").permitAll()
