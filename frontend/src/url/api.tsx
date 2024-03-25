@@ -21,6 +21,7 @@ export const redirectToGoogleOAuth = () => {
 // 서버에 인증 코드를 전송하여 사용자 정보를 받아오는 함수
 export const fetchUserInfo = async (code: string) => {
   try {
+    console.log('In fetchUserInfo');
     const response = await api.post('/auth/google/callback', JSON.stringify({ code }), {
       headers: {
         'Content-Type': 'application/json'
