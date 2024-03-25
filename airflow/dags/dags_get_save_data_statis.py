@@ -131,7 +131,11 @@ def process_reviews(num_batches, index, **kwargs):
             
 
         reviews_review = reviews_en.data['reviews']
-        sorted_reviews = sorted(reviews_review, key=lambda x: x['timestamp_updated'], reverse=False) # updated 기준으로 정렬
+        sorted_reviews = sorted(reviews_review, key=lambda x: x['timestamp_updated'], reverse=False) # 과거순 기준으로 정렬
+        if latest_review_date is not None:
+            sorted_reviews = [review for review in sorted_reviews if datetime.fromtimestamp(review['timestamp_updated']) > latest_review_date]
+            if not sorted_reviews:
+                continue
 
         
         cursor.execute(f"SELECT game_review_like_cnt, game_review_unlike_cnt, game_review_is_use_cnt FROM game_score_info WHERE game_id = '{game_id}'")
@@ -164,8 +168,7 @@ def process_reviews(num_batches, index, **kwargs):
             # UNIX timestamp를 datetime -> date 객체로 변환
             review_datetime = datetime.fromtimestamp(timestamp_created)
             review_updated_dt = review_datetime
-            
-            
+
             # game_id, review_id, review_content, review_is_good, review_updated_dt, 
             # review_playtime_at, review_playtime_total, review_playtime_recent
             # review_is_use, updated_dttm
@@ -216,7 +219,7 @@ def process_reviews(num_batches, index, **kwargs):
                 print("카산드라 데이터 저장 중 오류 발생:", e)
 
             # else:
-            #     break ## 완탐 로직
+            #     break ## 완탐 로직 플레이 시간 때문에 완탐하고 싶은 경우 필터링을 빼고 돌면서 과거 댓글인 경우 여기로 아니면 위에서 처리로 바꿔야할듯
             #     # 1.3배 이상 늘어난 현재 플탐인 경우 True로 바꿔줌
             #     if review_playtime_total is not None and review_playtime_at is not None:
             #         if review_playtime_total >= 1.3 * review_playtime_at:
