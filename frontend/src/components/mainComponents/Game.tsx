@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import { motion } from 'framer-motion';
 import GameCard from '../commonUseComponents/GameCard';
 import useStoreMain from "../../stores/mainStore";
@@ -16,6 +17,7 @@ tagList: Array<{ codeId: string; tagName: string }>;
 
 const GameComponent: React.FC = () => {
   const { data, loading, error, fetchData } = useStoreMain();
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchData(); // 마운트시 데이터 가져오기
@@ -32,6 +34,11 @@ const GameComponent: React.FC = () => {
 
   if (!data || !data.result.length) {
     return <div>No data available</div>;
+  }
+
+  const handleClickGame = (gameId:number) => {
+    navigate(`/detail/${gameId}`)
+    console.log('디테일페이지 이동')
   }
 
   return (
@@ -57,7 +64,8 @@ const GameComponent: React.FC = () => {
             price={`₩ ${game.gamePriceFinal}`}
             tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
             likes={34}
-          />
+            onClick={() => handleClickGame(game.gameId)} // 수정된 부분
+            />
         </motion.li>
       ))}
     </motion.ul>

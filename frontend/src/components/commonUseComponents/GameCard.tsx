@@ -11,10 +11,11 @@ interface GameCardProps {
   price: string;
   tags: string[];
   likes: number;
+  onClick: () => void;  // onClick prop 타입 추가
 }
 
 // 타입스크립트식 선언
-const GameCard: React.FC<GameCardProps> = ({ imageUrl, title, price, tags, likes }) => {
+const GameCard: React.FC<GameCardProps> = ({ imageUrl, title, price, tags, likes, onClick }) => {
 
   const [isHovered, setIsHovered] = useState(false);
   const hoverEffects = {
@@ -32,6 +33,7 @@ const GameCard: React.FC<GameCardProps> = ({ imageUrl, title, price, tags, likes
       whileHover={hoverEffects}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
     >
       <div className={`${style.card} w-48 rounded overflow-hidden text-white text-center`}>
         <img src={imageUrl} alt={title} className="w-full" />
