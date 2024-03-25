@@ -19,24 +19,31 @@ interface PoketStore {
 
 // 스토어 생성
 const usePoketStore = create<PoketStore>((set) => ({
-  cartItems: [],
+  cartItems: JSON.parse(sessionStorage.getItem('cartItems') || '[]'),
 
   // 같은 게임 아이디의 게임은 추가 x
   addItem: (newItem) => set((state) => {
     const exists = state.cartItems.some(item => item.gameId === newItem.gameId);
     if (!exists) {
-      return { cartItems: [...state.cartItems, newItem] };
+      const newCartItems = [...state.cartItems, newItem];
+      sessionStorage.setItem('cartItems', JSON.stringify(newCartItems));
+      return { cartItems: newCartItems };
     }
     return state;
   }),
 
   // 장바구니 게임 빼기
-  removeItem: (gameId) => set((state) => ({
-    cartItems: state.cartItems.filter(item => item.gameId !== gameId)
-  })),
+  removeItem: (gameId) => set((state) => {
+    const newCartItems = state.cartItems.filter(item => item.gameId !== gameId);
+    sessionStorage.setItem('cartItems', JSON.stringify(newCartItems));
+    return { cartItems: newCartItems };
+  }),
 
   // 장바구니 초기화
-  clearCart: () => set({ cartItems: [] }),
+  clearCart: () => set(() => {
+    sessionStorage.removeItem('cartItems');
+    return { cartItems: [] };
+  }),
 }));
 
 export default usePoketStore;
