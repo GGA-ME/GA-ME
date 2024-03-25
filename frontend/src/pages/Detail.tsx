@@ -1,13 +1,15 @@
-import Navbar from "../components/commonUseComponents/Navbar";
+import Banner from "../components/detailComponents/Banner";
 
 
 function Detail() {
 
     return (
       <>
-      <Navbar />
-        <h1>Detail</h1>
+        <div className="flex flex-col items-center">
+          <Banner/>
+        </div>
       </>
     );
   }
-  export default Detail;
+
+export default Detail;
