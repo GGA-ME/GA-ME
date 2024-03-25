@@ -13,9 +13,11 @@ interface SurveyStoreState{
     data: ApiResponse | null;
     loading: boolean;
     error: AxiosError | null;
-    checkGameList: number[] | null;
+    checkGameList: number[];
 
-    setCheckChoiceGame: (gameId: number) => void;
+
+    addCheckChoiceGame: (gameId: number) => void;
+    removeCheckChoiceGame: (gameId: number) => void;
     fetchData: () => Promise<void>;
 }
 
@@ -25,11 +27,21 @@ export const surveyStore = create<SurveyStoreState>((set) => ({
     data: null,
     loading: false,
     error: null,
-    checkGameList: null,
+    checkGameList: [],    
 
-    setCheckChoiceGame(gameId: number) {
-        this.checkGameList?.push(gameId);
-    },
+    addCheckChoiceGame(gameId: number) {
+        // state라는 파라미터가 이전 값을 기억
+        set(state => ({
+          checkGameList: [...state.checkGameList, gameId]
+        }));
+      },
+    
+      removeCheckChoiceGame(gameId: number) {
+        // state라는 파라미터가 이전 값을 기억
+        set(state => ({
+          checkGameList: state.checkGameList.filter(id => id !== gameId)
+        }));
+      },
 
     fetchData: async() => {
         set({ loading: true });

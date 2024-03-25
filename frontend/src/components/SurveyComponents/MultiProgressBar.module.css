@@ -1,0 +1,33 @@
+/* MultiProgressBar.module.css */
+
+.progressBar {
+    display: flex;
+    align-items: center;
+  }
+  
+  .step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px;
+    font-size: 16px;
+  }
+  
+  .line {
+    height: 4px;
+    width: 50px; /* 막대의 길이 조정 가능 */
+    background-color: #ddd;
+  }
+  
+  .step-accomplished {
+    opacity: 1;
+  }
+  
+  .step-incomplete {
+    opacity: 0.5;
+  }
+  
