@@ -1,4 +1,6 @@
 import Navbar from "../components/commonUseComponents/Navbar";
+import CombinationList from "../components/mixAndMathComponents/CombinationList";
+import Result from "../components/mixAndMathComponents/Result";
 
 function MixAndMatch() {
 
@@ -11,6 +13,12 @@ function MixAndMatch() {
     <div className="max-w-full overflow-hidden"> {/* overflow-hidden을 사용하여 화면 너비를 초과하는 내용이 스크롤되지 않도록 합니다. */}
     여기가 컴포넌트 넣는곳
     하영쓰의 미스엔매치
+
+
+    <CombinationList />
+    <Result/>
+
+
     </div>
     </div>
     </div>
