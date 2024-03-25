@@ -1,82 +1,50 @@
-import GameCard from '../commonUseComponents/GameCard'
-import { motion } from 'framer-motion'
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import GameCard from '../commonUseComponents/GameCard';
+import useStoreMain from "../../stores/mainStore";
+import { AxiosError } from 'axios';
 
-function Game() {
+// 사용 스토어의 구조를 기반으로 하는 구조
+interface Game {
+  gameId: number;
+  gameName: string;
+  gameHeaderImg: string;
+  gamePriceFinal: number;
+// 각 태그를 기준으로 각 태그 및 이름을 가진 경우 선언방법
+tagList: Array<{ codeId: string; tagName: string }>;
+}
 
-  const sample = [{
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }, {
-    title: "Elden Ring",
-    price: 303000, // Assuming you meant 303,000. If it was intended to be 30,3000 (which is unconventional), please adjust accordingly.
-    imageUrl: "/Game.gif"
-  }];
+const GameComponent: React.FC = () => {
+  const { data, loading, error, fetchData } = useStoreMain();
+
+  useEffect(() => {
+    fetchData(); // 마운트시 데이터 가져오기
+  }, [fetchData]); // 데이터 변경시 재랜더링
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    const axiosError = error as AxiosError;
+    return <div>Error: {axiosError.message}</div>;
+  }
+
+  if (!data || !data.result.length) {
+    return <div>No data available</div>;
+  }
 
   return (
-    <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5
-    "
-      variants={{ 
+    <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      variants={{
         hidden: {},
-        visible: { transition: { staggerChildren: 0.1 } } // 각 자식 컴포넌트 사이의 지연시간을 설정합니다.
-        }}
-       initial="hidden" // 초기 상태를 hidden으로 설정
-      animate="visible" // 애니메이션 상태를 visible로 설정하여 애니메이션을 시작합니다.
-      >
-        {sample.map((game, index) =>(
-          <motion.li key={index} className="list-none"
+        visible: { transition: { staggerChildren: 0.1 } }
+      }}
+      initial="hidden"
+      animate="visible"
+    >
+      {data.result.map((game: Game, index: number) => (
+        <motion.li key={index} className="list-none"
           variants={{
             hidden: { x: -60, opacity: 0 },
             visible: { x: 0, opacity: 1, transition: { duration: 0.3 } }
@@ -84,15 +52,16 @@ function Game() {
         >
           <GameCard
             key={index}
-            imageUrl="/TestGameImg.jpg"
-            title={game.title}
-            price={`₩ ${game.price}`}
-            tags={['액션',' 슈팅', '개그','추리', '공포']}
+            imageUrl={game.gameHeaderImg}
+            title={game.gameName}
+            price={`₩ ${game.gamePriceFinal}`}
+            tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
             likes={34}
           />
         </motion.li>
-        ))}
+      ))}
     </motion.ul>
   );
-}
-export default Game;
+};
+
+export default GameComponent;
