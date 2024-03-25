@@ -24,7 +24,7 @@ public class OAuth2LoginSecurityConfig {
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/api/auth/google/callback").permitAll() // 변경된 부분
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                 )
                 .oauth2Login(oauth2Login ->
                         oauth2Login.successHandler(successHandler)
