@@ -1,3 +1,5 @@
+// 장현욱
+
 import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -36,8 +38,9 @@ const Navbar: React.FC = () => {
     };
 
     const navLinks: NavLinkItem[] = [
-        { path: "/Main", label: "Main", icon: '/Gameicon.png', activeIcon: '/Gameicon.gif' },
+        { path: "/", label: "Main", icon: '/Gameicon.png', activeIcon: '/Gameicon.gif' },
         { path: "/search", label: "Search", icon: '/SearchIcon.png', activeIcon: '/SearchIcon.gif' },
+        { path: "/mixAndMatch", label: "MixAndMatch", icon: '/SearchIcon.png', activeIcon: '/SearchIcon.gif' },
         { path: "/topic", label: "Hot Topic", icon: '/FireIcon.png', activeIcon: '/FireIcon.gif' },
         // 로그인 상태에 따라 분기 처리
         isLoggedIn ? 
@@ -63,9 +66,17 @@ const Navbar: React.FC = () => {
 
     return (
         <>
-            <div className="fixed top-0 left-0 flex flex-col items-center px-8 h-screen py-20 bg-gray-900 text-white">
+            <div className={`${style.neonBorder} fixed top-0 left-0 flex flex-col items-center px-8 h-screen py-20 border-r-2 bg-gray-900 text-white z-40`}>
                 <div className="mb-24">
-                    <img className="w-24" src='./GGAME.gif' alt='GGAMELOGO' />
+                    <NavLink to="/">
+                        <motion.img
+                            className="w-24"
+                            src='./GGAME.gif'
+                            alt='GGAMELOGO'
+                            whileHover={{ y: -20 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        />
+                    </NavLink>
                 </div>
 
                 <div className="relative pl-8">

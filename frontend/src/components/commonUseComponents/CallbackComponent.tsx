@@ -16,10 +16,11 @@ const CallbackComponent: React.FC = () => {
         const data = await fetchUserInfo(code);
         // 받아온 사용자 정보를 store에 저장
         setUser(data.user);
-        // 사용자를 home으로 리다이렉트
+        // 사용자를 /home으로 리다이렉트
         navigate('/');
       } catch (error) {
         console.error('Authentication failed:', error);
+        alert('Authentication failed:')
         // 실패 시 로그인 페이지로 리다이렉트
         navigate('/');
       }

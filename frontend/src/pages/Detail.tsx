@@ -1,15 +1,16 @@
-import Banner from "../components/detailComponents/Banner";
-
+import Statistics from "../components/detailComponents/Statistics";
+import BackButton from "../components/detailComponents/BackButton";
 
 function Detail() {
 
     return (
       <>
-        <div className="flex flex-col items-center">
-          <Banner/>
-        </div>
+        <BackButton />
+        <h1>Detail</h1>
+        <Statistics />
+
       </>
     );
   }
-
-export default Detail;
+  export default Detail;
+  
