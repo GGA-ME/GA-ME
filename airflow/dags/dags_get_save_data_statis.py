@@ -102,11 +102,11 @@ def process_reviews(num_batches, index, **kwargs):
         if rows:
             for row in rows:
                 review_date = row.review_updated_dt
-                if latest_review_date is None or review_date > latest_review_date:
+                if latest_review_date is None or (review_date is not None and review_date > latest_review_date):
                     latest_review_date = review_date
                 
-        if latest_review_date is not None:
-            latest_review_date = datetime.combine(latest_review_date, datetime.min.time())
+        # if latest_review_date is not None:
+        #     latest_review_date = datetime.combine(latest_review_date, datetime.min.time())
 
 
 
@@ -131,7 +131,7 @@ def process_reviews(num_batches, index, **kwargs):
             
 
         reviews_review = reviews_en.data['reviews']
-        sorted_reviews = sorted(reviews_review, key=lambda x: x['timestamp_updated'], reverse=True) # updated 기준으로 정렬
+        sorted_reviews = sorted(reviews_review, key=lambda x: x['timestamp_updated'], reverse=False) # updated 기준으로 정렬
 
         
         cursor.execute(f"SELECT game_review_like_cnt, game_review_unlike_cnt, game_review_is_use_cnt FROM game_score_info WHERE game_id = '{game_id}'")
@@ -186,51 +186,53 @@ def process_reviews(num_batches, index, **kwargs):
                 # 평균 플탐에 비해 10%이하인 댓글 배제 
                 continue
 
-            if latest_review_date is None or review_updated_dt > latest_review_date:
+            # if latest_review_date is None or review_updated_dt > latest_review_date:
                 #print('시간시간', review_updated_dt, latest_review_date)
                 # 리뷰 저장 코드 작성
-                scores = analyzer.polarity_scores(review_content)
-                # {'neg': 0.0, 'neu': 0.308, 'pos': 0.692, 'compound': 0.6249}
-                compound_score = scores['compound']
-                if compound_score >= 0:
-                    #print("긍정적인 감정입니다.")
-                    review_is_good = True
-                    game_review_like_cnt += 1
-                else:
-                    #print("부정적인 감정입니다.")
-                    review_is_good = False
-                    game_review_unlike_cnt += 1
-                
-                # 1.3배 이상 늘어난 현재 플탐인 경우 True로 바꿔줌
-                if review_playtime_total is not None and review_playtime_at is not None:
-                    if review_playtime_total >= 1.3 * review_playtime_at:
-                        review_is_use = True
-                
+            scores = analyzer.polarity_scores(review_content)
+            # {'neg': 0.0, 'neu': 0.308, 'pos': 0.692, 'compound': 0.6249}
+            compound_score = scores['compound']
+            if compound_score >= 0:
+                #print("긍정적인 감정입니다.")
+                review_is_good = True
+                game_review_like_cnt += 1
+            else:
+                #print("부정적인 감정입니다.")
+                review_is_good = False
+                game_review_unlike_cnt += 1
+            
+            # 1.3배 이상 늘어난 현재 플탐인 경우 True로 바꿔줌
+            if review_playtime_total is not None and review_playtime_at is not None:
+                if review_playtime_total >= 1.3 * review_playtime_at:
+                    review_is_use = True
+            
 
-                # 4. 리뷰 삽입
+            # 4. 리뷰 삽입
+            try:
                 insert_query = """INSERT INTO review (game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 cassandra_session.execute(insert_query, (game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm))
+            except Exception as e:
+                print("카산드라 데이터 저장 중 오류 발생:", e)
 
-
-            else:
-                return ## 완탐 로직
-                # 1.3배 이상 늘어난 현재 플탐인 경우 True로 바꿔줌
-                if review_playtime_total is not None and review_playtime_at is not None:
-                    if review_playtime_total >= 1.3 * review_playtime_at:
-                        #print("존재하는 댓글 + 플탐 해당 OOOOOOOO")
-                        review_is_use = True
+            # else:
+            #     break ## 완탐 로직
+            #     # 1.3배 이상 늘어난 현재 플탐인 경우 True로 바꿔줌
+            #     if review_playtime_total is not None and review_playtime_at is not None:
+            #         if review_playtime_total >= 1.3 * review_playtime_at:
+            #             #print("존재하는 댓글 + 플탐 해당 OOOOOOOO")
+            #             review_is_use = True
                         
-                        # 3. 리뷰 업데이트
-                        update_query = """UPDATE review 
-                                        SET review_is_use = %s, updated_dttm = %s
-                                        WHERE game_id = %s AND review_id = %s"""
-                        cassandra_session.execute(update_query, (review_is_use, updated_dttm, game_id, review_id))
+            #             # 3. 리뷰 업데이트
+            #             update_query = """UPDATE review 
+            #                             SET review_is_use = %s, updated_dttm = %s
+            #                             WHERE game_id = %s AND review_id = %s"""
+            #             cassandra_session.execute(update_query, (review_is_use, updated_dttm, game_id, review_id))
 
 
-                    else:
-                        #print("존재하는 댓글 + 플탐 해당 X")
-                        review_is_use = False
+            #         else:
+            #             #print("존재하는 댓글 + 플탐 해당 X")
+            #             review_is_use = False
 
         try:
             # #print(game_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dttm)
@@ -248,7 +250,7 @@ def process_reviews(num_batches, index, **kwargs):
             #print("Review 데이터가 성공적으로 저장되었습니다.")
         except Exception as e:
             conn.rollback()
-            #print("Review 데이터 저장 중 오류 발생:", e)
+            print("Review 데이터 저장 중 오류 발생:", e)
     cursor.close()
     conn.close()
     cassandra_session.shutdown()
@@ -259,7 +261,7 @@ def process_reviews(num_batches, index, **kwargs):
      
 
 def process_statistics(num_batches, index, **kwargs):
-    cnt = 0
+    # cnt = 0
     statistics_base_dt = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='started_dt')
     game_ids = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='game_ids')
     game_id_batch = game_ids[index::num_batches]
@@ -291,7 +293,7 @@ def process_statistics(num_batches, index, **kwargs):
             #print('game_id =', game_id)
             continue
         
-        if not reviews:
+        if list(reviews):
             #print(f"No reviews found for game ID: {game_id}")
             continue
         else:
@@ -335,7 +337,7 @@ def process_statistics(num_batches, index, **kwargs):
         # 리뷰의 평균 플레이타임 계산
         #print(reviews)
         total_playtime = sum(review[0] for review in reviews)
-        game_standard_playtime = total_playtime // len(reviews)
+        game_standard_playtime = total_playtime // len(list(reviews))
         if game_standard_playtime < 1:
             continue
         #print('game_standard 계산 전', total_playtime, len(reviews))
