@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
 const BASE_URL = "https://j10e105.p.ssafy.io/api";
-const REDIRECT_URI = BASE_URL+'/auth/google/callback';
+const REDIRECT_URI = 'https://j10e105.p.ssafy.io/auth/google/callback';
 const SCOPE = 'profile email';
 
 const api = axios.create({
