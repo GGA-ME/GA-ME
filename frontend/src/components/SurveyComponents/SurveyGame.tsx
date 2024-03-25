@@ -42,7 +42,7 @@ const Game = () => {
             <SimpleGameCard
                     key={index}
                     imageUrl={choiceGame.gameHeaderImg}
-                    title={choiceGame.gameChoiceName} gameId={choiceGame.gameId}            />
+                    title={choiceGame.gameChoiceName}           />
           </motion.li>
         ))}</p>
       </>
