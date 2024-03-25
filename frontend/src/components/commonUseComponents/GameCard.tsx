@@ -23,7 +23,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
   const [isHovered, setIsHovered] = useState(false);
   const { addItem } = usePoketStore();
 
-  const handleAddToCart = (event) => { // event 파라미터 추가
+  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 버블링 중지
     const itemToAdd = { gameId, imageUrl, title, price, tags };
     addItem(itemToAdd);

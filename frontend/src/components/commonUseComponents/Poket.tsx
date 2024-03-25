@@ -12,7 +12,7 @@ const Poket: React.FC = () => {
   return (
 <div className={`${style.neonBorder} fixed top-0 right-14 flex flex-col items-center justify-center px-8 h-screen border-r-2 border-l-2 bg-gray-900 text-white z-40`}>
       <div className="w-14">
-        {cartItems.map((game, index) => (
+        {cartItems.map((game) => (
           <motion.div key={game.gameId} className="mb-6"
             onClick={() => removeItem(game.gameId)}
             style={{ cursor: 'pointer' }}
