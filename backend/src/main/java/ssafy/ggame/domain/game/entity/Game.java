@@ -57,10 +57,10 @@ public class Game extends BaseUpdatedEntity {
     private String gameScreenshotImg;
 
     @Column(name = "game_final_score")
-    private Byte gameFinalScore;
+    private Double gameFinalScore;
 
     @Column(name = "game_recent_score")
-    private Integer gameRecentScore;
+    private Double gameRecentScore;
 
     @Column(name = "game_word_cloud_url")
     private String gameWordCloudUrl;
@@ -68,7 +68,7 @@ public class Game extends BaseUpdatedEntity {
     @OneToMany(mappedBy = "game")
     private List<GameTag> gameTags;
 
-    private Byte gameFinalRecentScore;
+    private Double gameFinalRecentScore;
 
     public GameCardDto converToGameCardDto(){
         return GameCardDto.builder()
