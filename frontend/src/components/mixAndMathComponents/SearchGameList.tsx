@@ -50,7 +50,25 @@ const games: Game[] = [
 
 // dummy data for test end
 
-const SearchGameListComponent: React.FC = () => {
+interface SearchGameListProps {
+  handleCombination: () => Promise<any>; // handleCombination 함수의 타입 정의
+}
+
+
+const SearchGameList: React.FC<SearchGameListProps> = ({ handleCombination }) => {
+
+  const handleClick = async () => {
+    try {
+      console.log("handleClick run! in SearchGameList")
+      const result = await handleCombination(); // handleCombination 함수 호출
+      console.log("Combination result:", result);
+    } catch (error) {
+      console.error("Error occurred while handling combination:", error);
+    }
+  };
+
+
+
   return (
     <>
     <div>
@@ -67,9 +85,9 @@ const SearchGameListComponent: React.FC = () => {
         );
       })}
       </div>
-      <button>조합하기</button>
+      <button onClick={handleClick}>조합하기</button>
     </>
   );
 };
 
-export default SearchGameListComponent;
+export default SearchGameList;

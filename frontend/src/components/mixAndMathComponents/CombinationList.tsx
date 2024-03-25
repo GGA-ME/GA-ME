@@ -1,14 +1,20 @@
 import React from 'react'
-import SearchGameListComponent from './SearchGameList'
+import SearchGameList from './SearchGameList'
 import RelatedTagList from './RelatedTagList'
 
-const CombinationList: React.FC = () => {
+
+interface CombinationListProps {
+    handleCombination: () => Promise<any>; // handleCombination 함수의 타입 정의
+  }
+  const CombinationList: React.FC<CombinationListProps> = ({ handleCombination }) => {
     return(
         <>
-        <SearchGameListComponent />
+        <SearchGameList handleCombination={handleCombination} />
         <RelatedTagList />
         </>
     )
 }
 
 export default CombinationList
+
+
