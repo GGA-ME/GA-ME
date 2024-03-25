@@ -21,7 +21,7 @@ interface SurveyStoreState{
 
 const api = axios.create({baseURL: 'https://j10e105.p.ssafy.io'});
 
-export const surveyStore = create<SurveyStoreState>((set, get) => ({
+export const surveyStore = create<SurveyStoreState>((set) => ({
     data: null,
     loading: false,
     error: null,
