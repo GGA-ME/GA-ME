@@ -9,12 +9,6 @@ interface ApiResponse {
     result: []; // `any` 대신 더 구체적인 타입을 사용해주세요.
 }
 
-interface SimpleGameInfo{
-    gameId: number;
-    gameChoiceName: string;
-    gameHeaderImg: string;
-}
-
 interface SurveyStoreState{
     data: ApiResponse | null;
     loading: boolean;
