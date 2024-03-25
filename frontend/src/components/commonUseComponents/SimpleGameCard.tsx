@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 interface SimpleGameCardProps {
     imageUrl: string;
     title: string;
+    gameId: number;
   }
 
 const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ imageUrl, title }) => {
@@ -15,7 +16,7 @@ const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ imageUrl, title }) => {
             transition={{ type: "spring", stiffness: 300 }}
         >
             <div className={`w-48 rounded overflow-hidden bg-gray-600 text-white text-center`}>
-                <img src={imageUrl} alt={title} className='object-cover'   />
+                <img src={imageUrl} alt={title} className='object-cover w-50 h-50'  style={{width: '192px', height: '110px' , objectFit :'cover'  }}/>
                 <div className="p-1">
                     <h3 className="text-sm">{title}</h3>
                 </div>

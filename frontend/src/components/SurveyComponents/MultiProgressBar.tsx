@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 import styles from './MultiProgressBar.module.css'; // 스타일 모듈 불러오기
-import Lottie from 'react-lottie-player'
-import lottieJson from './my-lottie.json'
 
 const flexName = "justify-center ";
 
