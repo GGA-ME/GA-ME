@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from './Banner.module.css'; // CSS 모듈 import
 
 function Banner() {
