@@ -1,16 +1,14 @@
 package ssafy.ggame.domain.game.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.checkerframework.checker.units.qual.A;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class GameLikeDto {
-    Integer gameId;
-    Integer gameLike;
+    Long gameId;
+    Long gameLike;
 }
