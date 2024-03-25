@@ -1,0 +1,27 @@
+/* Search.module.css */
+.searchContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .searchInput {
+    padding: 10px 40px 10px 10px; /* 오른쪽에 아이콘 공간 확보 */
+    border: 1px solid #ccc;
+    color: #000;
+    border-radius: 20px;
+    outline: none;
+    width: 300px; /* 또는 필요한 너비 */
+  }
+  
+  .searchButton {
+    position: absolute;
+    right: 5px; /* input 필드 내부 오른쪽에 위치 */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #555; /* 아이콘 색상 */
+  }
+  
