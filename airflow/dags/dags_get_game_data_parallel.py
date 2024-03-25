@@ -428,6 +428,7 @@ def get_game_data(index, num_batches, **kwargs):
         return
     else:
        #print('applist 존재')
+       pass
 
     game_id_batch = applist[index::num_batches]
    #print("game_id_batch::", game_id_batch)
