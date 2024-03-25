@@ -173,9 +173,9 @@ def for_tag(game_id, code_id, list):
         # game_tag 테이블에 추가
         try:
             # TODO: 중복 태그 저장 방지
-            is_exist_query = f"select * from game_tag where game_id = {game_id} code_id = {code_id} and tag_id = {tag_id}"
+            is_exist_query = f"select * from game_tag where game_id = {game_id} and code_id = '{code_id}' and tag_id = {tag_id}"
             cursor.execute(is_exist_query)
-            result = cursor.fetchAll()
+            result = cursor.fetchall()
            #print("result::: ", len(result))
 
             if(len(result) < 1):
@@ -189,7 +189,7 @@ def for_tag(game_id, code_id, list):
                 print("for_tag 함수에서 중복 키 오류 발생:", err)
                 continue   
             else:
-               print("for_tag 함수에서 MySQL 커넥터 오류:", err)
+                print("for_tag 함수에서 MySQL 커넥터 오류:", err)
         
 def get_tag_category(game_id, detail_json):
     detail_body = detail_json.get(game_id).get("data")
