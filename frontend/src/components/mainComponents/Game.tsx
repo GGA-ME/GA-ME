@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 import GameCard from '../commonUseComponents/GameCard';
 import useStoreMain from "../../stores/mainStore";
 import { AxiosError } from 'axios';
@@ -16,6 +17,7 @@ tagList: Array<{ codeId: string; tagName: string }>;
 
 const GameComponent: React.FC = () => {
   const { data, loading, error, fetchData } = useStoreMain();
+  const navigate = useNavigate(); // useNavigate 인스턴스화
 
   useEffect(() => {
     fetchData(); // 마운트시 데이터 가져오기
@@ -34,6 +36,11 @@ const GameComponent: React.FC = () => {
     return <div>No data available</div>;
   }
 
+  const handleClickGame = (gameId:number) => {
+    navigate(`/detail/${gameId}`)
+    console.log('디테일페이지 이동')
+  }
+
   return (
     <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
       variants={{
@@ -47,17 +54,19 @@ const GameComponent: React.FC = () => {
         <motion.li key={index} className="list-none"
           variants={{
             hidden: { x: -60, opacity: 0 },
-            visible: { x: 0, opacity: 1, transition: { duration: 0.3 } }
+            visible: { x: 0, opacity: 1, transition: { duration: 0.1 } }
           }}
         >
           <GameCard
             key={index}
+            gameId={game.gameId}
             imageUrl={game.gameHeaderImg}
             title={game.gameName}
             price={`₩ ${game.gamePriceFinal}`}
             tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
             likes={34}
-          />
+            onGameClick={handleClickGame} // 수정된 부분
+            />
         </motion.li>
       ))}
     </motion.ul>
