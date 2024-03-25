@@ -231,6 +231,7 @@ def get_game_final_score(index, num_batches, **kwargs):
        #print('applist :', game_ids)
         return
     else:
+        pass
        #print('applist 존재')
 
     game_id_batch = game_ids[index::num_batches]
@@ -406,6 +407,7 @@ def insert_game_data(app, detail_res):
             get_tag_category(app_id, detail_json)
 
         except mysql.connector.Error as err:
+            print("MySQL 커넥터 오류:", err)
         #    #print("MYSQL CONNECTOR ERROR:::", err)
         #     continue
             # if isinstance(err, mysql.connector.IntegrityError) and err.errno == 1062:
@@ -413,7 +415,8 @@ def insert_game_data(app, detail_res):
             #     update_game_data(app_id, detail_json)
                 
             # else:
-            print("MySQL 커넥터 오류:", err)
+
+
 
 
 
