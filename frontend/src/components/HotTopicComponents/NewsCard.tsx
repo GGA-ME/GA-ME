@@ -12,9 +12,10 @@ interface NewsCardProps {
 }
 
 // 타입스크립트식 선언
-const NewsCardDto: React.FC<NewsCardProps> = ({ hotTopicLink, hotTopicImg, hotTopicTitle, hotTopicShortDesc, hotTopicDate }) => {
+const NewsCardDto: React.FC<NewsCardProps> = ({ hotTopicLink, hotTopicImg, hotTopicTitle, hotTopicShortDesc }) => {
 
   const [isHovered, setIsHovered] = useState(false);
+  isHovered;
   const hoverEffects = {
     scale: [1, 1.02], // 호버시 크기 설정
     transition: { duration: 0.3 },
