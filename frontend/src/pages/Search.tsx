@@ -12,7 +12,7 @@ function Search() {
     const user = useUserStore((state) => state.user);
     const setResults = useSearchStore((state) => state.setResults);
 
-    const userId = user?.userId ?? null;
+    const userId = user?.userId ?? 2;   //테스트용. 없으면 2로
 
     const handleSearch = async () => {
         if (!userId) {
