@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ssafy.ggame.domain.game.dto.GameCardDto;
+import ssafy.ggame.domain.game.dto.GameLikeDto;
 import ssafy.ggame.domain.game.dto.GameSaleCardDto;
 import ssafy.ggame.domain.game.dto.GameTagsDto;
 import ssafy.ggame.domain.search.dto.SearchLikeRequestDto;
@@ -57,11 +58,14 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         List<Long> preferIds = getPrefers(userId, ids);
         //해당하는 게임들 태그 가져오기
         Map<Long, List<TagDto>> tagsMap = getTags(ids);
+        //좋아요 수 가져오기
+        Map<Integer, Integer> likes = getLikes(ids);
 
         //게임에 매칭( tag, prefer )
         searchGames.forEach(game -> {
             game.updateTagList(tagsMap.get(game.getGameId()));
             game.updateIsPrefer(preferIds.contains(game.getGameId()));
+            game.updateLike(likes.get(game.getGameId()));
             game.updatePrices();
         });
 
@@ -147,6 +151,8 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         List<Long> prefers = getPrefers(userId, ids);
         //tags 가져오기
         Map<Long, List<TagDto>> tags = getTags(ids);
+        //좋아요 가져오기
+        Map<Integer, Integer> likes = getLikes(ids);
 
 
         //세일 퍼센트 세팅 10,30,50,75
@@ -159,7 +165,7 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         searchGames.forEach(game->{
             game.updateTagList(tags.get(game.getGameId()));
             game.updateIsPrefer(prefers.contains(game.getGameId()));
-
+            game.updateLike(likes.get(game.getGameId()));
             game.updatePrices();
             Byte percent = game.getGameDiscountPercent();
             if(percent>=10&&percent<30){
@@ -220,4 +226,20 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
                 .where(prefer.preferId.game.gameId.in(ids).and(prefer.preferId.user.userId.eq(userId)))
                 .fetch();
     }
+    //좋아요 수 가져오기
+    private Map<Integer,Integer> getLikes(List<Long> ids) {
+        List<GameLikeDto> likes = queryFactory.select(
+                        Projections.constructor(
+                                GameLikeDto.class,
+                                prefer.preferId.game.gameId.as("gameId"),
+                                prefer.preferId.game.gameId.count().as("gameLike")
+                        )
+                ).from(prefer)
+                .where(prefer.preferId.game.gameId.in(ids))
+                .groupBy(prefer.preferId.game.gameId)
+                .fetch();
+        return likes.stream()
+                .collect(Collectors.toMap(GameLikeDto::getGameId, GameLikeDto::getGameLike));
+    }
+
 }
