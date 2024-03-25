@@ -70,7 +70,7 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
     // 할인 게임 검색 메소드 ( 할인율 ~10%, ~30%, ~50%, ~75% )
     @Override
     public Map<Integer,List<GameSaleCardDto>> findSaleGames(Integer userId) {
-        //1. 일단 할인율이 있는거 다가져오기
+        //1. 일단 할인율이 있는거 다가져오기 (10~30)
         List<GameSaleCardDto> searchGames = queryFactory.select(
                         Projections.constructor(
                                 GameSaleCardDto.class,
@@ -83,9 +83,60 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
                                 game.gameDiscountPercent.as("gameDiscountPercent")
                         )
                 ).from(game)
-                .where(game.gameDiscountPercent.goe(10))
+                .where(game.gameDiscountPercent.goe(10).and(game.gameDiscountPercent.lt(30)))
                 .orderBy(game.gameFinalScore.desc())
+                .limit(30)
                 .fetch();
+        searchGames.addAll(queryFactory.select(
+                        Projections.constructor(
+                                GameSaleCardDto.class,
+                                game.gameId.as("gameId"),
+                                game.gameName.as("gameName"),
+                                game.gameHeaderImg.as("gameHeaderImg"),
+                                game.gamePriceInitial.as("gamePriceInitial"),
+                                game.gamePriceFinal.as("gamePriceFinal"),
+                                game.gameDeveloper.as("gameDeveloper"),
+                                game.gameDiscountPercent.as("gameDiscountPercent")
+                        )
+                ).from(game)
+                .where(game.gameDiscountPercent.goe(30).and(game.gameDiscountPercent.lt(50)))
+                .orderBy(game.gameFinalScore.desc())
+                .limit(30)
+                .fetch());
+        searchGames.addAll(queryFactory.select(
+                        Projections.constructor(
+                                GameSaleCardDto.class,
+                                game.gameId.as("gameId"),
+                                game.gameName.as("gameName"),
+                                game.gameHeaderImg.as("gameHeaderImg"),
+                                game.gamePriceInitial.as("gamePriceInitial"),
+                                game.gamePriceFinal.as("gamePriceFinal"),
+                                game.gameDeveloper.as("gameDeveloper"),
+                                game.gameDiscountPercent.as("gameDiscountPercent")
+                        )
+                ).from(game)
+                .where(game.gameDiscountPercent.goe(50).and(game.gameDiscountPercent.lt(75)))
+                .orderBy(game.gameFinalScore.desc())
+                .limit(30)
+                .fetch());
+        searchGames.addAll(queryFactory.select(
+                        Projections.constructor(
+                                GameSaleCardDto.class,
+                                game.gameId.as("gameId"),
+                                game.gameName.as("gameName"),
+                                game.gameHeaderImg.as("gameHeaderImg"),
+                                game.gamePriceInitial.as("gamePriceInitial"),
+                                game.gamePriceFinal.as("gamePriceFinal"),
+                                game.gameDeveloper.as("gameDeveloper"),
+                                game.gameDiscountPercent.as("gameDiscountPercent")
+                        )
+                ).from(game)
+                .where(game.gameDiscountPercent.goe(75))
+                .orderBy(game.gameFinalScore.desc())
+                .limit(30)
+                .fetch());
+
+
         //2. 선호, 태그들 가져오기
         //해당하는 게임들 id를 추출
         List<Long> ids = searchGames.stream()
