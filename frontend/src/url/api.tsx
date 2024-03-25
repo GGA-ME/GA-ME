@@ -28,5 +28,17 @@ export const fetchUserInfo = async (code: string) => {
   }
 };
 
+// 게임명 검색 API 함수
+export const searchGames = async (keyword: string, userId: number) => {
+  try {
+    const response = await api.post('/search', {
+      keyword,
+      userId
+    });
+    return response.data; // 검색 결과를 반환
+  } catch (error) {
+    throw new Error('Failed to search games');
+  }
+};
 
 export { api };
