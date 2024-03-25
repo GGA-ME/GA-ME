@@ -6,7 +6,71 @@ font-style: bold;
 font-weight: 400;
 font-size: 20px;
 font-style: italic;
-
+margin-top: 20px;
+margin-bottom: 20px;
 color: #FFFFFF;
-text-shadow: 0px 0px 20px #81BECE, 0px 0px 5px #cece81;
+text-shadow: 0px 0px 20px #cece81, 0px 0px 5px #cece81;
+}
+.title1{
+    /* Hot Topic 타이틀 */
+font-family: 'TAEBAEK font TTF';
+font-style: bold;
+font-weight: 400;
+font-size: 20px;
+font-style: italic;
+margin-top: 20px;
+margin-bottom: 20px;
+color: #FFFFFF;
+text-shadow: 0px 0px 20px #8ace81, 0px 0px 5px #8ace81;
+}
+.title2{
+    /* Hot Topic 타이틀 */
+font-family: 'TAEBAEK font TTF';
+font-style: bold;
+font-weight: 400;
+font-size: 20px;
+font-style: italic;
+margin-top: 20px;
+margin-bottom: 20px;
+color: #FFFFFF;
+text-shadow: 0px 0px 20px #81adce, 0px 0px 5px #81adce;
+}
+.title3{
+    /* Hot Topic 타이틀 */
+font-family: 'TAEBAEK font TTF';
+font-style: bold;
+font-weight: 400;
+font-size: 20px;
+font-style: italic;
+margin-top: 20px;
+margin-bottom: 20px;
+color: #FFFFFF;
+text-shadow: 0px 0px 20px #d15b5b, 0px 0px 5px #d15b5b;
+}
+/* 세일 라디오 버튼 */
+.select {
+    padding: 0px 10px;
+}
+.select input[type=radio]{
+    display: none;
+}
+.select input[type=radio]+label{
+    display: inline-block;
+    cursor: pointer;
+    height: 30px;
+    width: 130px;
+    border: 1px solid #333;
+    line-height: 24px;
+    text-align: center;
+    font-weight:bold;
+    font-size:13px;
+    margin-left: 5px;
+}
+.select input[type=radio]+label{
+    background-color: #fff;
+    color: #333;
+}
+.select input[type=radio]:checked+label{
+    background-color: #847bd7;
+    color: #fff;
 }

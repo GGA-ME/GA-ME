@@ -30,6 +30,7 @@ interface CardDto {
     gamePriceFinal: number;
     gameDeveloper: string;
     gameDiscountPercent: number;
+    gameLike:number;
     isPrefer: boolean;
     tagList: Array<{ codeId: string; tagName: string }>;
 }

@@ -14,8 +14,9 @@ interface SaleCardProps {
     gamePriceInitial: number;
     gameDeveloper: string;
     gameDiscountPercent: number;
+    gameLike: number;
     isPrefer: boolean;
-    tagList: Array<{ codeId: string; tagName: string }>;
+    tagList: Array<{ codeId: string; tagName: string }> | null; // tagList가 null일 수도 있음을 명시
   }[];
 }
 
@@ -52,8 +53,8 @@ const SalesList: React.FC<SaleCardProps> = ({ cardDtoList }) => {
             imageUrl={game.gameHeaderImg}
             title={game.gameName}
             price={`₩ ${game.gamePriceFinal}`}
-            tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
-            likes={34}
+            tags={game.tagList ? game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName) : []}
+            likes={game.gameLike}
           />
         </motion.li>
       ))}

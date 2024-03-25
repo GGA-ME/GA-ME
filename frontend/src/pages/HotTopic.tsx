@@ -26,10 +26,15 @@ const HotTopic: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="pl-80 w-full h-full" 
+      <div className="pl-80 w-full" 
         style={{
           backgroundImage: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 100%)',
-          height: '100%'
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          overflowY: 'scroll' // 스크롤이 필요한 경우만 스크롤 가능하도록 설정
         }}>
         <Title/>
         <div style={{marginTop:'20px',display: 'flex', gap: '20px'}}>
