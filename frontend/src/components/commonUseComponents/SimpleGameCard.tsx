@@ -3,11 +3,13 @@ import { motion } from 'framer-motion';
 
 // 타입스크립트 타입 프롭받을 타입 정의
 interface SimpleGameCardProps {
+    gameId: number;
     imageUrl: string;
     title: string;
   }
 
-const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ imageUrl, title }) => {
+const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ gameId, imageUrl, title }) => {
+    const className = 'w-full ' + {gameId};
     return (
         <motion.div
             className="w-48 rounded overflow-hidden shadow-lg transform cursor-pointer"
@@ -15,7 +17,7 @@ const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ imageUrl, title }) => {
             transition={{ type: "spring", stiffness: 300 }}
         >
             <div className={`w-48 rounded overflow-hidden bg-gray-600 text-white text-center`}>
-                <img src={imageUrl} alt={title} className="w-full" />
+                <img src={imageUrl} alt={title} className={className}   />
                 <div className="p-1">
                     <h3 className="text-sm">{title}</h3>
                 </div>
