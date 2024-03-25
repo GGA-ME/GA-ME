@@ -173,13 +173,13 @@ def for_tag(game_id, code_id, list):
         # game_tag 테이블에 추가
         try:
             # TODO: 중복 태그 저장 방지
-            is_exist_query = f"select * from game_tag where code_id = {code_id} and tag_id = {tag_id} where game_id = {game_id}"
+            is_exist_query = f"select * from game_tag where game_id = {game_id} code_id = {code_id} and tag_id = {tag_id}"
             cursor.execute(is_exist_query)
             result = cursor.fetchAll()
            #print("result::: ", len(result))
 
             if(len(result) < 1):
-                insert_game_tag_query = f"insert into game_tag (game_id, tag_id, code_id) values ({game_id}, {tag_id}, '{code_id}')"
+                insert_game_tag_query = f"insert into game_tag (game_id, code_id, tag_id) values ({game_id}, '{code_id}', {tag_id})"
                 cursor.execute(insert_game_tag_query)
                 conn.commit()
                #print("insert into game_tag :: ", game_id, " - ", tag_id, " - ", code_id)
