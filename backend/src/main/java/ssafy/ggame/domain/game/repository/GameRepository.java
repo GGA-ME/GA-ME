@@ -15,4 +15,5 @@ public interface GameRepository extends JpaRepository<Game,Long> {
 
 //    @Query("SELECT e FROM game e WHERE e.gCodeId = :codeId AND e.tagId = :tagId ORDER BY e.gameFinalScore")
 //    List<Game> findAllByGCodeIdAndTagIdOrderByGameFinalScore(String codeId, Short tagId);
+
 }
