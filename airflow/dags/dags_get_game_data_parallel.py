@@ -172,10 +172,18 @@ def for_tag(game_id, code_id, list):
             
         # game_tag 테이블에 추가
         try:
-            insert_game_tag_query = f"insert into game_tag (game_id, tag_id, code_id) values ({game_id}, {tag_id}, '{code_id}')"
-            cursor.execute(insert_game_tag_query)
-            conn.commit()
-            print("insert into game_tag :: ", game_id, " - ", tag_id, " - ", code_id)
+            # TODO: 중복 태그 저장 방지
+            is_exist_query = f"select * from game_tag where code_id = {code_id} and tag_id = {tag_id} where game_id = {game_id}"
+            cursor.execute(is_exist_query)
+            result = cursor.fetchAll()
+            print("result::: ", len(result))
+
+            if(len(result) < 1):
+                insert_game_tag_query = f"insert into game_tag (game_id, tag_id, code_id) values ({game_id}, {tag_id}, '{code_id}')"
+                cursor.execute(insert_game_tag_query)
+                conn.commit()
+                print("insert into game_tag :: ", game_id, " - ", tag_id, " - ", code_id)
+                
         except mysql.connector.Error as err:
             if isinstance(err, mysql.connector.IntegrityError) and err.errno == 1062:
                 print("for_tag 함수에서 중복 키 오류 발생:", err)
@@ -301,6 +309,7 @@ def insert_game_data(app, detail_res):
             # print("game_header_img ", game_header_img)
             if not detail_body.get("website"):
                 log.info("@@@@@@ no website")
+                game_website = ""
             game_website = detail_body.get("website")
             # print("game_website: ", game_website)
             # devloper list를 문자열로
@@ -356,20 +365,7 @@ def insert_game_data(app, detail_res):
             , updated_dt
             ) 
             values (
-            %s
-            , %s
-            , %s
-            , %s
-            , %s
-            , %s
-            , %s
-            , %s
-            , %s
-            , %s
-            , %s
-            , %s
-            , %s
-            , now()
+            %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, now()
             )
             on duplicate key update
             game_name = VALUES(game_name),
