@@ -100,6 +100,7 @@ public class TopicServiceImpl implements TopicService {
 
 
             List<WebElement> news = driver.findElements(By.cssSelector("#content > div.content-left > div.news-list > ul > li"));
+            if(size>=news.size()) size = news.size();
             for (int i = 0; i < size; i++) {
                 WebElement n = news.get(i);
                 String link = n.findElement(By.cssSelector("a")).getAttribute("href");
