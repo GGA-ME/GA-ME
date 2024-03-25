@@ -28,7 +28,7 @@ export const fetchUserInfo = async (code: string) => {
     });
     return response.data; // 사용자 정보와 새로운 사용자 여부를 반환
   } catch (error) {
-    throw new Error('Failed to fetch user information');
+    throw new Error('Failed to fetch user information'+error);
   }
 };
 
