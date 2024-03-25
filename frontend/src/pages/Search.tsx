@@ -1,4 +1,3 @@
-import React from 'react';
 import Navbar from "../components/commonUseComponents/Navbar";
 import Result from "../components/searchComponents/Result";
 import SearchBox from '../components/searchComponents/SearchBox';
