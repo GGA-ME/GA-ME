@@ -15,6 +15,7 @@ interface GameCardProps {
 
 // 타입스크립트식 선언
 const GameCard: React.FC<GameCardProps> = ({ imageUrl, title, price, tags, likes }) => {
+
   const [isHovered, setIsHovered] = useState(false);
   const hoverEffects = {
     scale: [1, 1.1], // 호버시 크기 설정

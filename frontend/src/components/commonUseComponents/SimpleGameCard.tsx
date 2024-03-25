@@ -15,7 +15,7 @@ const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ imageUrl, title }) => {
             transition={{ type: "spring", stiffness: 300 }}
         >
             <div className={`w-48 rounded overflow-hidden bg-gray-600 text-white text-center`}>
-                <img src={imageUrl} alt={title} className="w-full" />
+                <img src={imageUrl} alt={title} className='w-full'   />
                 <div className="p-1">
                     <h3 className="text-sm">{title}</h3>
                 </div>
