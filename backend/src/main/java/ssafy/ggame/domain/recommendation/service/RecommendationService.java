@@ -118,7 +118,7 @@ public class RecommendationService {
         return gameCardDtoList;
     }
 
-    private List<GameCardDto> makeGameCardDtoList(List<Game> gameList) {
+    public List<GameCardDto> makeGameCardDtoList(List<Game> gameList) {
         List<GameCardDto> gameCardDtoList = new ArrayList<>();
         for(Game game : gameList){
             GameCardDto gameCardDto = game.converToGameCardDto();
