@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ssafy.ggame.domain.game.dto.GameCardDto;
+import ssafy.ggame.domain.game.dto.GameLikeDto;
 import ssafy.ggame.domain.game.dto.GameSaleCardDto;
 import ssafy.ggame.domain.game.dto.GameTagsDto;
 import ssafy.ggame.domain.search.dto.SearchLikeRequestDto;
@@ -57,9 +58,13 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         List<Long> preferIds = getPrefers(userId, ids);
         //해당하는 게임들 태그 가져오기
         Map<Long, List<TagDto>> tagsMap = getTags(ids);
+        //좋아요 수 가져오기
+        Map<Integer, Integer> likes = getLikes(ids);
+
 
         //게임에 매칭( tag, prefer )
         searchGames.forEach(game -> {
+            game.updateLike(likes.get(game.getGameId()));
             game.updateTagList(tagsMap.get(game.getGameId()));
             game.updateIsPrefer(preferIds.contains(game.getGameId()));
             game.updatePrices();
@@ -67,10 +72,26 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
 
         return searchGames;
     }
+    //좋아요 수 가져오기
+    private Map<Integer,Integer> getLikes(List<Long> ids) {
+        List<GameLikeDto> likes = queryFactory.select(
+                        Projections.constructor(
+                                GameLikeDto.class,
+                                prefer.preferId.game.gameId.as("gameId"),
+                                prefer.preferId.game.gameId.count().as("gameLike")
+                        )
+                ).from(prefer)
+                .where(prefer.preferId.game.gameId.in(ids))
+                .groupBy(prefer.preferId.game.gameId)
+                .fetch();
+        return likes.stream()
+                .collect(Collectors.toMap(GameLikeDto::getGameId, GameLikeDto::getGameLike));
+    }
+
     // 할인 게임 검색 메소드 ( 할인율 ~10%, ~30%, ~50%, ~75% )
     @Override
     public Map<Integer,List<GameSaleCardDto>> findSaleGames(Integer userId) {
-        //1. 일단 할인율이 있는거 다가져오기
+        //1. 일단 할인율이 있는거 다가져오기 (10~30)
         List<GameSaleCardDto> searchGames = queryFactory.select(
                         Projections.constructor(
                                 GameSaleCardDto.class,
@@ -83,9 +104,60 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
                                 game.gameDiscountPercent.as("gameDiscountPercent")
                         )
                 ).from(game)
-                .where(game.gameDiscountPercent.goe(10))
+                .where(game.gameDiscountPercent.goe(10).and(game.gameDiscountPercent.lt(30)))
                 .orderBy(game.gameFinalScore.desc())
+                .limit(30)
                 .fetch();
+        searchGames.addAll(queryFactory.select(
+                        Projections.constructor(
+                                GameSaleCardDto.class,
+                                game.gameId.as("gameId"),
+                                game.gameName.as("gameName"),
+                                game.gameHeaderImg.as("gameHeaderImg"),
+                                game.gamePriceInitial.as("gamePriceInitial"),
+                                game.gamePriceFinal.as("gamePriceFinal"),
+                                game.gameDeveloper.as("gameDeveloper"),
+                                game.gameDiscountPercent.as("gameDiscountPercent")
+                        )
+                ).from(game)
+                .where(game.gameDiscountPercent.goe(30).and(game.gameDiscountPercent.lt(50)))
+                .orderBy(game.gameFinalScore.desc())
+                .limit(30)
+                .fetch());
+        searchGames.addAll(queryFactory.select(
+                        Projections.constructor(
+                                GameSaleCardDto.class,
+                                game.gameId.as("gameId"),
+                                game.gameName.as("gameName"),
+                                game.gameHeaderImg.as("gameHeaderImg"),
+                                game.gamePriceInitial.as("gamePriceInitial"),
+                                game.gamePriceFinal.as("gamePriceFinal"),
+                                game.gameDeveloper.as("gameDeveloper"),
+                                game.gameDiscountPercent.as("gameDiscountPercent")
+                        )
+                ).from(game)
+                .where(game.gameDiscountPercent.goe(50).and(game.gameDiscountPercent.lt(75)))
+                .orderBy(game.gameFinalScore.desc())
+                .limit(30)
+                .fetch());
+        searchGames.addAll(queryFactory.select(
+                        Projections.constructor(
+                                GameSaleCardDto.class,
+                                game.gameId.as("gameId"),
+                                game.gameName.as("gameName"),
+                                game.gameHeaderImg.as("gameHeaderImg"),
+                                game.gamePriceInitial.as("gamePriceInitial"),
+                                game.gamePriceFinal.as("gamePriceFinal"),
+                                game.gameDeveloper.as("gameDeveloper"),
+                                game.gameDiscountPercent.as("gameDiscountPercent")
+                        )
+                ).from(game)
+                .where(game.gameDiscountPercent.goe(75))
+                .orderBy(game.gameFinalScore.desc())
+                .limit(30)
+                .fetch());
+
+
         //2. 선호, 태그들 가져오기
         //해당하는 게임들 id를 추출
         List<Long> ids = searchGames.stream()
@@ -104,11 +176,14 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         salePercentSetting(sales);
         //할인율 ~10%, ~30%, ~50%, ~75%
 
+        //좋아요 가져오기
+        Map<Integer, Integer> likes = getLikes(ids);
+
         //다 돌면서 분기 처리
         searchGames.forEach(game->{
             game.updateTagList(tags.get(game.getGameId()));
             game.updateIsPrefer(prefers.contains(game.getGameId()));
-
+            game.updateLike(likes.get(game.getGameId()));
             game.updatePrices();
             Byte percent = game.getGameDiscountPercent();
             if(percent>=10&&percent<30){
@@ -162,7 +237,6 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
     }
     //User prefer 가져오기
     private List<Long> getPrefers(Integer userId, List<Long> ids) {
-
         return queryFactory.select(
                         prefer.preferId.game.gameId
                 ).from(prefer)
