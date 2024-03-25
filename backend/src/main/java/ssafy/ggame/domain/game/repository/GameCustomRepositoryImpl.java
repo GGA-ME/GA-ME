@@ -59,13 +59,13 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         //해당하는 게임들 태그 가져오기
         Map<Long, List<TagDto>> tagsMap = getTags(ids);
         //좋아요 수 가져오기
-        Map<Integer, Integer> likes = getLikes(ids);
+        Map<Long, Long> likes = getLikes(ids);
 
         //게임에 매칭( tag, prefer )
         searchGames.forEach(game -> {
             game.updateTagList(tagsMap.get(game.getGameId()));
             game.updateIsPrefer(preferIds.contains(game.getGameId()));
-            game.updateLike(likes.get(game.getGameId()));
+            game.updateLike(likes.get(game.getGameId())==null?0:likes.get(game.getGameId()));
             game.updatePrices();
         });
 
@@ -152,7 +152,7 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         //tags 가져오기
         Map<Long, List<TagDto>> tags = getTags(ids);
         //좋아요 가져오기
-        Map<Integer, Integer> likes = getLikes(ids);
+        Map<Long, Long> likes = getLikes(ids);
 
 
         //세일 퍼센트 세팅 10,30,50,75
@@ -165,7 +165,7 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         searchGames.forEach(game->{
             game.updateTagList(tags.get(game.getGameId()));
             game.updateIsPrefer(prefers.contains(game.getGameId()));
-            game.updateLike(likes.get(game.getGameId()));
+            game.updateLike(likes.get(game.getGameId())==null?0:likes.get(game.getGameId()));
             game.updatePrices();
             Byte percent = game.getGameDiscountPercent();
             if(percent>=10&&percent<30){
@@ -227,7 +227,7 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
                 .fetch();
     }
     //좋아요 수 가져오기
-    private Map<Integer,Integer> getLikes(List<Long> ids) {
+    private Map<Long,Long> getLikes(List<Long> ids) {
         List<GameLikeDto> likes = queryFactory.select(
                         Projections.constructor(
                                 GameLikeDto.class,
