@@ -22,11 +22,8 @@ export const redirectToGoogleOAuth = () => {
 export const fetchUserInfo = async (code: string) => {
   try {
     console.log('In fetchUserInfo');
-    const response = await api.post('/auth/google/callback', JSON.stringify({ code }), {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    console.log('Code: '+code);
+    const response = await api.post('/auth/google/callback', { code });
     return response.data; // 사용자 정보와 새로운 사용자 여부를 반환
   } catch (error) {
     throw new Error('Failed to fetch user information'+error);
