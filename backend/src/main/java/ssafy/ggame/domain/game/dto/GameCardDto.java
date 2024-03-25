@@ -20,7 +20,6 @@ public class GameCardDto {
     Integer gamePriceInitial;
     Integer gamePriceFinal;
     String gameDeveloper;
-    Integer gameLike;
     Boolean isPrefer;
     List<TagDto> tagList;
 
@@ -31,7 +30,6 @@ public class GameCardDto {
     public void updateTagList(List<TagDto> tagList){
         this.tagList = tagList;
     }
-    public void updateLike(Integer like){this.gameLike = like;}
     //한화로 적용하기 위해서 설정된 값에서 /100을 해준다.
     public void updatePrices(){
         this.gamePriceInitial/=100;
