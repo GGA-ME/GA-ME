@@ -82,7 +82,7 @@ def load_game_detail_retry(app, game_datail_url):
 
 
 # def update_game_data(app_id, detail_json):
-#     print("###################UPDATE GAME DATA RUN!!!#######################")
+#    #print("###################UPDATE GAME DATA RUN!!!#######################")
 #     detail_body = detail_json.get(app_id).get("data")
 #     # game객체에 필요한 값 추출
 #     game_id = app_id
@@ -97,7 +97,7 @@ def load_game_detail_retry(app, game_datail_url):
 #     game_website = detail_body.get("website")
 #     # devloper list를 문자열로
 #     if not detail_body.get("developers"):
-#         print("NO DEVELOPER")
+#        #print("NO DEVELOPER")
 #         game_developer = ""
 #     else:
 #         game_developer = ', '.join([element.replace('"', '') for element in detail_body.get("developers")])
@@ -143,7 +143,7 @@ def load_game_detail_retry(app, game_datail_url):
     
 #     where  game_id = {game_id}
 #     """
-#     print("update query:::", query)
+#    #print("update query:::", query)
 #     # 쿼리 실행
 #     cursor.execute(query)
 
@@ -153,7 +153,7 @@ def load_game_detail_retry(app, game_datail_url):
 
 
 #     conn.commit()
-#     print("update commit", app_id)
+#    #print("update commit", app_id)
 
 def for_tag(game_id, code_id, list):
     for element in list:
@@ -163,12 +163,12 @@ def for_tag(game_id, code_id, list):
         is_exist_query = f"select * from tag where code_id = '{code_id}' and tag_id = {tag_id}"
         cursor.execute(is_exist_query)
         result = cursor.fetchone()
-        print("result::::::::::::", result)
+       #print("result::::::::::::", result)
         if result is None:
             insert_tag_query = f"insert into tag (code_id, tag_id, tag_name) values ('{code_id}', {tag_id}, '{tag_name}')"
             cursor.execute(insert_tag_query)
             conn.commit()
-            print("insert into tag :: ", tag_id, "-" ,tag_name)
+           #print("insert into tag :: ", tag_id, "-" ,tag_name)
             
         # game_tag 테이블에 추가
         try:
@@ -176,27 +176,27 @@ def for_tag(game_id, code_id, list):
             is_exist_query = f"select * from game_tag where code_id = {code_id} and tag_id = {tag_id} where game_id = {game_id}"
             cursor.execute(is_exist_query)
             result = cursor.fetchAll()
-            print("result::: ", len(result))
+           #print("result::: ", len(result))
 
             if(len(result) < 1):
                 insert_game_tag_query = f"insert into game_tag (game_id, tag_id, code_id) values ({game_id}, {tag_id}, '{code_id}')"
                 cursor.execute(insert_game_tag_query)
                 conn.commit()
-                print("insert into game_tag :: ", game_id, " - ", tag_id, " - ", code_id)
+               #print("insert into game_tag :: ", game_id, " - ", tag_id, " - ", code_id)
                 
         except mysql.connector.Error as err:
             if isinstance(err, mysql.connector.IntegrityError) and err.errno == 1062:
                 print("for_tag 함수에서 중복 키 오류 발생:", err)
                 continue   
             else:
-                print("for_tag 함수에서 MySQL 커넥터 오류:", err)
+               print("for_tag 함수에서 MySQL 커넥터 오류:", err)
         
 def get_tag_category(game_id, detail_json):
     detail_body = detail_json.get(game_id).get("data")
     categories = detail_body.get("categories")
     genres = detail_body.get("genres")
-    print("#####categories:::", categories)
-    print("#####genres:::", genres)
+   #print("#####categories:::", categories)
+   #print("#####genres:::", genres)
     
     if categories is not None:  
         for_tag(game_id, 'CAT', categories)
@@ -217,8 +217,8 @@ def get_game_id_list(**kwargs):
             # 게임 id-name 받아오기
             res_json = res.json()
             applist = res_json.get("applist").get("apps")
-            # print(applist[0])
-            print(len(applist))
+            ##print(applist[0])
+           #print(len(applist))
             kwargs['ti'].xcom_push(key='game_id_list', value=applist)
             return applist
     except Exception as e:
@@ -228,17 +228,17 @@ def get_game_final_score(index, num_batches, **kwargs):
     game_ids = kwargs["ti"].xcom_pull(task_ids = 'game_ids_task', key="game_ids")
 
     if not game_ids:
-        print('applist :', game_ids)
+       #print('applist :', game_ids)
         return
     else:
-        print('applist 존재')
+       #print('applist 존재')
 
     game_id_batch = game_ids[index::num_batches]
 
     try:
         for game_id in game_id_batch:
 
-            print("################### CALCULATE GAME SCORE!!!#######################")
+           #print("################### CALCULATE GAME SCORE!!!#######################")
 
             # 가장 최근 갱신된 점수 정보 가져오기
             select_query = f'''select 
@@ -255,7 +255,7 @@ def get_game_final_score(index, num_batches, **kwargs):
             cursor.execute(select_query) 
 
             select_result = cursor.fetchall()
-            print("SELECT_RESULT:: " ,select_result)
+           #print("SELECT_RESULT:: " ,select_result)
 
             # 필요한 값 추출
             game_id = select_result[0][0]
@@ -276,7 +276,7 @@ def get_game_final_score(index, num_batches, **kwargs):
             update_query = f"""update game set game_final_score ={game_final_score} where game_id ={game_id}"""
             cursor.execute(update_query)
             conn.commit()
-            print("game_final_score 업데이트 완료!")
+           #print("game_final_score 업데이트 완료!")
 
     except Exception as e:
         log.fetal("get_game_score에서 예외 발생:: ", e)
@@ -293,35 +293,35 @@ def insert_game_data(app, detail_res):
     else:
         try:
             # 데이터가 존재하지 않을 때 insert
-            print("################### INSERT GAME DATA !!!#######################")
+           #print("################### INSERT GAME DATA !!!#######################")
             detail_body = detail_json.get(app_id).get("data")
             # game객체에 필요한 값 추출
             game_id = app_id
-            # print("game_id ", game_id)
+            ##print("game_id ", game_id)
             game_name = detail_body.get("name").replace('"', '')
-            # print("game_name ", game_name)
+            ##print("game_name ", game_name)
             game_short_description = detail_body.get("short_description").replace('"', '')
-            # print("game_short_description ", game_short_description)
+            ##print("game_short_description ", game_short_description)
             # 상세설명이 길어서 Blob데이터 형식으로 저장 (인코딩 방식은 utf-8)
             game_detailed_description = detail_body.get("detailed_description").replace('"', '')
-            # print("game_detailed_description ", game_detailed_description)
+            ##print("game_detailed_description ", game_detailed_description)
             game_header_img = detail_body.get("header_image")
-            # print("game_header_img ", game_header_img)
+            ##print("game_header_img ", game_header_img)
             if not detail_body.get("website"):
                 log.info("@@@@@@ no website")
                 game_website = ""
             game_website = detail_body.get("website")
-            # print("game_website: ", game_website)
+            ##print("game_website: ", game_website)
             # devloper list를 문자열로
             if not detail_body.get("developers"):
-                print("@@@@@@@@ no developer")
+               #print("@@@@@@@@ no developer")
                 game_developer = ""
             else:
                 game_developer = ', '.join([element.replace('"', '') for element in detail_body.get("developers")])
-            # print("game_developer: ", game_developer)
+            ##print("game_developer: ", game_developer)
             # publisher list를 문자열로
             game_publisher = ', '.join([element.replace('"', '') for element in detail_body.get("publishers")])
-            print("game_publisher: ", game_publisher)
+           #print("game_publisher: ", game_publisher)
             if not detail_body.get("price_overview") :
                 log.info("@@@@@@@@@@ no price overview")
                 game_price_initial = 0
@@ -329,11 +329,11 @@ def insert_game_data(app, detail_res):
                 game_discount_percent = 0
             else:
                 game_price_initial = detail_body.get("price_overview").get("initial")
-                # print("game_price_initial ",game_price_initial )
+                ##print("game_price_initial ",game_price_initial )
                 game_price_final = detail_body.get("price_overview").get("final")
-                # print("game_price_final: ", game_price_final)
+                ##print("game_price_final: ", game_price_final)
                 game_discount_percent = detail_body.get("price_overview").get("discount_percent")
-                # print("game_discount_percent: ", game_discount_percent)
+                ##print("game_discount_percent: ", game_discount_percent)
 
             # 문자열로 받은 release_date를 date type으로 저장
             game_release_date = detail_body.get("release_date").get("date").replace('"', '')
@@ -343,7 +343,7 @@ def insert_game_data(app, detail_res):
                 "screenshots": detail_body.get("screenshots")
             } 
             json_game_screenshot_img = json.dumps(screenshots_json)
-            # print("screenshots_json:::::::::", screenshots_json)
+            ##print("screenshots_json:::::::::", screenshots_json)
             game_screenshot_img = json_game_screenshot_img
             
             query = """
@@ -382,7 +382,7 @@ def insert_game_data(app, detail_res):
             game_screenshot_img = VALUES(game_screenshot_img),
             updated_dt = VALUES(updated_dt)
             """
-            print("insert query:::", query)
+           #print("insert query:::", query)
 
             # 쿼리 실행
             cursor.execute(query, (
@@ -406,10 +406,10 @@ def insert_game_data(app, detail_res):
             get_tag_category(app_id, detail_json)
 
         except mysql.connector.Error as err:
-        #     print("MYSQL CONNECTOR ERROR:::", err)
+        #    #print("MYSQL CONNECTOR ERROR:::", err)
         #     continue
             # if isinstance(err, mysql.connector.IntegrityError) and err.errno == 1062:
-            #     print("중복 키 오류 발생:", err)
+            #    #print("중복 키 오류 발생:", err)
             #     update_game_data(app_id, detail_json)
                 
             # else:
@@ -421,19 +421,19 @@ def get_game_data(index, num_batches, **kwargs):
     applist = kwargs["ti"].xcom_pull(task_ids = 'get_game_id_list_task', key="game_id_list")
 
     if not applist:
-        print('applist :', applist)
+       #print('applist :', applist)
         return
     else:
-        print('applist 존재')
+       #print('applist 존재')
 
     game_id_batch = applist[index::num_batches]
-    print("game_id_batch::", game_id_batch)
+   #print("game_id_batch::", game_id_batch)
 
         # 받은 리스트 순회하며 상세정보 저장하기
         #for idx, app in enumerate(applist):
     for idx, app in enumerate(game_id_batch):
         try:
-            print("app [%d]: " %idx, app)
+           #print("app [%d]: " %idx, app)
 
             # appid 변수 설정
             appid = app.get("appid")

@@ -298,11 +298,11 @@ def process_statistics(num_batches, index, **kwargs):
         
         if list(reviews):
             #print(f"No reviews found for game ID: {game_id}")
-            continue
+            pass
         else:
             #print('리뷰 데이터', reviews)
             #print('리뷰길이', len(reviews))
-            pass
+            continue
             
         # 불러온 리뷰 리스트에서 game_review_is_use_cnt의 합계를 계산
         total_game_review_is_use_cnt = sum(review[2] for review in reviews)
