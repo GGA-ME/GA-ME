@@ -48,14 +48,16 @@ const SalesList: React.FC<SaleCardProps> = ({ cardDtoList }) => {
             visible: { x: 0, opacity: 1, transition: { duration: 0.3 } }
           }}
         >
-          <GameCard
-            key={index}
-            imageUrl={game.gameHeaderImg}
-            title={game.gameName}
-            price={`₩ ${game.gamePriceFinal}`}
-            tags={game.tagList ? game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName) : []}
-            likes={game.gameLike}
-          />
+    <GameCard
+      gameId={game.gameId}
+      imageUrl={game.gameHeaderImg}
+      title={game.gameName}
+      price={`₩ ${game.gamePriceFinal}`}
+      tags={game.tagList ? game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName) : []}
+      likes={game.gameLike}
+      // 젠킨슨 오류 해결을 위한 임시 코드
+      onGameClick={() => console.log(`Clicked on game ${game.gameId}`)} // 여기에 실제 로직을 구현
+    />
         </motion.li>
       ))}
     </motion.ul>
