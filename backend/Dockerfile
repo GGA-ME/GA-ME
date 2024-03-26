@@ -1,6 +1,6 @@
-# 기존 Java 이미지를 기반으로 시작
-FROM openjdk:17
 
+# Debian 기반 OpenJDK 이미지를 사용
+FROM openjdk:17-bullseye
 # 필요한 패키지 및 의존성 설치
 RUN apt-get update && apt-get install -y wget unzip xvfb libxi6 libgconf-2-4
 
