@@ -54,7 +54,10 @@ public class AuthController {
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
+        System.out.println("redirectUri: "+ redirectUri);
+        System.out.println("before response");
         ResponseEntity<Map> response = restTemplate.postForEntity("https://oauth2.googleapis.com/token", request , Map.class);
+        System.out.println("after response");
         Map<String, Object> tokenResponse = response.getBody();
         String accessToken = (String) tokenResponse.get("access_token");
 
