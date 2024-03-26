@@ -28,7 +28,7 @@ import java.util.*;
 public class TopicServiceImpl implements TopicService {
     private final PreferCustomRepository preferRepository;
     private final GameCustomRepository gameCustomRepository;
-    private final WebDriver driver;
+//    private final WebDriver driver;
     //선호 게임 기사 가져오기
 
     @Override
@@ -70,17 +70,17 @@ public class TopicServiceImpl implements TopicService {
 
     //크롤링 데이터
     public void getCrawlingData(String keyword, int size, List<TopicNewsResDto> hotTopicDtoList) {
-//        ChromeOptions options = new ChromeOptions();
-//        options.addArguments("headless");
-//        options.addArguments("--headless");
-//        options.addArguments("--no-sandbox"); // Sandbox 비활성화
-//        options.addArguments("--disable-dev-shm-usage"); // /dev/shm 파티션 사용 안 함
-//        options.addArguments("--disable-gpu"); // GPU 가속 사용 안 함
-//        options.addArguments("--remote-debugging-port=9222"); // 원격 디버깅 포트 설정
-//        System.out.println("크롬 드라이버 실행전");
-//        // ChromeDriver 생성
-//        WebDriver driver = new ChromeDriver(options);
-//        System.out.println("크롬 드라이버 실행후");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("headless");
+        options.addArguments("--headless");
+        options.addArguments("--no-sandbox"); // Sandbox 비활성화
+        options.addArguments("--disable-dev-shm-usage"); // /dev/shm 파티션 사용 안 함
+        options.addArguments("--disable-gpu"); // GPU 가속 사용 안 함
+        options.addArguments("--remote-debugging-port=9222"); // 원격 디버깅 포트 설정
+        System.out.println("크롬 드라이버 실행전");
+        // ChromeDriver 생성
+        WebDriver driver = new ChromeDriver(options);
+        System.out.println("크롬 드라이버 실행후");
         try {
             //시작 URL
             String URL = "https://www.gamemeca.com/search.php?q=" + keyword;
