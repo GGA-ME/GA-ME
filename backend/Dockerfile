@@ -20,9 +20,10 @@ RUN wget https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.58/
 RUN wget https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.58/linux64/chromedriver-linux64.zip -P /tmp/ \
     && unzip /tmp/chromedriver-linux64.zip -d /tmp/ \
     && ls -l /tmp/ \
-    && mv /tmp/chromedriver /usr/local/bin/chromedriver \
+    && mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
     && chmod 755 /usr/local/bin/chromedriver \
     && rm /tmp/chromedriver-linux64.zip
+
 
 
 # 애플리케이션 JAR 파일을 이미지에 추가
