@@ -72,16 +72,22 @@ public class TopicServiceImpl implements TopicService {
     public void getCrawlingData(String keyword, int size, List<TopicNewsResDto> hotTopicDtoList) {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("headless");
-
+        options.addArguments("--headless");
+        options.addArguments("--no-sandbox"); // Sandbox 비활성화
+        options.addArguments("--disable-dev-shm-usage"); // /dev/shm 파티션 사용 안 함
+        options.addArguments("--disable-gpu"); // GPU 가속 사용 안 함
+        options.addArguments("--remote-debugging-port=9222"); // 원격 디버깅 포트 설정
+        System.out.println("크롬 드라이버 실행전");
         // ChromeDriver 생성
         WebDriver driver = new ChromeDriver(options);
+        System.out.println("크롬 드라이버 실행후");
         try {
             //시작 URL
             String URL = "https://www.gamemeca.com/search.php?q=" + keyword;
             driver.get(URL);
 
             // 크롤링하려는 웹 페이지가 로딩 되는 시간을 기다림
-            driver.manage().timeouts().implicitlyWait(Duration.ofMillis(10));
+            driver.manage().timeouts().implicitlyWait(Duration.ofMillis(300));
 
 
             // 게임 정보로 이동
@@ -122,6 +128,8 @@ public class TopicServiceImpl implements TopicService {
             return; //해당하는 요소들이 없으면 그냥 return
         } catch (Exception e) {
             throw new BaseException(StatusCode.CRAWLING_FAILED);
+        }finally {
+            driver.quit();
         }
 
     }
