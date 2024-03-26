@@ -26,6 +26,7 @@ const Result: React.FC = () => {
                         imageUrl={game.gameHeaderImg}
                         title={game.gameName}
                         price={game.gamePriceFinal.toLocaleString()}
+                        tagsAll={game.tagList}
                         tags={game.tagList ? game.tagList.map((tag) => tag.tagName) : []}
                         likes={0} // `likes` 값이 제공되지 않으므로 예시값인 0을 사용
                         // 젠킨슨 오류해결을 위한 임시 코드

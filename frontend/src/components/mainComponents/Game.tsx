@@ -12,7 +12,7 @@ interface Game {
   gameHeaderImg: string;
   gamePriceFinal: number;
 // 각 태그를 기준으로 각 태그 및 이름을 가진 경우 선언방법
-tagList: Array<{ codeId: string; tagName: string }>;
+tagList: Array<{ codeId: string; tagId:number; tagName: string }>;
 }
 
 const GameComponent: React.FC = () => {
@@ -63,6 +63,7 @@ const GameComponent: React.FC = () => {
             imageUrl={game.gameHeaderImg}
             title={game.gameName}
             price={`₩ ${game.gamePriceFinal}`}
+            tagsAll={game.tagList}
             tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
             likes={34}
             onGameClick={handleClickGame} // 수정된 부분
