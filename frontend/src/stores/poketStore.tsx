@@ -1,18 +1,12 @@
 import { create } from 'zustand';
 
-interface TagDto {
-  codeId:string
-  tagId:number
-  tagName:string
-}
-
 // 카트 아이탬 타입스크립트 선언식
 interface CartItem {
   gameId: number;
   imageUrl: string;
   title: string;
   price: string;
-  tagsAll?: TagDto[] | null;
+  tags: string[];
 }
 
 // 추가, 제거, 비우기 함수
@@ -33,7 +27,6 @@ const usePoketStore = create<PoketStore>((set) => ({
     if (!exists) {
       const newCartItems = [...state.cartItems, newItem];
       sessionStorage.setItem('cartItems', JSON.stringify(newCartItems));
-      console.log(state.cartItems)
       return { cartItems: newCartItems };
     }
     return state;

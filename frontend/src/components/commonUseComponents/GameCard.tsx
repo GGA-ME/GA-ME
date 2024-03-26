@@ -5,19 +5,12 @@ import { useState } from 'react';
 import  usePoketStore  from './../../stores/poketStore';
 import style from './GameCard.module.css'
 
-interface TagDto {
-  codeId:string
-  tagId:number
-  tagName:string
-}
-
 // 타입스크립트 타입 프롭받을 타입 정의
 interface GameCardProps {
   gameId: number;
   imageUrl: string;
   title: string;
   price: string;
-  tagsAll?: TagDto[] | null;
   tags: string[];
   likes: number;
   onGameClick: (gameId: number) => void;
@@ -25,14 +18,14 @@ interface GameCardProps {
 
 
 // 타입스크립트식 선언
-const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tagsAll, tags, likes, onGameClick }) => {
+const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tags, likes, onGameClick }) => {
 
   const [isHovered, setIsHovered] = useState(false);
   const { addItem } = usePoketStore();
 
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 버블링 중지
-    const itemToAdd = { gameId, imageUrl, title, price, tagsAll };
+    const itemToAdd = { gameId, imageUrl, title, price, tags };
     addItem(itemToAdd);
   };
   
