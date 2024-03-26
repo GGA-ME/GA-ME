@@ -1,27 +1,9 @@
 import Navbar from "../components/commonUseComponents/Navbar";
 import CombinationList from "../components/mixAndMathComponents/CombinationList";
 import Result from "../components/mixAndMathComponents/Result";
-import mixAndMatchStore from "../stores/mixAndMatchStore"
 
 function MixAndMatch() {
 
-  const {fetchData} = mixAndMatchStore();
-
-  // useSearchStore에서 검색 결과 가져오기
-  const results = mixAndMatchStore((state) => state.results);
-
-  const postData = ""// 현욱씌가 짜준 전역 변수 및 함수에서 가져오기
-
-  const handleCombination = async (postData) => {
-    try {
-      const res = await fetchData(postData);
-      console.log("Data fetched successfully in MixAndMatch page:", res);
-      return res;
-    } catch (error) {
-      console.error("Error occurred while fetching data in MixAndMatch page:", error);
-      throw error;
-    }
-  };
 
   return (
     <>
@@ -34,8 +16,8 @@ function MixAndMatch() {
     하영쓰의 미스엔매치
 
 
-    <CombinationList handleCombination={handleCombination} />
-    <Result results={results}/>
+    <CombinationList />
+    <Result />
 
 
     </div>

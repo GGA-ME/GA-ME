@@ -16,11 +16,7 @@ interface RequestData {
   userId: number;
   gameIdAndTagDtoList: {
     gameId: number;
-    tagList: {
-      codeId: string;
-      tagId: number;
-      tagName: string;
-    }[];
+    tagList: Tag[];
   }[];
 }
 
@@ -46,30 +42,26 @@ interface SearchState {
   setResults: (results: SearchResult[]) => void; // 검색 결과를 업데이트하는 액션
 }
 
-const mixAndMatchStore = create<SearchState>((set) => ({
-
+const useMixAndMatchStore = create<SearchState>((set) => ({
   results: [], // 초기 상태는 빈 배열
   setResults: (results) => set({ results }), // 검색 결과 업데이트
 
   fetchData: async (postData: RequestData) => {
     try {
-      console.log("store!!!");
-      const response = await api.post(
-        `/api/recommendations/search`,
-        postData
-      );
-
+      console.log("store post axios!!!");
+      console.log("postData: ", postData)
+      const response = await api.post(`/api/recommendations/search`, postData);
+      console.log("after axios 요청");
       // Zustand 스토어에 응답 데이터를 저장합니다.
-      set({ results: response.data });
       console.log("mixAndMatchStore response: ", response.data);
+      set({ results: response.data });
       return response.data;
-
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log(error)
+        console.log(error);
       }
     }
   },
 }));
 
-export default mixAndMatchStore;
+export default useMixAndMatchStore;
