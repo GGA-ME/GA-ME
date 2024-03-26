@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Builder
@@ -49,10 +50,7 @@ public class GameDetailResDto {
     private String gameReleaseDate;
 
     // 스크린샷 이미지
-    private String screenshotList;
-
-    // 유튜브 링크
-    private List<String> videoUrlList;
+    private List<Map<String, String>> screenshotList;
 
     // 관련 게임 리스트
     private List<GameCardDto> relatedGameList;

@@ -1,6 +1,8 @@
 package ssafy.ggame.domain.game.service;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ssafy.ggame.domain.game.dto.GameCardDto;
@@ -15,6 +17,7 @@ import ssafy.ggame.domain.user.repository.UserRepository;
 import ssafy.ggame.global.common.StatusCode;
 import ssafy.ggame.global.exception.BaseException;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -57,13 +60,16 @@ public class GameService {
 
     }
 
-    private GameDetailResDto convertToGameDetailResDto(Long gameId) {
+    public GameDetailResDto convertToGameDetailResDto(Long gameId) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
 
-        List<Game> relatedGameList = getPopularGamesByGameId(gameId);
+        List<Game> relatedGameList = getPopularGamesByGameId(game);
 
-        List<Game> relatedGames = recommendationService.makeGameCardDtoList(relatedGameList);
+        List<GameCardDto> relatedGames = null;
+        if (relatedGameList != null) {
+            relatedGames = recommendationService.makeGameCardDtoList(relatedGameList);
+        }
 
         return GameDetailResDto.builder()
                 .gameId(game.getGameId())
@@ -78,16 +84,13 @@ public class GameService {
                 .gamePriceFinal(game.getGamePriceFinal())
                 .gameDiscountPercent(game.getGameDiscountPercent())
                 .gameReleaseDate(game.getGameReleaseDate())
-                .screenshotList(game.getGameScreenshotImg())
-                .videoUrlList(game.getVideoUrlList())
+                .screenshotList(convertJsonToList(game.getGameScreenshotImg())) // null or 리스트로 담기
                 .relatedGameList(relatedGames)
                 .build();
     }
 
-    private List<Game> getPopularGamesByGameId(Long gameId) {
+    private List<Game> getPopularGamesByGameId(Game detailGame) {
 
-        Game detailGame = gameRepository.findById(gameId)
-                .orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
         List<User> users = userRepository.findAllUsersByGame(detailGame);
 
 
@@ -123,4 +126,29 @@ public class GameService {
 
     }
 
+    private List<Map<String, String>> convertJsonToList(String gameScreenshotImg) {
+        if (gameScreenshotImg == null) {
+            return Collections.emptyList();
+        }
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(gameScreenshotImg);
+            JsonNode screenshotsNode = jsonNode.get("screenshots");
+            if (screenshotsNode != null && screenshotsNode.isArray()) {
+                List<Map<String, String>> screenshotList = new ArrayList<>();
+                for (JsonNode screenshot : screenshotsNode) {
+                    Map<String, String> screenshotMap = new HashMap<>();
+                    screenshotMap.put("id", screenshot.get("id").asText());
+                    screenshotMap.put("path_full", screenshot.get("path_full").asText());
+                    screenshotMap.put("path_thumbnail", screenshot.get("path_thumbnail").asText());
+                    screenshotList.add(screenshotMap);
+                }
+                return screenshotList;
+            } else {
+                return Collections.emptyList();
+            }
+        } catch (IOException e) {
+            return Collections.emptyList();
+        }
+    }
 }
