@@ -119,8 +119,15 @@ public class GameService {
 
         // 정렬된 게임 ID 리스트 생성
         List<Game> sortedGames = new ArrayList<>();
+        int count = 0; // 추가된 게임 수를 추적하기 위한 변수
+
         for (Map.Entry<Game, Integer> entry : sortedEntries) {
             sortedGames.add(entry.getKey());
+            count++;
+
+            if (count >= 5) {
+                break; // 5개의 게임을 추가하면 반복문을 종료합니다.
+            }
         }
         return sortedGames;
 
