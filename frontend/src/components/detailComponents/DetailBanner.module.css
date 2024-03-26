@@ -1,26 +1,82 @@
-/* 큰 이미지를 표시하는 스와이퍼 */
-.swiper-container {
+/* 배너를 감싸는 컨테이너 */
+.bannerContainer {
+  position: relative;
+}
+
+/* 배경 이미지 관련 스타일 */
+.bannerBackground {
+  position: relative;
   width: 100%;
-  height: 300px;
+  height: 600px; /* 뷰포트 높이를 꽉 채움 */
+  background-size: cover; /* 이미지가 화면을 꽉 채우도록 조정 */
+  background-position: center; /* 이미지를 중앙에 배치 */
 }
 
-/* 썸네일 이미지를 표시하는 스와이퍼 */
-.mySwiper {
-  height: 100px;
-  box-sizing: border-box;
-  padding: 10px 0;
+/* 어두운 필터와 그라데이션 효과 적용 */
+.darkFilter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,1) 100%); /* 상단에서 하단으로 어두워지는 그라데이션 */
+}
+/* 내부 컨텐츠를 감싸는 요소 */
+.innerContent {
+  position: absolute;
+  width: 1200px;
+  height: 600px;
+  top: 70%; /* 부모 요소인 .bannerBackground의 중앙을 기준으로 위로부터 50% 이동 */
+  left: 50%; /* 부모 요소인 .bannerBackground의 중앙을 기준으로 왼쪽으로부터 50% 이동 */
+  transform: translate(-50%, -50%); /* 수직, 수평 가운데 정렬 */
+  text-align: center;
+  color: white;
 }
 
-/* 썸네일 이미지 슬라이드 */
-.mySwiper .swiper-slide {
-  width: 100px;
-  height: 100px;
-  background-position: center;
-  background-size: cover;
+/* 중앙에 배치할 이미지 스타일 */
+.centerImage {
+  width: 1200px;
+  height: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: visible; /* 이미지의 테두리가 외부 이미지를 벗어나도록 함 */
 }
 
-/* 큰 이미지 슬라이드 */
-.swiper-slide {
-  background-position: center;
-  background-size: cover;
+/* 좋아요 버튼 스타일 */
+.likeButton {
+  position: absolute;
+  top: 5%; /* 중앙 이미지 상단으로부터의 상대적인 위치 */
+  left: 5%; /* 중앙 이미지 왼쪽으로부터의 상대적인 위치 */
+  padding: 5px 10px;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  cursor: pointer;
+}
+
+/* 왼쪽 하단 텍스트 스타일 */
+.leftBottomText {
+  position: absolute;
+  bottom: 5%; /* 중앙 이미지 하단으로부터의 상대적인 위치 */
+  left: 5%; /* 중앙 이미지 왼쪽으로부터의 상대적인 위치 */
+  color: white;
+}
+
+/* 오른쪽 하단 버튼 스타일 */
+.rightBottomButtons {
+  position: absolute;
+  bottom: 5%; /* 중앙 이미지 하단으로부터의 상대적인 위치 */
+  right: 5%; /* 중앙 이미지 오른쪽으로부터의 상대적인 위치 */
+}
+
+/* URL 버튼 스타일 */
+.urlButton {
+  margin-right: 10px;
+  padding: 5px 10px;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  cursor: pointer;
 }
