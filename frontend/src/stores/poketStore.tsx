@@ -6,7 +6,7 @@ interface TagDto {
   tagName:string
 }
 
-// 카트 아이탬 타입스크립트 선언식
+// 카트 아이탬 타입스크립트 선언식 tagsAll추가
 interface CartItem {
   gameId: number;
   imageUrl: string;
