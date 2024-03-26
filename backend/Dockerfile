@@ -23,6 +23,7 @@ RUN wget https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.58/
     && chmod 755 /usr/local/bin/chromedriver \
     && rm /tmp/chromedriver-linux64.zip
 
+
 # 애플리케이션 JAR 파일을 이미지에 추가
 ARG JAR_FILE=build/libs/ggame-0.0.1-SNAPSHOT.jar
 ADD ${JAR_FILE} ggame-user.jar
