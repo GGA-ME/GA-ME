@@ -3,11 +3,18 @@ import axios from 'axios';
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
 const BASE_URL = "https://j10e105.p.ssafy.io/api";
-const REDIRECT_URI = BASE_URL+'/auth/google/callback';
+const REDIRECT_URI = 'https://j10e105.p.ssafy.io/auth/google/callback';
 const SCOPE = 'profile email';
 
 const api = axios.create({
-  baseURL: BASE_URL // 기본 api 주소
+  baseURL: BASE_URL, // 기본 api 주소
+  headers: {
+    "Content-Type": `application/json;charset=UTF-8`,
+    "Accept": "application/json",      
+    // 추가  
+    "Access-Control-Allow-Origin": 'https://j10e105.p.ssafy.io',
+    'Access-Control-Allow-Credentials':"true",
+}
 });
 
 // 사용자를 구글 로그인 페이지로 리디렉트하는 함수
@@ -21,12 +28,15 @@ export const redirectToGoogleOAuth = () => {
 // 서버에 인증 코드를 전송하여 사용자 정보를 받아오는 함수
 export const fetchUserInfo = async (code: string) => {
   try {
-    const response = await api.post('https://j10e105.p.ssafy.io/auth/google/callback', { code });
+    console.log('In fetchUserInfo');
+    console.log('Code: '+code);
+    const response = await api.post('/auth/google/callback', { code }, {  withCredentials: true});
     return response.data; // 사용자 정보와 새로운 사용자 여부를 반환
   } catch (error) {
-    throw new Error('Failed to fetch user information');
+    throw new Error('Failed to fetch user information'+error);
   }
 };
+
 
 // 게임명 검색 API 함수
 export const searchGames = async (keyword: string, userId: number) => {

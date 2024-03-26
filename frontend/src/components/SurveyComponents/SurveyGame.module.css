@@ -1,0 +1,31 @@
+/* SurveyGame.module.css */
+
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://tumblbug-pci.imgix.net/57a9b6ca4418fc63f6a5a655d8ea53e1c2b1bb68/0855dbc193fbc7918d45638ef738fc65c70b16d0/6229a7153c0a7a371bc191de80950bff527fa970/347823a6-82f9-4c44-8036-43daf4e3be44.png?ixlib=rb-1.1.0&w=1240&h=930&auto=format%2Ccompress&lossless=true&fit=crop&s=e5bf0e90c74327cb7b79855cff837b6f');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.5; /* 검은색 필터 투명도 조절 */
+    z-index: -1;
+}
+
+.contentWrapper {
+    position: relative; /* 내부 컨텐츠를 위로 띄우기 위해 필요함 */
+    text-align: center; /* 텍스트를 중앙으로 정렬 */
+    z-index: 0;
+}
