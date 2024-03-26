@@ -1,10 +1,8 @@
-import Game from "../components/SurveyComponents/SurveyGame";
+import SurveyGame from "../components/SurveyComponents/SurveyGame";
+
 function Survey() {
   return(
-    <div>
-      <Game/>
-    </div>
-    
+    <SurveyGame/>
   )
 }
   export default Survey;
