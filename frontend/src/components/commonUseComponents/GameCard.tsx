@@ -2,7 +2,8 @@
 
 import { motion } from 'framer-motion'
 import { useState } from 'react';
-import  usePoketStore  from './../../stores/poketStore';
+import  usePoketStore  from '../../stores/poketStore';
+import likeStore from '../../stores/likeStore'
 import style from './GameCard.module.css'
 
 interface TagDto {
@@ -20,6 +21,7 @@ interface GameCardProps {
   tagsAll?: TagDto[] | null;
   tags: string[];
   likes: number;
+  isPrefer: boolean; // 추가
   onGameClick: (gameId: number) => void;
 }
 
@@ -29,11 +31,23 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
 
   const [isHovered, setIsHovered] = useState(false);
   const { addItem } = usePoketStore();
+  const { likeGame, unlikeGame } = useStoreLike();
 
+  // 포켓에 넣는 핸들러
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 버블링 중지
     const itemToAdd = { gameId, imageUrl, title, price, tagsAll };
     addItem(itemToAdd);
+  };
+
+  // 좋아요와 좋아요 취소 핸들러
+  const handleLikeToggle = async () => {
+    event.stopPropagation(); // 이벤트 버블링 중지
+    if (isPrefer) {
+      await unlikeGame(); // 좋아요 취소 요청
+    } else {
+      await likeGame(); // 좋아요 요청
+    }
   };
   
   const hoverEffects = {
@@ -71,9 +85,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
           exit="hidden"
         >
           <div className="flex justify-center items-center space-x-2">
-            {/* Icons */}
             <button className="rounded-full p-2">
-              {/* Heart Icon */}
               <img src={'./Like.png'} alt={'Like'}></img>
             </button>
             <motion.button className="rounded-full p-2" onClick={(event) => handleAddToCart(event)}
@@ -83,7 +95,6 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
               // rotate: -90,
               borderRadius: "100%"
             }} >
-              {/* Save Icon */}
               <img src={'./Cart.png'} alt={'Cart'}></img>
             </motion.button>
             <button className="rounded-full p-2">

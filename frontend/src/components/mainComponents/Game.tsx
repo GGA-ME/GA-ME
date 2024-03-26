@@ -58,14 +58,14 @@ const GameComponent: React.FC = () => {
           }}
         >
           <GameCard
-            key={index}
+            key={gameId}
             gameId={game.gameId}
             imageUrl={game.gameHeaderImg}
             title={game.gameName}
             price={`₩ ${game.gamePriceFinal}`}
             tagsAll={game.tagList}
             tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
-            likes={34}
+            likes={game.gameLike}
             onGameClick={handleClickGame} // 수정된 부분
             />
         </motion.li>
