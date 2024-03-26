@@ -32,11 +32,7 @@ interface CardDto {
     gameDiscountPercent: number;
     gameLike:number;
     isPrefer: boolean;
-    tagList?: Array<{
-        codeId: string;
-        tagId: number; // 이제 tagId가 필수입니다.
-        tagName: string;
-      }> | null;
+    tagList: Array<{ codeId: string; tagName: string }>;
 }
 
 // 스토어 상태의 타입을 정의합니다.

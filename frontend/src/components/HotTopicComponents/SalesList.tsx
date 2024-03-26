@@ -16,7 +16,7 @@ interface SaleCardProps {
     gameDiscountPercent: number;
     gameLike: number;
     isPrefer: boolean;
-    tagList?: Array<{ codeId: string; tagId:number; tagName: string }> | null; // tagList가 null일 수도 있음을 명시
+    tagList: Array<{ codeId: string; tagName: string }> | null; // tagList가 null일 수도 있음을 명시
   }[];
 }
 
@@ -53,7 +53,6 @@ const SalesList: React.FC<SaleCardProps> = ({ cardDtoList }) => {
       imageUrl={game.gameHeaderImg}
       title={game.gameName}
       price={`₩ ${game.gamePriceFinal}`}
-      tagsAll={game.tagList}
       tags={game.tagList ? game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName) : []}
       likes={game.gameLike}
       // 젠킨슨 오류 해결을 위한 임시 코드
