@@ -12,13 +12,14 @@ RUN apt-get update && apt-get install -y \
 
 # Chrome 설치
 RUN wget https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.58/linux64/chrome-linux64.zip -P /tmp/ \
-    && unzip /tmp/chrome-linux64.zip -d /opt/chrome \
-    && ln -s /opt/chrome/chrome /usr/bin/google-chrome \
+    && unzip /tmp/chrome-linux64.zip -d /opt/chrome/ \
+    && ln -s /opt/chrome/chrome-linux/chrome /usr/bin/google-chrome \
     && rm /tmp/chrome-linux64.zip
 
 # ChromeDriver 설치
 RUN wget https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.58/linux64/chromedriver-linux64.zip -P /tmp/ \
-    && unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin/ \
+    && unzip /tmp/chromedriver-linux64.zip -d /tmp/ \
+    && mv /tmp/chromedriver /usr/local/bin/chromedriver \
     && chmod 755 /usr/local/bin/chromedriver \
     && rm /tmp/chromedriver-linux64.zip
 
