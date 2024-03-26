@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ssafy.ggame.domain.game.dto.GameDetailResDto;
 import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.game.repository.GameRepository;
+import ssafy.ggame.domain.game.service.GameService;
 import ssafy.ggame.domain.statistics.dto.GameStatisticsResDto;
 import ssafy.ggame.domain.statistics.dto.StatisticsDto;
 import ssafy.ggame.domain.statistics.entity.Statistics;
@@ -28,6 +30,60 @@ public class GameController {
 
     private final GameRepository gameRepository;
     private final StatisticsRepository statisticsRepository;
+    private final GameService gameService;
+
+    @GetMapping("/{game_id}/info")
+    public ResponseEntity<Object> getGameInfo(@PathVariable("game_id") Long gameId) {
+
+        GameDetailResDto responseDto = gameService.convertToGameDetailResDto(gameId);
+
+        return ResponseEntity.ok(new BaseResponse<>(responseDto));
+    }
+
+    @GetMapping("/{game_id}/statistics")
+    public ResponseEntity<Object> getGameStatistics(@PathVariable("game_id") Long gameId) {
+        // 게임 정보 조회
+        Optional<Game> optionalGame = gameRepository.findById(gameId);
+
+        Game game = optionalGame.orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
+
+        String gameWordCloudUrl = optionalGame.map(Game::getGameWordCloudUrl).orElse(null);
+
+        // 최신 통계 정보 조회
+        Optional<Statistics> optionalStatistics = statisticsRepository.findFirstByStatisticsIdGameOrderByStatisticsIdStatisticsBaseDtDesc(game);
+        // 통계 정보 DTO 생성
+        StatisticsDto statisticsDto = null;
+        if (optionalStatistics.isPresent()) {
+            statisticsDto = optionalStatistics.map(statistics -> {
+                if (statistics.getGameStandardPlaytime() < 10) {
+                    return null;
+                }
+                return StatisticsDto.builder()
+                        .gameId(statistics.getStatisticsId().getGame().getGameId())
+                        .statisticsBaseAt(statistics.getStatisticsId().getStatisticsBaseDt())
+                        .timeValues(getTimeValues(statistics))
+                        .positiveCounts(getPositiveCounts(statistics))
+                        .negativeCounts(getNegativeCounts(statistics))
+                        .build();
+            }).orElse(null);
+        }
+        // 게임 통계 응답 DTO 생성
+        GameStatisticsResDto responseDto;
+        if (statisticsDto != null) {
+            responseDto = new GameStatisticsResDto(gameWordCloudUrl, statisticsDto);
+        } else {
+            responseDto = new GameStatisticsResDto(gameWordCloudUrl);
+        }
+        // 최소한 하나의 값이 존재하는지 확인하여 응답 반환
+        if (gameWordCloudUrl != null || statisticsDto != null) {
+            return ResponseEntity.ok(new BaseResponse<>(responseDto));
+        } else {
+            throw new BaseException(StatusCode.GAME_STATISTICS_NOT_FOUND);
+        }
+    }
+
+
+
 
 
     // 긍정 댓글 개수 리스트 생성 메서드
@@ -72,45 +128,4 @@ public class GameController {
         return timeValues;
     }
 
-    @GetMapping("/{game_id}/statistics")
-    public ResponseEntity<Object> getGameStatistics(@PathVariable("game_id") Long gameId) {
-        // 게임 정보 조회
-        Optional<Game> optionalGame = gameRepository.findById(gameId);
-
-        Game game = optionalGame.orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
-
-        String gameWordCloudUrl = optionalGame.map(Game::getGameWordCloudUrl).orElse(null);
-
-        // 최신 통계 정보 조회
-        Optional<Statistics> optionalStatistics = statisticsRepository.findFirstByStatisticsIdGameOrderByStatisticsIdStatisticsBaseDtDesc(game);
-        // 통계 정보 DTO 생성
-        StatisticsDto statisticsDto = null;
-        if (optionalStatistics.isPresent()) {
-            statisticsDto = optionalStatistics.map(statistics -> {
-                if (statistics.getGameStandardPlaytime() < 10) {
-                    return null;
-                }
-                return StatisticsDto.builder()
-                        .gameId(statistics.getStatisticsId().getGame().getGameId())
-                        .statisticsBaseAt(statistics.getStatisticsId().getStatisticsBaseDt())
-                        .timeValues(getTimeValues(statistics))
-                        .positiveCounts(getPositiveCounts(statistics))
-                        .negativeCounts(getNegativeCounts(statistics))
-                        .build();
-            }).orElse(null);
-        }
-        // 게임 통계 응답 DTO 생성
-        GameStatisticsResDto responseDto;
-        if (statisticsDto != null) {
-            responseDto = new GameStatisticsResDto(gameWordCloudUrl, statisticsDto);
-        } else {
-            responseDto = new GameStatisticsResDto(gameWordCloudUrl);
-        }
-        // 최소한 하나의 값이 존재하는지 확인하여 응답 반환
-        if (gameWordCloudUrl != null || statisticsDto != null) {
-            return ResponseEntity.ok(new BaseResponse<>(responseDto));
-        } else {
-            throw new BaseException(StatusCode.GAME_STATISTICS_NOT_FOUNT);
-        }
-    }
 }
