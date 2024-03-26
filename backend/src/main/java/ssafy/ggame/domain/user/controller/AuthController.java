@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import ssafy.ggame.domain.user.dto.UserInfoResDto;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
 import ssafy.ggame.domain.user.service.AuthService;
-import org.springframework.web.client.RestTemplate;
 import ssafy.ggame.global.common.BaseResponse;
 
 import java.util.Map;
@@ -39,7 +39,7 @@ public class AuthController {
 
     @PostMapping("/google/callback")
     public ResponseEntity<BaseResponse<UserInfoResDto>> handleGoogleCallback(@RequestBody Map<String, String> payload) {
-        String code = payload.get("code"); //FE에서 코드 받아오기
+        String code = payload.get("code");
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -51,8 +51,6 @@ public class AuthController {
         map.add("code", code);
         map.add("redirect_uri", redirectUri);
         map.add("grant_type", "authorization_code");
-
-        System.out.println(redirectUri);
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
 
@@ -68,25 +66,22 @@ public class AuthController {
         Map<String, Object> userInfo = userInfoResponse.getBody();
         String email = (String) userInfo.get("email");
 
-        Optional<User> userOptional = userRepository.findByUserEmail(email);
-
-        if (!userOptional.isPresent()) {
-            // 사용자가 존재하지 않는 경우, 신규 사용자 생성 로직
-            User newUser = User.builder()
+        boolean isNewUser = false;
+        User user = userRepository.findByUserEmail(email).orElse(null);
+        if (user == null) {
+            user = User.builder()
                     .userEmail(email)
-                    // 추가 정보 설정, 예를 들어 이름과 프로필 이미지 URL을 설정할 수 있습니다.
                     .userName((String) userInfo.get("name"))
                     .userProfileImg((String) userInfo.get("picture"))
                     .build();
-            userRepository.save(newUser);
-            // 신규 사용자 정보를 반환하거나 필요한 추가 작업 수행
+            userRepository.save(user);
+            isNewUser = true;
         }
 
-        User user = userOptional.orElseGet(() -> userRepository.findByUserEmail(email).orElseThrow(() -> new RuntimeException("Failed to create new user")));
-
         // 사용자 정보를 기반으로 필요한 응답 반환 로직 구현
-        // 예를 들어, UserInfoResDto를 생성하고 이를 ResponseEntity로 감싸서 반환합니다.
         UserInfoResDto userInfoResDto = authService.getUserInfo(user.getUserEmail());
+        userInfoResDto.setIsNewUser(isNewUser);
+
         return ResponseEntity.ok(new BaseResponse<>(userInfoResDto));
     }
 }
