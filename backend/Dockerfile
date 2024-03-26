@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     libxtst6 \
     libgdk-pixbuf2.0-0 \
     libgtk-3-0 \
+    libgbm1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Chrome 설치
