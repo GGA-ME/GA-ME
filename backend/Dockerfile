@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y \
     && gdebi --n google-chrome-stable_current_amd64.deb \
     && rm -rf /var/lib/apt/lists/* google-chrome-stable_current_amd64.deb
 
-# ChromeDriver 설치
-RUN CHROMEDRIVER_VERSION=$(wget -qO- chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
+# ChromeDriver 설치 (버전을 명시적으로 지정)
+RUN CHROMEDRIVER_VERSION="123.0.6312.58" && \
     wget -N https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip -P /tmp/ && \
     unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/ && \
     chmod 755 /usr/local/bin/chromedriver && \
