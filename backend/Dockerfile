@@ -10,10 +10,14 @@ RUN apt-get update && apt-get install -y \
     gdebi-core \
     && wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && gdebi --n google-chrome-stable_current_amd64.deb \
-    && wget -N $(wget -qO- chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip \
-    && unzip chromedriver_linux64.zip -d /usr/local/bin/ \
-    && chmod 755 /usr/local/bin/chromedriver \
-    && rm -rf /var/lib/apt/lists/* google-chrome-stable_current_amd64.deb chromedriver_linux64.zip
+    && rm -rf /var/lib/apt/lists/* google-chrome-stable_current_amd64.deb
+
+# ChromeDriver 설치
+RUN CHROMEDRIVER_VERSION=$(wget -qO- chromedriver.storage.googleapis.com/LATEST_RELEASE) && \
+    wget -N https://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip -P /tmp/ && \
+    unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/ && \
+    chmod 755 /usr/local/bin/chromedriver && \
+    rm /tmp/chromedriver_linux64.zip
 
 # 애플리케이션 JAR 파일을 이미지에 추가
 ARG JAR_FILE=build/libs/ggame-0.0.1-SNAPSHOT.jar
