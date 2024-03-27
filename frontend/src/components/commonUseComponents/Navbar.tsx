@@ -4,12 +4,11 @@ import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import style from './Navbar.module.css';
-import { redirectToGoogleOAuth } from '../../url/api'; // login 함수 임포트
 import useUserStore from '../../stores/userStore';
 
 // 네비게이션 링크를 위한 타입 정의
 interface NavLinkItem {
-    path?: string;      // 구글 로그인 링크를 위해 선택적으로 변경
+    path?: string;
     label: string;
     icon: string;
     activeIcon: string;
@@ -18,8 +17,10 @@ interface NavLinkItem {
 
 const Navbar: React.FC = () => {
     const location = useLocation();
+    const { user, isLoggedIn, setIsLoggedIn } = useUserStore();
     const isActive = (path: string) => location.pathname === path;
-    const { setIsLoggedIn } = useUserStore();
+    const fetchAndSetUser = useUserStore((state) => state.fetchAndSetUser);
+    const setUser = useUserStore(state => state.setUser);
 
     const navLinkYPositions: number[] = [0, 65, 130, 195]; // 각 네비게이션 항목에 대한 Y 위치
 
@@ -27,15 +28,48 @@ const Navbar: React.FC = () => {
     const initialY: number = localStorage.getItem('indicatorY') ? Number(localStorage.getItem('indicatorY')) : navLinkYPositions[0];
     const [indicatorY, setIndicatorY] = useState<number>(initialY);
 
-    // 로그인 되었는지 확인
-    const isLoggedIn = useUserStore(state => state.isLoggedIn);
-    const handleLoginClick = async () => {
-        console.log("로그인 호출");
-        // login 함수 호출
-        await redirectToGoogleOAuth();
-        // 성공적으로 로그인 처리가 되면 상태 업데이트
-        setIsLoggedIn(true);
+    // 로그인 함수
+    const handleLoginClick = () => {
+        window.Kakao.Auth.login({
+          success: function(authObj) {
+            console.log(authObj); // 인증 정보 출력
+            // authObj 객체에서 access_token을 추출
+            const accessToken = authObj.access_token;
+            // 스토어의 fetchAndSetUser 함수 호출하여 서버에 사용자 정보 요청
+            fetchAndSetUser(accessToken); 
+            setIsLoggedIn(true);
+          },
+          fail: function(err) {
+            console.error(err); // 에러 처리
+          }
+        });
     };
+
+    // 쿠키 삭제
+    const deleteCookie = (name: string) => {
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
+    // 로그아웃 함수
+    const handleLogoutClick = () => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        if (window.Kakao.Auth.getAccessToken()) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            window.Kakao.Auth.logout(() => {
+                console.log('카카오 로그아웃 완료');
+                // 여기에서 인증 관련 쿠키 삭제
+                deleteCookie('auth_token');
+                // 상태 업데이트
+                setIsLoggedIn(false);
+                setUser(null);
+
+                // 페이지 새로고침
+                //window.location.reload();
+            });
+        }
+      };
 
     const navLinks: NavLinkItem[] = [
         { path: "/", label: "Main", icon: '/Gameicon.png', activeIcon: '/Gameicon.gif' },
@@ -44,8 +78,10 @@ const Navbar: React.FC = () => {
         { path: "/topic", label: "Hot Topic", icon: '/FireIcon.png', activeIcon: '/FireIcon.gif' },
         // 로그인 상태에 따라 분기 처리
         isLoggedIn ? 
-            { path: "/myPage", label: "My Page", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif' } :
-            { label: "Login", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif', action: handleLoginClick }, 
+            { path: `/myPage/${user?.userId}`, label: "My Page", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif' } :
+            { label: "Login", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif', action: handleLoginClick },
+        // isLoggedIn이 true일 때만 로그아웃 버튼 객체를 배열에 추가
+        ...(isLoggedIn ? [{ label: "Logout", icon: '/LogoutIcon.png', activeIcon: '/LogoutIcon.gif', action: handleLogoutClick }] : []),    
     ];
 
     useEffect(() => {

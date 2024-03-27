@@ -1,40 +1,45 @@
 // src/components/CallbackComponent.tsx
-import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import useUserStore from '../../stores/userStore';
-import { fetchUserInfo } from '../../url/api';
 
-const CallbackComponent: React.FC = () => {
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useUserStore from '../../stores/userStore';
+import { fetchKakaoUserInfo } from '../../url/api';
+
+const CallbackComponent = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const setUser = useUserStore((state) => state.setUser);
+  const setUser = useUserStore(state => state.setUser);
 
   useEffect(() => {
-    const fetchUser = async (code: string) => {
-      try {
-        // 서버로부터 사용자 정보를 받아옴
-        const data = await fetchUserInfo(code);
-        // 받아온 사용자 정보를 store에 저장
-        setUser(data.user);
-        // 사용자를 /home으로 리다이렉트
-        navigate('/');
-      } catch (error) {
-        console.error('Authentication failed:', error);
-        alert('Authentication failed:')
-        // 실패 시 로그인 페이지로 리다이렉트
-        navigate('/');
-      }
-    };
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
 
-    // URL에서 인증 코드 추출
-    const queryParams = new URLSearchParams(location.search);
-    const code = queryParams.get('code');
     if (code) {
-      fetchUser(code);
-    }
-  }, [location, navigate, setUser]);
+      const fetchUser = async () => {
+        try {
+          // 서버로부터 accessToken을 포함한 사용자 정보를 가져옵니다.
+          const data = await fetchKakaoUserInfo(code);
+          if (data) {
+            // 가져온 사용자 정보로 스토어의 상태를 업데이트합니다.
+            setUser(data.user);
+            // isNewUser 상태에 따라 페이지를 리디렉션합니다.
+            if (data.user.isNewUser) {
+              console.log("/survey로 이동");
+              navigate('/survey');
+            } else {
+              console.log("/로 이동");
+              navigate('/');
+            }
+          }
+        } catch (error) {
+          alert('또 에러야 또 Authentication failed');
+          console.error('Authentication failed:', error);
+        }
+      };
 
-  // 로딩 상태나 다른 메시지를 표시할 수 있음
+      fetchUser();
+    }
+  }, [navigate, setUser]);
+
   return <div>Loading...</div>;
 };
 
