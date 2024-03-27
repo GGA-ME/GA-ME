@@ -1,4 +1,5 @@
 import usePoketStore from '../../stores/poketStore'; // 스토어를 가져옵니다.
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import style from './Poket.module.css';
 
@@ -7,11 +8,16 @@ import style from './Poket.module.css';
 const Poket: React.FC = () => {
   const cartItems = usePoketStore(state => state.cartItems);
   const { removeItem } = usePoketStore();
+  const navigate = useNavigate();
 
+  const navigateToMixAndMatch = () => {
+    navigate(`/mixAndMatch`)
+    console.log('믹스엔 매치 페이지 이동')
+  }
 
   return (
     <div className='fixed right-5 flex flex-col items-center justify-center h-screen'>
-      <div className={`${style.neonBorder} -translate-y-20 flex flex-col items-center justify-center px-8 mt-28 rounded-full border-r-2 border-l-2 bg-gray-900 text-white z-40 h-96`}
+      <div className={`${style.neonBorder} -translate-y-20 flex flex-col items-center justify-center px-8 mt-60 rounded-full border-r-2 border-l-2 bg-gray-900 text-white z-40 h-96`}
         style={{ height: '28rem' }}>
         <div className="w-14">
           {cartItems.map((game) => (
@@ -31,7 +37,7 @@ const Poket: React.FC = () => {
           ))}
         </div>
       </div>
-      <div className={`${style.lightButton}`}>
+      <div className={`${style.lightButton}`} onClick={navigateToMixAndMatch}>
         <button className={`${style.bt}`}>
           <div className={`${style.lightHolder}`}>
             <div className={`${style.dot}`}></div>
