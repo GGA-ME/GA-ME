@@ -15,6 +15,7 @@ interface SearchResult {
   gamePriceFinal: number;
   gameDeveloper: string;
   isPrefer: boolean | null;
+  gameLike: number | null;
   tagList: Tag[];
 }
 

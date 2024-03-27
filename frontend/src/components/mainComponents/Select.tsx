@@ -5,7 +5,7 @@ import style from './Select.module.css'
 const Select: React.FC = () => {
   const categorys = ['전체 인기', '취향 저격']
   const [nowCategory, setNotCategory] = useState<string>('ALL')
-  const allTags = [ 'FPS', 'RPG', 'a', 'b', 'c', 'd', 'e', 'f']
+  const allTags = [ '액션', '전략', 'RPG', '캐주얼', '레이싱', '스포츠', '인디', '어드벤처']
   const myTags = [ 'ㄱ', 'ㄴ', 'ㄷ', 'ㄹ', 'ㅁ' ]
   const [selectedTagId, setSelectedTagId] = useState<string>('');
   return (
