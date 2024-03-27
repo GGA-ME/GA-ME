@@ -12,7 +12,7 @@ interface User {
 interface UserState {
   user: User | null;
   isLoggedIn: boolean;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
   fetchAndSetUser: (accessToken: string) => void;
 }

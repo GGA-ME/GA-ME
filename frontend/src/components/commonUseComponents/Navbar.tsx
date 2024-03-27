@@ -20,6 +20,7 @@ const Navbar: React.FC = () => {
     const isActive = (path: string) => location.pathname === path;
     const { user, setIsLoggedIn } = useUserStore();
     const fetchAndSetUser = useUserStore((state) => state.fetchAndSetUser);
+    const setUser = useUserStore(state => state.setUser);
 
     const navLinkYPositions: number[] = [0, 65, 130, 195]; // 각 네비게이션 항목에 대한 Y 위치
 
@@ -29,6 +30,7 @@ const Navbar: React.FC = () => {
 
     // 로그인 되었는지 확인
     const isLoggedIn = useUserStore(state => state.isLoggedIn);
+    // 로그인 함수
     const handleLoginClick = () => {
         window.Kakao.Auth.login({
           success: function(authObj) {
@@ -45,6 +47,15 @@ const Navbar: React.FC = () => {
         });
     };
 
+    // 로그아웃 함수
+    const handleLogoutClick = () => {
+        // 사용자 세션 종료 및 상태 초기화
+        setIsLoggedIn(false);
+        setUser(null); // 사용자 정보를 null로 초기화
+        // 필요한 경우 추가적인 로그아웃 처리 로직
+        console.log('로그아웃 되었습니다.');
+      };
+
     const navLinks: NavLinkItem[] = [
         { path: "/", label: "Main", icon: '/Gameicon.png', activeIcon: '/Gameicon.gif' },
         { path: "/search", label: "Search", icon: '/SearchIcon.png', activeIcon: '/SearchIcon.gif' },
@@ -53,7 +64,9 @@ const Navbar: React.FC = () => {
         // 로그인 상태에 따라 분기 처리
         isLoggedIn ? 
             { path: `/myPage/${user?.userId}`, label: "My Page", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif' } :
-            { label: "Login", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif', action: handleLoginClick }, 
+            { label: "Login", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif', action: handleLoginClick },
+        // isLoggedIn이 true일 때만 로그아웃 버튼 객체를 배열에 추가
+        ...(isLoggedIn ? [{ label: "Logout", icon: '/LogoutIcon.png', activeIcon: '/LogoutIconActive.gif', action: handleLogoutClick }] : []),    
     ];
 
     useEffect(() => {
