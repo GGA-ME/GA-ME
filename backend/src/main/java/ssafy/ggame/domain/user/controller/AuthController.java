@@ -23,13 +23,13 @@ import java.util.Optional;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Value("${kakao.client-id}")
+    @Value("${spring.kakao.client-id}")
     private String clientId;
 
-    @Value("${kakao.client-secret}")
+    @Value("${spring.kakao.client-secret}")
     private String clientSecret;
 
-    @Value("${kakao.redirect-uri}")
+    @Value("${spring.kakao.redirect-uri}")
     private String redirectUri;
 
     @Autowired
