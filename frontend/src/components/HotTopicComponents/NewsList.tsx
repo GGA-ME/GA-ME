@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import NewsCard from '../HotTopicComponents/NewsCard';
 import useHotTopicStore from "../../stores/hotTopicStore";
+import style from './NewsList.module.css';
 import { AxiosError } from 'axios';
 
 // 사용 스토어의 구조를 기반으로 하는 구조
@@ -13,16 +14,30 @@ interface NewsList {
 }
 
 const NewsList: React.FC = () => {
-  const { newsData, nLoading, nError } = useHotTopicStore();
-
+  const { newsData, nLoading, nError ,fetchNewsData} = useHotTopicStore();
+     // 버튼 클릭 시 뉴스 데이터를 다시 가져오는 함수
+  const handleRetry = () => {
+    fetchNewsData(); // 데이터 재요청
+  };
 
   if (nLoading) {
-    return <div>Loading...</div>;
+    return <div className={`${style.container}`}>
+              <div className={`${style.loader}`}></div>
+              <div>
+              <h1 className={`${style.loadingTitle}`}> 뉴스 정보를 가져오는 중입니다. </h1>  
+              <h1> 조금만 기다려주세요 ! </h1>  
+              </div>
+          </div>;
   }
 
   if (nError) {
-    const axiosError = nError as AxiosError;
-    return <div>Error: {axiosError.message}</div>;
+    return <div className={`${style.container}`}>
+    <div className={`${style.eyes}`}></div>
+    <div>
+    <h1 className={`${style.loadingTitle}`}> 뉴스 정보를 가져오는데 실패했습니다. </h1>  
+    <button className={`${style.outlineButton}` }onClick={handleRetry}> 다시 시도하기 </button>
+    </div>
+</div>;
   }
 
   if (!newsData || !newsData.result.length) {
@@ -30,7 +45,7 @@ const NewsList: React.FC = () => {
   }
 
   return (
-    <motion.ul className="grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3"
+    <motion.ul className="grid gap-2 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3"
       variants={{
         hidden: {},
         visible: { transition: { staggerChildren: 0.1 } }
