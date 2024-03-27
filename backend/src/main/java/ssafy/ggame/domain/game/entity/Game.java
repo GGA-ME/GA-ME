@@ -6,8 +6,10 @@ import lombok.*;
 import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.gameTag.entity.GameTag;
 import ssafy.ggame.domain.prefer.entity.Prefer;
+import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.global.common.BaseUpdatedEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -71,6 +73,10 @@ public class Game extends BaseUpdatedEntity {
     private Double gameFinalRecentScore;
 
     public GameCardDto converToGameCardDto(){
+        List<TagDto> tagDtoList = new ArrayList<>();
+        for(GameTag gameTag : gameTags){
+            tagDtoList.add(gameTag.convertToTagDto());
+        }
         return GameCardDto.builder()
                 .gameId(this.gameId)
                 .gameName(this.gameName)
@@ -78,6 +84,7 @@ public class Game extends BaseUpdatedEntity {
                 .gamePriceInitial(this.gamePriceInitial)
                 .gamePriceFinal(this.gamePriceFinal)
                 .gameDeveloper(this.gameDeveloper)
+                .tagList(tagDtoList)
                 .isPrefer(false)
                 .build();
     }

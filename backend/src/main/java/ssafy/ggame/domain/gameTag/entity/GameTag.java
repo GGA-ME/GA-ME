@@ -18,7 +18,7 @@ public class GameTag {
     @Column(name = "game_tag_id")
     private Long gameTagId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     private Game game;
 

@@ -1,10 +1,12 @@
 package ssafy.ggame.domain.game.repository;
 
+import com.querydsl.core.Tuple;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ssafy.ggame.domain.game.entity.Game;
+import ssafy.ggame.domain.recommendation.dto.TempDto;
 import ssafy.ggame.domain.user.entity.User;
 
 import java.util.List;
@@ -19,6 +21,16 @@ public interface GameRepository extends JpaRepository<Game,Long> {
     // 각 사용자가 선호하는 게임 목록을 가져오는 쿼리 메서드
     @Query("SELECT p.preferId.game FROM Prefer p WHERE p.preferId.user = :user")
     List<Game> findPreferredGamesByUser(@Param("user") User user);
+
+//    @Query("SELECT gt.game.gameId, gt.gameTagId, gt.tag.tagId.code.codeId, gt.tag.tagId.tagId FROM GameTag gt")
+
+    interface GameTagProjection {
+        Long getGameId();
+        Long getGameTagId();
+        String getGameName();
+        Long getCodeId();
+        Long getTagId();
+    }
 
 //    @Query("SELECT e FROM game e WHERE e.gCodeId = :codeId AND e.tagId = :tagId ORDER BY e.gameFinalScore")
 //    List<Game> findAllByGCodeIdAndTagIdOrderByGameFinalScore(String codeId, Short tagId);
