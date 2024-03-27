@@ -107,7 +107,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
                   // rotate: -90,
                   borderRadius: "100%"
                 }} >
-                <img src={isPrefer ? './OnLike':'./Like.png'} alt={'Like'} ></img>
+                <img src={isPrefer ? '/OnLike':'/Like.png'} alt={'Like'} ></img>
               </motion.button>
 
               {/* 포켓에담기 버튼 */}
@@ -131,7 +131,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
                   // rotate: -90,
                   borderRadius: "100%"
                 }} >
-                <img src={'./NotLike.png'} alt={'NotLike'}></img>
+                <img src={'/NotLike.png'} alt={'NotLike'}></img>
               </motion.button>
 
             </div>
