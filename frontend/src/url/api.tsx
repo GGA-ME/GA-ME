@@ -4,7 +4,7 @@ import axios from 'axios';
 // 환경변수에서 카카오 클라이언트 ID와 리디렉션 URI를 가져옵니다.
 // 카카오에서는 REST API 키를 클라이언트 ID로 사용합니다.
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID as string;
-const KAKAO_REDIRECT_URI = 'https://j10e105.p.ssafy.io/auth/kakao/callback';
+const KAKAO_REDIRECT_URI = import.meta.env.VITE_KAKAO_REDIRECT_URI as string;
 
 const BASE_URL = "https://j10e105.p.ssafy.io/api";
 
