@@ -2,20 +2,23 @@ package ssafy.ggame.domain.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import ssafy.ggame.domain.user.dto.UserInfoResDto;
 import ssafy.ggame.domain.user.entity.User;
 import ssafy.ggame.domain.user.repository.UserRepository;
 import ssafy.ggame.domain.user.service.AuthService;
 import ssafy.ggame.global.common.BaseResponse;
+import ssafy.ggame.global.common.StatusCode;
+import ssafy.ggame.global.exception.BaseException;
 
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
 
@@ -23,13 +26,13 @@ import java.util.Optional;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    @Value("${kakao.client-id}")
     private String clientId;
 
-    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
+    @Value("${kakao.client-secret}")
     private String clientSecret;
 
-    @Value("${spring.security.oauth2.client.registration.google.redirect-uri}")
+    @Value("${kakao.redirect-uri}")
     private String redirectUri;
 
     @Autowired
@@ -37,53 +40,56 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/google/callback")
-    public ResponseEntity<BaseResponse<UserInfoResDto>> handleGoogleCallback(@RequestBody Map<String, String> payload) {
-        String code = payload.get("code");
-
+    @GetMapping("/kakao/login")
+    public ResponseEntity<String> redirectToKakaoOAuth() {
+        String kakaoOAuthUrl = "https://kauth.kakao.com/oauth/authorize?"
+                + "client_id=" + clientId
+                + "&redirect_uri=" + redirectUri
+                + "&response_type=code";
+        return ResponseEntity.ok(kakaoOAuthUrl);
+    }
+    @PostMapping("/kakao/callback")
+    public ResponseEntity<BaseResponse<UserInfoResDto>> handleKakaoCallback(@RequestParam String code) {
         RestTemplate restTemplate = new RestTemplate();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
-        map.add("client_id", clientId);
-        map.add("client_secret", clientSecret);
-        map.add("code", code);
-        map.add("redirect_uri", redirectUri);
-        map.add("grant_type", "authorization_code");
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", clientId);
+        params.add("redirect_uri", redirectUri);
+        params.add("code", code);
+        params.add("client_secret", clientSecret); // client_secret은 선택적으로 사용됩니다.
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+        ResponseEntity<Map> response = restTemplate.postForEntity("https://kauth.kakao.com/oauth/token", request, Map.class);
+        Map<String, Object> responseBody = response.getBody();
+        String accessToken = (String) responseBody.get("access_token");
 
-        System.out.println("redirectUri: "+ redirectUri);
-        System.out.println("before response");
-        ResponseEntity<Map> response = restTemplate.postForEntity("https://oauth2.googleapis.com/token", request , Map.class);
-        System.out.println("after response");
-        Map<String, Object> tokenResponse = response.getBody();
-        String accessToken = (String) tokenResponse.get("access_token");
-
-        // 액세스 토큰을 사용하여 사용자 정보를 조회합니다.
         HttpHeaders userInfoHeaders = new HttpHeaders();
-        userInfoHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+        userInfoHeaders.setBearerAuth(accessToken);
         HttpEntity<?> userInfoRequest = new HttpEntity<>(userInfoHeaders);
-        ResponseEntity<Map> userInfoResponse = restTemplate.exchange("https://www.googleapis.com/oauth2/v2/userinfo", HttpMethod.GET, userInfoRequest, Map.class);
+        ResponseEntity<Map> userInfoResponse = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, userInfoRequest, Map.class);
         Map<String, Object> userInfo = userInfoResponse.getBody();
-        String email = (String) userInfo.get("email");
 
-        boolean isNewUser = false;
-        User user = userRepository.findByUserEmail(email).orElse(null);
-        if (user == null) {
-            user = User.builder()
+        Map<String, Object> kakaoAccount = (Map<String, Object>) userInfo.get("kakao_account");
+        String email = (String) kakaoAccount.get("email");
+
+        Optional<User> userOptional = userRepository.findByUserEmail(email);
+
+        boolean isNewUser = !userOptional.isPresent();
+        User user = userOptional.orElseGet(() -> {
+            User newUser = User.builder()
                     .userEmail(email)
-                    .userName((String) userInfo.get("name"))
-                    .userProfileImg((String) userInfo.get("picture"))
+                    .userName((String)((Map<String, Object>)userInfo.get("properties")).get("nickname"))
+                    .userProfileImg((String)((Map<String, Object>)kakaoAccount.get("profile")).get("thumbnail_image_url"))
+                    .userLastLoginDt(LocalDate.now())
                     .build();
-            userRepository.save(user);
-            isNewUser = true;
-        }
+            return userRepository.save(newUser);
+        });
 
-        // 사용자 정보를 기반으로 필요한 응답 반환 로직 구현
         UserInfoResDto userInfoResDto = authService.getUserInfo(user.getUserEmail());
-        userInfoResDto.setIsNewUser(isNewUser);
 
         return ResponseEntity.ok(new BaseResponse<>(userInfoResDto));
     }

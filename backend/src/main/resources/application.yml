@@ -13,15 +13,10 @@ spring:
     properties:
       hibernate:
         format_sql: 'true'
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${OAUTH_CLIENT_ID}
-            client-secret: ${OAUTH_CLIENT_SECRET}
-            redirect-uri: ${OAUTH_URL}
-            scope: ${OAUTH_CLIENT_SCOPE}
+  kakao:
+    client-id: ${OAUTH_CLIENT_ID}
+    client-secret: ${OAUTH_CLIENT_SECRET}
+    redirect-uri: ${OAUTH_URL}
   cassandra:
     keyspace-name: ${CASSANDRA_KEYSPACE}
     contact-points: ${CASSANDRA_CONTACT_POINTS}

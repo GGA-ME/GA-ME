@@ -13,9 +13,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class OAuth2LoginSecurityConfig {
 
-    @Autowired
-    private CustomAuthenticationSuccessHandler successHandler;
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -26,9 +23,6 @@ public class OAuth2LoginSecurityConfig {
                         //.requestMatchers("/user/login").permitAll()
                         // 나머지 모든 요청은 인증된 사용자만 접근할 수 있도록 설정합니다.
                         .anyRequest().permitAll()
-                )
-                .oauth2Login(oauth2 -> oauth2
-                        .successHandler(successHandler) // 로그인 성공 핸들러 등록
                 );
         return http.build();
     }
