@@ -32,10 +32,10 @@ public class GameController {
     private final StatisticsRepository statisticsRepository;
     private final GameService gameService;
 
-    @GetMapping("/{game_id}/info")
-    public ResponseEntity<Object> getGameInfo(@PathVariable("game_id") Long gameId) {
+    @GetMapping("/{game_id}/info/{user_id}")
+    public ResponseEntity<Object> getGameInfo(@PathVariable("game_id") Long gameId, @PathVariable("user_id") Long userId) {
 
-        GameDetailResDto responseDto = gameService.convertToGameDetailResDto(gameId);
+        GameDetailResDto responseDto = gameService.convertToGameDetailResDto(gameId, userId);
 
         return ResponseEntity.ok(new BaseResponse<>(responseDto));
     }
