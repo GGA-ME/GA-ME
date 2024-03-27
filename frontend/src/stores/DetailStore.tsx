@@ -32,8 +32,8 @@ export interface GameData {
     gameReleaseDate: string;
     screenshotList: Screenshot[];
     relatedGameList: Game[]; // 관련 게임 데이터에 대한 정확한 타입이 없는 경우 any로 지정
-    tagList: Array<{ codeId: string; tagId:number; tagName: string }>;
-    isLike: boolean;
+    gameTagList: Array<{ codeId: string; tagId:number; tagName: string }>;
+    gameIsLike: boolean;
 }
 
 interface ApiResponse {
@@ -53,10 +53,10 @@ type DetailState = {
 
 export const useDetailStore = create<DetailState>((set) => ({
     data: null,
-    fetchData: async (userId, gameId) => {
+    fetchData: async (gameId, userId) => {
     // 데이터 가져오는 비동기 요청
     try {
-        const response = await api.get<ApiResponse>(`/api/games/${gameId}/info/${userId}`,);
+        const response = await api.get<ApiResponse>(`/games/${gameId}/info/${userId}`,);
         set({ data: response.data });
         console.log(response.data);
     } catch (error) {

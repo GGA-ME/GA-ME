@@ -12,7 +12,6 @@ interface InfoDetailDescProps {
     <>
     <div className={styles.container}>
         <div>상세 정보</div>
-        <div>{data}</div>
     </div>
     </>
   );

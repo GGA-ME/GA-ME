@@ -9,7 +9,8 @@ interface InfoDescriptionProps {
   return (
     <>
     <div className={styles.container}>
-    <div>{gameDetailedDescription}</div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }} 
+      dangerouslySetInnerHTML={{ __html: gameDetailedDescription }} />
     </div>
     </>
   );

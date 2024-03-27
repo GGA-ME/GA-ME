@@ -62,6 +62,7 @@
   position: absolute;
   bottom: 5%; /* 중앙 이미지 하단으로부터의 상대적인 위치 */
   left: 5%; /* 중앙 이미지 왼쪽으로부터의 상대적인 위치 */
+  text-align: left;
   color: white;
 }
 
