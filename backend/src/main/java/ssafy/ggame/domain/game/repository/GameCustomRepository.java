@@ -17,4 +17,6 @@ public interface GameCustomRepository {
     Map<Integer,List<GameSaleCardDto>> findSaleGames(Integer userId);
 
     List<TempDto> findAllGameAndTag();
+
+    List<GameCardDto> getPreferList(Integer userId);
 }

@@ -3,7 +3,9 @@ package ssafy.ggame.domain.prefer.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.entity.Game;
+import ssafy.ggame.domain.game.repository.GameCustomRepository;
 import ssafy.ggame.domain.game.repository.GameRepository;
 import ssafy.ggame.domain.prefer.dto.PreferRequestDto;
 import ssafy.ggame.domain.prefer.entity.Prefer;
@@ -14,6 +16,7 @@ import ssafy.ggame.domain.user.repository.UserRepository;
 import ssafy.ggame.global.common.StatusCode;
 import ssafy.ggame.global.exception.BaseException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +26,7 @@ public class PreferServiceImpl implements PreferService{
     private final PreferRepository preferRepository;
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
+    private final GameCustomRepository gameCustomRepository;
 
 
 //    @Override
@@ -44,5 +48,10 @@ public class PreferServiceImpl implements PreferService{
         preferRepository.delete(result);
         // 여기까지 성공적 처리시 true
         return true;
+    }
+
+    @Override
+    public List<GameCardDto> getPreferList(Integer userId) {
+        return gameCustomRepository.getPreferList(userId);
     }
 }
