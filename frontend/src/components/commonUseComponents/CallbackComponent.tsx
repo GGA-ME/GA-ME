@@ -8,6 +8,8 @@ const CallbackComponent: React.FC = () => {
   const location = useLocation();
   const setUser = useUserStore((state) => state.setUser);
 
+  console.log('In CallbackComponent');
+
   // URL에서 인증 코드 추출
   const queryParams = new URLSearchParams(location.search);
   const code = queryParams.get('code');
