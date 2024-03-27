@@ -1,0 +1,8 @@
+.container {
+    width: 1000px;
+    height: 800px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+
+    background-color: lightblue; /* 배경색 설정 */
+}

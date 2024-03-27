@@ -2,7 +2,7 @@ import styles from './DetailBanner.module.css'; // CSS 모듈 import
 
 function Banner() {
   const bannerImage = 'https://cdn.cloudflare.steamstatic.com/steam/apps/1562700/header_koreana.jpg?t=1699513185'; // 이미지 URL
-
+  // const bannerImage = 'https://cdn.akamai.steamstatic.com/steam/apps/10240/header.jpg?t=1447354813';
   return (
     <div className={styles.bannerContainer}>
       <div style={{ backgroundImage: `url(${bannerImage})` }} className={styles.bannerBackground}>
