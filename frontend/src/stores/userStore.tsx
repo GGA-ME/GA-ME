@@ -41,7 +41,8 @@ const useUserStore = create<UserState>((set) => ({
           isLoggedIn: true,
         });
 
-        console.log('사용자 정보: '+userInfo);
+        console.log('사용자 정보: ');
+        console.log(userInfo);
       } else {
         // 응답이 실패했을 경우의 처리
         console.error(response.data.message);
