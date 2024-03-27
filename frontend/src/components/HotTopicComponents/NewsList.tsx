@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import NewsCard from '../HotTopicComponents/NewsCard';
 import useHotTopicStore from "../../stores/hotTopicStore";
 import style from './NewsList.module.css';
-import { AxiosError } from 'axios';
 
 // 사용 스토어의 구조를 기반으로 하는 구조
 interface NewsList {
