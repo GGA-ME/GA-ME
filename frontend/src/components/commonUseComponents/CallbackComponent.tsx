@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useUserStore from '../../stores/userStore';
-import { fetchUserInfo } from '../../url/api';
+import { fetchKakaoUserInfo, redirectToKakaoOAuth } from '../../url/api'; // 카카오 사용자 정보를 받아오는 함수로 변경
 
 const CallbackComponent: React.FC = () => {
   const navigate = useNavigate();
@@ -12,17 +12,17 @@ const CallbackComponent: React.FC = () => {
   useEffect(() => {
     const fetchUser = async (code: string) => {
       try {
-        // 서버로부터 사용자 정보를 받아옴
-        const data = await fetchUserInfo(code);
+        // 서버로부터 카카오 사용자 정보를 받아옴
+        const data = await fetchKakaoUserInfo(code);
         // 받아온 사용자 정보를 store에 저장
         setUser(data.user);
-        // 사용자를 /home으로 리다이렉트
+        // 사용자를 홈 페이지로 리다이렉트
         navigate('/');
       } catch (error) {
         console.error('Authentication failed:', error);
         alert('Authentication failed:')
-        // 실패 시 로그인 페이지로 리다이렉트
-        navigate('/');
+        // 인증 실패 시 카카오 로그인 페이지로 다시 리디렉트
+        redirectToKakaoOAuth();
       }
     };
 
@@ -34,7 +34,6 @@ const CallbackComponent: React.FC = () => {
     }
   }, [location, navigate, setUser]);
 
-  // 로딩 상태나 다른 메시지를 표시할 수 있음
   return <div>Loading...</div>;
 };
 
