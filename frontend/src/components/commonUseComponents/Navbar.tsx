@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import style from './Navbar.module.css';
-import { redirectToGoogleOAuth } from '../../url/api'; // login 함수 임포트
+import { redirectToKakaoOAuth } from '../../url/api'; // 카카오 로그인 함수 임포트
 import useUserStore from '../../stores/userStore';
 
 // 네비게이션 링크를 위한 타입 정의
 interface NavLinkItem {
-    path?: string;      // 구글 로그인 링크를 위해 선택적으로 변경
+    path?: string;
     label: string;
     icon: string;
     activeIcon: string;
@@ -31,8 +31,8 @@ const Navbar: React.FC = () => {
     const isLoggedIn = useUserStore(state => state.isLoggedIn);
     const handleLoginClick = async () => {
         console.log("로그인 호출");
-        // login 함수 호출
-        await redirectToGoogleOAuth();
+        // 카카오 로그인 함수 호출
+        redirectToKakaoOAuth();
         // 성공적으로 로그인 처리가 되면 상태 업데이트
         setIsLoggedIn(true);
     };
