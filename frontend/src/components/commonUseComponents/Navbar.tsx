@@ -17,8 +17,8 @@ interface NavLinkItem {
 
 const Navbar: React.FC = () => {
     const location = useLocation();
+    const { user, isLoggedIn, setIsLoggedIn } = useUserStore();
     const isActive = (path: string) => location.pathname === path;
-    const { user, setIsLoggedIn } = useUserStore();
     const fetchAndSetUser = useUserStore((state) => state.fetchAndSetUser);
     const setUser = useUserStore(state => state.setUser);
 
@@ -28,8 +28,6 @@ const Navbar: React.FC = () => {
     const initialY: number = localStorage.getItem('indicatorY') ? Number(localStorage.getItem('indicatorY')) : navLinkYPositions[0];
     const [indicatorY, setIndicatorY] = useState<number>(initialY);
 
-    // 로그인 되었는지 확인
-    const isLoggedIn = useUserStore(state => state.isLoggedIn);
     // 로그인 함수
     const handleLoginClick = () => {
         window.Kakao.Auth.login({
