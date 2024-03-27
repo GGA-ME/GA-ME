@@ -1,5 +1,6 @@
 package ssafy.ggame.domain.game.repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.dto.GameLikeDto;
 import ssafy.ggame.domain.game.dto.GameSaleCardDto;
 import ssafy.ggame.domain.game.dto.GameTagsDto;
+import ssafy.ggame.domain.recommendation.dto.TempDto;
 import ssafy.ggame.domain.search.dto.SearchLikeRequestDto;
 import ssafy.ggame.domain.tag.dto.TagDto;
 
@@ -22,9 +24,10 @@ import static ssafy.ggame.domain.tag.entity.QTag.tag;
 
 @Repository
 @RequiredArgsConstructor
-public class GameCustomRepositoryImpl implements GameCustomRepository{
+public class GameCustomRepositoryImpl implements GameCustomRepository {
 
     private final JPAQueryFactory queryFactory;
+
     //게임 명 검색
     @Override
     public List<GameCardDto> findByGameNameContaining(SearchLikeRequestDto dto) {
@@ -65,15 +68,16 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         searchGames.forEach(game -> {
             game.updateTagList(tagsMap.get(game.getGameId()));
             game.updateIsPrefer(preferIds.contains(game.getGameId()));
-            game.updateLike(likes.get(game.getGameId())==null?0:likes.get(game.getGameId()));
+            game.updateLike(likes.get(game.getGameId()) == null ? 0 : likes.get(game.getGameId()));
             game.updatePrices();
         });
 
         return searchGames;
     }
+
     // 할인 게임 검색 메소드 ( 할인율 ~10%, ~30%, ~50%, ~75% )
     @Override
-    public Map<Integer,List<GameSaleCardDto>> findSaleGames(Integer userId) {
+    public Map<Integer, List<GameSaleCardDto>> findSaleGames(Integer userId) {
         //1. 일단 할인율이 있는거 다가져오기 (10~30)
         List<GameSaleCardDto> searchGames = queryFactory.select(
                         Projections.constructor(
@@ -156,25 +160,25 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
 
 
         //세일 퍼센트 세팅 10,30,50,75
-        Map<Integer,List<GameSaleCardDto>> sales = new HashMap<>();
+        Map<Integer, List<GameSaleCardDto>> sales = new HashMap<>();
 
         salePercentSetting(sales);
         //할인율 ~10%, ~30%, ~50%, ~75%
 
         //다 돌면서 분기 처리
-        searchGames.forEach(game->{
+        searchGames.forEach(game -> {
             game.updateTagList(tags.get(game.getGameId()));
             game.updateIsPrefer(prefers.contains(game.getGameId()));
-            game.updateLike(likes.get(game.getGameId())==null?0:likes.get(game.getGameId()));
+            game.updateLike(likes.get(game.getGameId()) == null ? 0 : likes.get(game.getGameId()));
             game.updatePrices();
             Byte percent = game.getGameDiscountPercent();
-            if(percent>=10&&percent<30){
+            if (percent >= 10 && percent < 30) {
                 sales.get(10).add(game);
-            }else if(percent>=30&&percent<50){
+            } else if (percent >= 30 && percent < 50) {
                 sales.get(30).add(game);
-            }else if(percent>=50&&percent<75){
+            } else if (percent >= 50 && percent < 75) {
                 sales.get(50).add(game);
-            }else if(percent>=75){
+            } else if (percent >= 75) {
                 sales.get(75).add(game);
             }
         });
@@ -182,14 +186,32 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         return sales;
     }
 
-    private static void salePercentSetting(Map<Integer, List<GameSaleCardDto>> sales) {
-        sales.put(10,new ArrayList<>());
-        sales.put(30,new ArrayList<>());
-        sales.put(50,new ArrayList<>());
-        sales.put(75,new ArrayList<>());
+    @Override
+    public List<TempDto> findAllGameAndTag() {
+        // 디티오 추출
+        // 해당하는 게임 정보와 태그 가져오기
+        return queryFactory.select(
+                        Projections.constructor(
+                                TempDto.class,
+                                game.gameId.as("gameId"),
+                                game.gameFinalScore.as("gameFinalScore"),
+                                tag.tagId.code.codeId.as("codeId"),
+                                tag.tagId.tagId.as("tagId")
+                        )
+                ).from(game)
+                .join(game.gameTags, gameTag)
+                .join(gameTag.tag, tag)
+                .fetch();
     }
 
-    private  Map<Long, List<TagDto>> getTags(List<Long> ids) {
+    private static void salePercentSetting(Map<Integer, List<GameSaleCardDto>> sales) {
+        sales.put(10, new ArrayList<>());
+        sales.put(30, new ArrayList<>());
+        sales.put(50, new ArrayList<>());
+        sales.put(75, new ArrayList<>());
+    }
+
+    private Map<Long, List<TagDto>> getTags(List<Long> ids) {
         //해당하는 게임들 태그 가져오기
         List<GameTagsDto> gameTags = queryFactory.select(
                         Projections.constructor(
@@ -217,6 +239,7 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
                                 , Collectors.toList())));
 
     }
+
     //User prefer 가져오기
     private List<Long> getPrefers(Integer userId, List<Long> ids) {
 
@@ -226,8 +249,9 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
                 .where(prefer.preferId.game.gameId.in(ids).and(prefer.preferId.user.userId.eq(userId)))
                 .fetch();
     }
+
     //좋아요 수 가져오기
-    private Map<Long,Long> getLikes(List<Long> ids) {
+    private Map<Long, Long> getLikes(List<Long> ids) {
         List<GameLikeDto> likes = queryFactory.select(
                         Projections.constructor(
                                 GameLikeDto.class,
@@ -241,5 +265,6 @@ public class GameCustomRepositoryImpl implements GameCustomRepository{
         return likes.stream()
                 .collect(Collectors.toMap(GameLikeDto::getGameId, GameLikeDto::getGameLike));
     }
+
 
 }

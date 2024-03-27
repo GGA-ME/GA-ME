@@ -16,7 +16,7 @@ import java.io.Serializable;
 public class TagId implements Serializable {
     @Column(name = "tag_id")
     private Short tagId;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "code_id")
     private Code code;
 
