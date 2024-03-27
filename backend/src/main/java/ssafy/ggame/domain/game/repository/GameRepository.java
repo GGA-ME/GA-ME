@@ -21,18 +21,5 @@ public interface GameRepository extends JpaRepository<Game,Long> {
     // 각 사용자가 선호하는 게임 목록을 가져오는 쿼리 메서드
     @Query("SELECT p.preferId.game FROM Prefer p WHERE p.preferId.user = :user")
     List<Game> findPreferredGamesByUser(@Param("user") User user);
-
-//    @Query("SELECT gt.game.gameId, gt.gameTagId, gt.tag.tagId.code.codeId, gt.tag.tagId.tagId FROM GameTag gt")
-
-    interface GameTagProjection {
-        Long getGameId();
-        Long getGameTagId();
-        String getGameName();
-        Long getCodeId();
-        Long getTagId();
-    }
-
-//    @Query("SELECT e FROM game e WHERE e.gCodeId = :codeId AND e.tagId = :tagId ORDER BY e.gameFinalScore")
-//    List<Game> findAllByGCodeIdAndTagIdOrderByGameFinalScore(String codeId, Short tagId);
-
+    
 }
