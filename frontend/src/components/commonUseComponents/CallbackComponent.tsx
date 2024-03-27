@@ -1,45 +1,34 @@
+// src/components/CallbackComponent.tsx
+
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useUserStore from '../../stores/userStore';
-import { fetchKakaoUserInfo, redirectToKakaoOAuth } from '../../url/api';
+import { fetchKakaoUserInfo } from '../../url/api';
 
-const CallbackComponent: React.FC = () => {
+const CallbackComponent = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const setUser = useUserStore((state) => state.setUser);
-
-  console.log('In CallbackComponent');
-
-  // URL에서 인증 코드 추출
-  const queryParams = new URLSearchParams(location.search);
-  const code = queryParams.get('code');
-  console.log("Callback Component mounted. Extracted code:", code);
+  const setUser = useUserStore(state => state.setUser);
 
   useEffect(() => {
-    console.log("useEffect triggered in Callback Component.");
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
 
-    const fetchUser = async () => {
-      if (code) {
-        console.log("Attempting to fetch user with code:", code);
+    if (code) {
+      const fetchUser = async () => {
         try {
-          // 서버로부터 카카오 사용자 정보를 받아옴
           const data = await fetchKakaoUserInfo(code);
-          console.log("Fetched user data:", data);
-          // 받아온 사용자 정보를 store에 저장
           setUser(data.user);
-          // 사용자를 홈 페이지로 리다이렉트
           navigate('/');
         } catch (error) {
+          alert('또 에러야 또 Authentication failed');
           console.error('Authentication failed:', error);
-          alert('Authentication failed. Redirecting to Kakao login.');
-          // 인증 실패 시 카카오 로그인 페이지로 다시 리디렉트
-          redirectToKakaoOAuth();
+          // 에러 처리 로직...
         }
-      }
-    };
+      };
 
-    fetchUser();
-  }, [location.search, navigate, setUser]); // Dependencies에 navigate와 setUser 추가
+      fetchUser();
+    }
+  }, [navigate, setUser]);
 
   return <div>Loading...</div>;
 };
