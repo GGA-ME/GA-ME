@@ -16,13 +16,21 @@ const CallbackComponent = () => {
     if (code) {
       const fetchUser = async () => {
         try {
+          // 서버로부터 accessToken을 포함한 사용자 정보를 가져옵니다.
           const data = await fetchKakaoUserInfo(code);
-          setUser(data.user);
-          navigate('/');
+          if (data) {
+            // 가져온 사용자 정보로 스토어의 상태를 업데이트합니다.
+            setUser(data.user);
+            // isNewUser 상태에 따라 페이지를 리디렉션합니다.
+            if (data.user.isNewUser) {
+              navigate('/survey');
+            } else {
+              navigate('/');
+            }
+          }
         } catch (error) {
           alert('또 에러야 또 Authentication failed');
           console.error('Authentication failed:', error);
-          // 에러 처리 로직...
         }
       };
 
