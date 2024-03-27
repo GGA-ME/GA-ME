@@ -21,17 +21,17 @@ const Result: React.FC = () => {
             <div className="flex flex-wrap justify-center">
                 {results.map((game) => (
                     <GameCard
-                        key={game.gameId}
-                        gameId={game.gameId} // 젠킨슨 해결을 위해 추가
-                        imageUrl={game.gameHeaderImg}
-                        title={game.gameName}
-                        price={game.gamePriceFinal.toLocaleString()}
-                        tagsAll={game.tagList}
-                        tags={game.tagList ? game.tagList.map((tag) => tag.tagName) : []}
-                        likes={0} // `likes` 값이 제공되지 않으므로 예시값인 0을 사용
-                        // 젠킨슨 오류해결을 위한 임시 코드
-                        onGameClick={() => handleGameClick(game.gameId)} 
-                    />
+                    key={game.gameId}
+                    gameId={game.gameId}
+                    imageUrl={game.gameHeaderImg}
+                    title={game.gameName}
+                    price={game.gamePriceFinal.toLocaleString()}
+                    tagsAll={game.tagList}
+                    tags={game.tagList ? game.tagList.map((tag) => tag.tagName) : []}
+                    likes={game.gameLike}
+                    isPrefer={false} // 모든 게임을 기본적으로 비선호로 처리
+                    onGameClick={() => handleGameClick(game.gameId)}
+                />
                 ))}
             </div>
         </div>

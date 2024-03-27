@@ -40,7 +40,7 @@ const Navbar: React.FC = () => {
     const navLinks: NavLinkItem[] = [
         { path: "/", label: "Main", icon: '/Gameicon.png', activeIcon: '/Gameicon.gif' },
         { path: "/search", label: "Search", icon: '/SearchIcon.png', activeIcon: '/SearchIcon.gif' },
-        { path: "/mixAndMatch", label: "MixAndMatch", icon: '/MixAndMatch.png', activeIcon: '/MixAndMatch.gif' },
+        { path: "/mixAndMatch", label: "Mix Match", icon: '/MixAndMatch.png', activeIcon: '/MixAndMatch.gif' },
         { path: "/topic", label: "Hot Topic", icon: '/FireIcon.png', activeIcon: '/FireIcon.gif' },
         // 로그인 상태에 따라 분기 처리
         isLoggedIn ? 
@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
                     <NavLink to="/">
                         <motion.img
                             className="w-24"
-                            src='./GGAME.gif'
+                            src='/GGAME.gif'
                             alt='GGAMELOGO'
                             whileHover={{ y: -20 }}
                             transition={{ type: "spring", stiffness: 300, damping: 20 }}
