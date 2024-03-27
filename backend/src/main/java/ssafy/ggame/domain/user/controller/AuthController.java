@@ -57,21 +57,34 @@ public class AuthController {
         params.add("client_id", clientId);
         params.add("redirect_uri", redirectUri);
         params.add("code", code);
-        params.add("client_secret", clientSecret); // client_secret은 선택적으로 사용됩니다.
+        params.add("client_secret", clientSecret);
+
+        System.out.println("params: "+params.get(clientId));
+        System.out.println("redirect_uri: "+params.get(redirectUri));
 
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+        System.out.println("before response");
         ResponseEntity<Map> response = restTemplate.postForEntity("https://kauth.kakao.com/oauth/token", request, Map.class);
+        System.out.println("after response");
         Map<String, Object> responseBody = response.getBody();
         String accessToken = (String) responseBody.get("access_token");
+
+        System.out.println("responseBody: "+accessToken);
 
         HttpHeaders userInfoHeaders = new HttpHeaders();
         userInfoHeaders.setBearerAuth(accessToken);
         HttpEntity<?> userInfoRequest = new HttpEntity<>(userInfoHeaders);
+
+        System.out.println("before userInfo response");
         ResponseEntity<Map> userInfoResponse = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET, userInfoRequest, Map.class);
         Map<String, Object> userInfo = userInfoResponse.getBody();
+        System.out.println("after userInfo response");
 
         Map<String, Object> kakaoAccount = (Map<String, Object>) userInfo.get("kakao_account");
         String email = (String) kakaoAccount.get("email");
+
+        System.out.println("email: "+email);
 
         Optional<User> userOptional = userRepository.findByUserEmail(email);
 
