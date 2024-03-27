@@ -45,6 +45,11 @@ const Navbar: React.FC = () => {
         });
     };
 
+    // 쿠키 삭제
+    const deleteCookie = (name: string) => {
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
     // 로그아웃 함수
     const handleLogoutClick = () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -54,11 +59,16 @@ const Navbar: React.FC = () => {
             // @ts-expect-error
             window.Kakao.Auth.logout(() => {
                 console.log('카카오 로그아웃 완료');
+                // 여기에서 인증 관련 쿠키 삭제
+                deleteCookie('auth_token');
                 // 상태 업데이트
                 setIsLoggedIn(false);
                 setUser(null);
             });
         }
+
+        // 페이지 새로고침
+        window.location.reload();
       };
 
     const navLinks: NavLinkItem[] = [
