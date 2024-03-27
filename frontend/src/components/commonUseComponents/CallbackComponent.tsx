@@ -1,4 +1,3 @@
-// src/components/CallbackComponent.tsx
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useUserStore from '../../stores/userStore';
@@ -9,11 +8,13 @@ const CallbackComponent: React.FC = () => {
   const location = useLocation();
   const setUser = useUserStore((state) => state.setUser);
 
+  // URL에서 인증 코드 추출
+  const queryParams = new URLSearchParams(location.search);
+  const code = queryParams.get('code');
+  console.log("Callback Component mounted. Extracted code:", code);
+
   useEffect(() => {
-    // URL에서 인증 코드 추출
-    const queryParams = new URLSearchParams(location.search);
-    const code = queryParams.get('code');
-    console.log("Callback Component mounted. Extracted code:", code);
+    console.log("useEffect triggered in Callback Component.");
 
     const fetchUser = async () => {
       if (code) {
@@ -36,7 +37,7 @@ const CallbackComponent: React.FC = () => {
     };
 
     fetchUser();
-  }, [location.search]); // location.search가 변경될 때만 useEffect 실행
+  }, [location.search, navigate, setUser]); // Dependencies에 navigate와 setUser 추가
 
   return <div>Loading...</div>;
 };
