@@ -13,14 +13,14 @@ const api = axios.create({
 });
 
 interface RequestData {
-  userId: number;
+  userId?: number; 
   gameIdAndTagDtoList: {
     gameId: number;
-    tagList: Tag[];
+    tagList: TagDto[] | null | undefined;
   }[];
 }
 
-interface Tag {
+interface TagDto {
   codeId: string;
   tagId: number;
   tagName: string;
@@ -34,12 +34,13 @@ interface SearchResult {
   gamePriceFinal: number;
   gameDeveloper: string;
   isPrefer: boolean | null;
-  tagList: Tag[];
+  tagList: TagDto[];
 }
 
 interface SearchState {
   results: SearchResult[]; // 검색 결과를 저장할 상태
   setResults: (results: SearchResult[]) => void; // 검색 결과를 업데이트하는 액션
+  fetchData: (postData: RequestData) => void;
 }
 
 const useMixAndMatchStore = create<SearchState>((set) => ({
@@ -48,12 +49,9 @@ const useMixAndMatchStore = create<SearchState>((set) => ({
 
   fetchData: async (postData: RequestData) => {
     try {
-      console.log("store post axios!!!");
-      console.log("postData: ", postData)
       const response = await api.post(`/api/recommendations/search`, postData);
-      console.log("after axios 요청");
       // Zustand 스토어에 응답 데이터를 저장합니다.
-      console.log("mixAndMatchStore response: ", response.data);
+      set({results:response.data.result})
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

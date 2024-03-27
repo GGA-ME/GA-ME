@@ -11,13 +11,13 @@ import useMixAndMatchStore from "../../stores/mixAndMatchStore";
 // TODO: 4. 조합하기 버튼 만들기(axios) 연결
 // TODO: 5. 조합하기 버튼 onClick handle함수 만들기
 
-
 const SearchGameList: React.FC = () => {
   const cartItems = usePoketStore((state) => state.cartItems);
   console.log("1. getCartItems: ", cartItems);
 
   // axios 요청을 위한 requestData 생성
   const userId = useUserStore().user?.userId;
+
   const gameIdAndTagDtoList = [];
   for (const item of cartItems) {
     gameIdAndTagDtoList.push({
@@ -25,16 +25,16 @@ const SearchGameList: React.FC = () => {
       tagList: item.tagsAll,
     });
   }
+
   const requestData = {
     userId,
-    gameIdAndTagDtoList,
+    gameIdAndTagDtoList
   };
 
-  const { setResults,results, fetchData } = useMixAndMatchStore();
+  const { fetchData } = useMixAndMatchStore();
 
-  const HandleOnClick = async () => {
-    const res = await fetchData(requestData);
-    setResults(res)
+  const HandleOnClick =  () => {
+    fetchData(requestData);
   };
 
   return (
@@ -54,7 +54,7 @@ const SearchGameList: React.FC = () => {
           />
         ))}
       </div>
-      <button onClick={HandleOnClick}> 조합하기 </button>
+      <button className={style.topicBtn} onClick={HandleOnClick}> 조합하기 </button>
     </div>
   );
 };
