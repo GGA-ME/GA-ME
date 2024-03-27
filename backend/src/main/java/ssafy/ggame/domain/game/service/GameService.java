@@ -10,6 +10,8 @@ import ssafy.ggame.domain.game.dto.GameDetailResDto;
 import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.game.repository.GameRepository;
 import ssafy.ggame.domain.gameTag.entity.GameTag;
+import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
+import ssafy.ggame.domain.prefer.repository.PreferRepository;
 import ssafy.ggame.domain.recommendation.service.RecommendationService;
 import ssafy.ggame.domain.tag.dto.TagDto;
 import ssafy.ggame.domain.user.entity.User;
@@ -19,6 +21,7 @@ import ssafy.ggame.global.exception.BaseException;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,8 @@ public class GameService {
     private final GameRepository gameRepository;
     private final RecommendationService recommendationService;
     private final UserRepository userRepository;
+    private final GameTagRepository gameTagRepository;
+    private final PreferRepository preferRepository;
 
     /**
      *
@@ -60,7 +65,7 @@ public class GameService {
 
     }
 
-    public GameDetailResDto convertToGameDetailResDto(Long gameId) {
+    public GameDetailResDto convertToGameDetailResDto(Long gameId, Long userId) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
 
@@ -70,6 +75,14 @@ public class GameService {
         if (relatedGameList != null) {
             relatedGames = recommendationService.makeGameCardDtoList(relatedGameList);
         }
+        boolean isLikedByUser = preferRepository.existsByPreferIdUserUserIdAndPreferIdGameGameId(userId, gameId);
+
+        List<GameTag> gameTags = gameTagRepository.findByGame_GameId(gameId);
+
+        // 각 게임 태그를 TagDto로 변환하여 리스트로 만듭니다.
+        List<TagDto> tagDtoList = gameTags.stream()
+                .map(GameTag::convertToTagDto)
+                .toList();
 
         return GameDetailResDto.builder()
                 .gameId(game.getGameId())
@@ -83,6 +96,8 @@ public class GameService {
                 .gamePriceInitial(game.getGamePriceInitial())
                 .gamePriceFinal(game.getGamePriceFinal())
                 .gameDiscountPercent(game.getGameDiscountPercent())
+                .gameIsLike(isLikedByUser)
+                .gameTagList(tagDtoList)
                 .gameReleaseDate(game.getGameReleaseDate())
                 .screenshotList(convertJsonToList(game.getGameScreenshotImg())) // null or 리스트로 담기
                 .relatedGameList(relatedGames)

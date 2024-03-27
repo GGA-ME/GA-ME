@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ssafy.ggame.domain.tag.dto.TagDto;
 
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,12 @@ public class GameDetailResDto {
 
     // 게임 출시 년월일
     private String gameReleaseDate;
+
+    // 좋아요 여부
+    private Boolean gameIsLike;
+
+    // 태그 리스트
+    private List<TagDto> gameTagList;
 
     // 스크린샷 이미지
     private List<Map<String, String>> screenshotList;
