@@ -23,8 +23,10 @@ const CallbackComponent = () => {
             setUser(data.user);
             // isNewUser 상태에 따라 페이지를 리디렉션합니다.
             if (data.user.isNewUser) {
+              console.log("/survey로 이동");
               navigate('/survey');
             } else {
+              console.log("/로 이동");
               navigate('/');
             }
           }
