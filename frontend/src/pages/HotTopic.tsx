@@ -27,7 +27,6 @@ const HotTopic: React.FC = () => {
   const handleSaleButtonClick = () => {
     setShowSale(true); 
   };
-  
   return (
     <>
       <Navbar />
@@ -49,7 +48,7 @@ const HotTopic: React.FC = () => {
         </div>
         <div style={{marginTop:'30px',display: 'flex', gap: '20px'}}>
           {!showSale && (
-            <NewsList/>
+            <NewsList/> 
           )}
           {showSale &&(
               <SaleComponent/>
@@ -57,6 +56,8 @@ const HotTopic: React.FC = () => {
           }
         </div>
       </div>
+
+      
     </>
   );
 }
