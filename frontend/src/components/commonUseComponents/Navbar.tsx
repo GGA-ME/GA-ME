@@ -47,11 +47,18 @@ const Navbar: React.FC = () => {
 
     // 로그아웃 함수
     const handleLogoutClick = () => {
-        // 사용자 세션 종료 및 상태 초기화
-        setIsLoggedIn(false);
-        setUser(null); // 사용자 정보를 null로 초기화
-        // 필요한 경우 추가적인 로그아웃 처리 로직
-        console.log('로그아웃 되었습니다.');
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        if (window.Kakao.Auth.getAccessToken()) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            window.Kakao.Auth.logout(() => {
+                console.log('카카오 로그아웃 완료');
+                // 상태 업데이트
+                setIsLoggedIn(false);
+                setUser(null);
+            });
+        }
       };
 
     const navLinks: NavLinkItem[] = [
