@@ -11,10 +11,10 @@ const CallbackComponent: React.FC = () => {
 
   useEffect(() => {
     const fetchUser = async (code: string) => {
+      console.log("Callback code: "+code);
       try {
         // 서버로부터 카카오 사용자 정보를 받아옴
         const data = await fetchKakaoUserInfo(code);
-        console.log('code: '+data);
         // 받아온 사용자 정보를 store에 저장
         setUser(data.user);
         // 사용자를 홈 페이지로 리다이렉트
