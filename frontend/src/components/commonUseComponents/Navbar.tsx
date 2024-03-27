@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
             { path: `/myPage/${user?.userId}`, label: "My Page", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif' } :
             { label: "Login", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif', action: handleLoginClick },
         // isLoggedIn이 true일 때만 로그아웃 버튼 객체를 배열에 추가
-        ...(isLoggedIn ? [{ label: "Logout", icon: '/LogoutIcon.png', activeIcon: '/LogoutIconActive.gif', action: handleLogoutClick }] : []),    
+        ...(isLoggedIn ? [{ label: "Logout", icon: '/LogoutIcon.png', activeIcon: '/LogoutIcon.gif', action: handleLogoutClick }] : []),    
     ];
 
     useEffect(() => {
