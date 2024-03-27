@@ -8,19 +8,24 @@ import SaleComponent from '../components/HotTopicComponents/SaleComponent';
 import useHotTopicStore from "../stores/hotTopicStore";
 
 const HotTopic: React.FC = () => {
-  const [showNews, setShowNews] = useState(true);
+  const [showSale, setShowSale] = useState(true);
   const { fetchNewsData } = useHotTopicStore();
 
   useEffect(() => {
-    fetchNewsData(); // 초기 렌더링 시에만 실행됨
-  }, []); 
-
+    const fetchData = async () => {
+      await fetchNewsData();
+    };
+  
+    fetchData(); // 함수 호출
+    
+  }, []); // 두 번째 매개변수로 빈 배열 전달
+  
   const handleNewsButtonClick = () => {
-    setShowNews(true);
+    setShowSale(false);
   };
 
   const handleSaleButtonClick = () => {
-    setShowNews(false); // 세일 버튼을 클릭하면 NewsCard를 숨김
+    setShowSale(true); 
   };
   
   return (
@@ -39,15 +44,14 @@ const HotTopic: React.FC = () => {
         }}>
         <Title/>
         <div style={{marginTop:'20px',display: 'flex', gap: '20px'}}>
-          <NewsButton onClick={handleNewsButtonClick} />
           <SaleButton onClick={handleSaleButtonClick} />
+          <NewsButton onClick={handleNewsButtonClick} />
         </div>
         <div style={{marginTop:'30px',display: 'flex', gap: '20px'}}>
-          {showNews && (
+          {!showSale && (
             <NewsList/>
           )}
-          {
-            !showNews &&(
+          {showSale &&(
               <SaleComponent/>
             )
           }
