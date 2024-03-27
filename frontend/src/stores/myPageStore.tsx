@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import { api } from "../url/api";
+import axios, { AxiosError } from "axios";
 
 // interface로 response data들에 대한 타입을 미리 지정해줌
 // dto랑 비슷한 느낌으로 사용
@@ -7,7 +9,7 @@ interface ApiResponse {
     isSuccess: boolean;
     message: string;
     code: number;
-    result: UserInfo[]; 
+    result: UserInfo; 
     tagWeightList: TagWeight[];
 }
 // 유저의 기본 정보와 선호 게임이 존재
@@ -19,7 +21,7 @@ interface UserInfo{
     preferList: Prefer[];
 }
 // 선호하는 게임에 대한 정보가 존재
-interface Prefer{
+export interface Prefer{
     gameId: number;
     gameName: string;
     gameHeaderImg: string;
@@ -37,7 +39,7 @@ interface TagList{
     tagName: string;
 }
 // 유저의 태그에 대한 정보가 존재
-interface TagWeight{
+export interface TagWeight{
     userId: number;
     tagId: number;
     codeId: string;
@@ -81,22 +83,51 @@ const initialData: ApiResponse = {
     isSuccess: false,
     message: '', 
     code: 0, 
-    result: [initialUser],
+    result: initialUser,
     tagWeightList: [initialTagWeight]
 }
 
+
+
 interface detailState {
     data: ApiResponse;
-
+    loading: boolean;
+    error: AxiosError | null;
+    topTenTag: TagWeight[];
     setData: (resData: ApiResponse) => void;
-
+    fetchData: (userId: number) => void;
+    sendFavoriteGameList: () => void;
 }
 
 const detailStore = create<detailState>((set) => ({
     data: initialData,
+    loading: false,
+    error: null, 
+    topTenTag: [],
 
-    setData: (resData: ApiResponse) => set({ data: resData})
-    
+    setData: (resData: ApiResponse) => set({ data: resData}),
+    fetchData: async (userId: number) => {
+        // const BASE_URL = "https://j10e105.p.ssafy.io/api";
+        try{
+            const response = await api.get(`/users/${userId}`);
+            set({ data: response.data, loading: false });
+        }
+        catch(error){
+            if (axios.isAxiosError(error)) {
+                set({ error, loading: false });
+            }
+        }
+    },
+    sendFavoriteGameList: () => {
+        set(state => {
+            const topTenTag: TagWeight[] = [];
+            state.data.tagWeightList.forEach((tag: TagWeight) => {
+                topTenTag.push(tag);
+                if (topTenTag.length > 10) return;
+            });
+            return { ...state, topTenTag };
+        });
+    }
 
 })) 
 
