@@ -14,11 +14,11 @@ interface SurveyStoreState{
     data: ApiResponse | null;
     loading: boolean;
     error: AxiosError | null;
-    checkGameList: number[];
+    checkGameList: number[][];
 
 
-    addCheckChoiceGame: (gameId: number) => void;
-    removeCheckChoiceGame: (gameId: number) => void;
+    addCheckChoiceGame: (gameId: number, current: number) => void;
+    removeCheckChoiceGame: (gameId: number, current: number) => void;
     fetchData: () => Promise<void>;
 }
 
@@ -28,20 +28,24 @@ export const surveyStore = create<SurveyStoreState>((set) => ({
     data: null,
     loading: false,
     error: null,
-    checkGameList: [],    
+    checkGameList: [[], [], []],    
 
-    addCheckChoiceGame(gameId: number) {
+    addCheckChoiceGame(gameId: number, current: number) {
         // state라는 파라미터가 이전 값을 기억
-        set(state => ({
-          checkGameList: [...state.checkGameList, gameId]
-        }));
+        set((state) => {
+          const updatedCheckGameList = [...state.checkGameList]; // 이전 상태를 복사하여 수정할 배열 생성
+          updatedCheckGameList[current] = [...updatedCheckGameList[current], gameId]; // 현재 그룹에 선택된 게임 추가
+          return { ...state, checkGameList: updatedCheckGameList }; // 새로운 상태 반환
+        });
       },
     
-      removeCheckChoiceGame(gameId: number) {
+      removeCheckChoiceGame(gameId: number, current: number) {
         // state라는 파라미터가 이전 값을 기억
-        set(state => ({
-          checkGameList: state.checkGameList.filter(id => id !== gameId)
-        }));
+        set(state => {
+          const updatedCheckGameList = [...state.checkGameList]; // 이전 상태를 복사하여 수정할 배열 생성
+          updatedCheckGameList[current] = updatedCheckGameList[current].filter(id => id !== gameId); // 해당 그룹에서 선택된 게임 제거
+          return { ...state, checkGameList: updatedCheckGameList }; // 새로운 상태 반환
+        });
       },
 
     fetchData: async() => {

@@ -41,22 +41,25 @@ export const fetchKakaoUserInfo = async (code: string) => {
 };
 
 // 취향조사 게임 가중치 추가
-export const addLikeWeight = async (gameList: number[]) => {
+export const addLikeWeight = async (gameList: number[][]) => {
+
+  if(gameList[2].length === 0 ) return alert('게임을 선택해주세요!');
+  
   const userId: number = 1;
   const page: string = 'survey';
   const action: string = 'like';
-  try {
-    gameList.map(async (gameId: number) => {
-      try {
+  gameList.map(async (arrayGame: number[]) => {
+    try {
+      arrayGame.map(async (gameId: number) => {
         const response = await api.put(`/api/tracking/userId=${userId}/gameId=${gameId}/page=${page}/action=${action}`);
-        console.log(response);
-      } catch(error) {
-        console.error(error);
-      }
-    });
-  } catch(error) {
-    console.error(error);
-  }
+        console.log(response);  
+      })
+    } catch(error) {
+      console.error(error);
+    }
+  });
+  
+  window.location.href = "https://j10e105.p.ssafy.io";
 };
 
 // 게임명 검색 API 함수
