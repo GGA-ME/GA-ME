@@ -8,8 +8,8 @@ import useMixAndMatchStore from "../../stores/mixAndMatchStore";
 // TODO: 1. pocket에 담긴 게임 가져오기 DONE
 // TODO: 2. 가져온 포켓게임 보여주기 DONE
 // TODO: 3. MixAndMatchStore에 fetchData axios 만들기 DONE
-// TODO: 4. 조합하기 버튼 만들기(axios) 연결
-// TODO: 5. 조합하기 버튼 onClick handle함수 만들기
+// TODO: 4. 조합하기 버튼 만들기(axios) 연결 DONE
+// TODO: 5. 조합하기 버튼 onClick handle함수 만들기 DONE
 
 const SearchGameList: React.FC = () => {
   const cartItems = usePoketStore((state) => state.cartItems);
@@ -46,8 +46,8 @@ const SearchGameList: React.FC = () => {
             gameId={item.gameId}
             imageUrl={item.imageUrl}
             title={item.title}
-            price={item.price}
-            tags={[]}// 필요없는 값이라 빈배열로 지정
+            price={`₩ ${item.price}`}
+            tags={item.tagsAll?.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName) ?? []}
             tagsAll={item.tagsAll}
             likes={0} // 임시 값
             onGameClick={() => console.log("temp onGameClick: ", item.title)}

@@ -26,7 +26,7 @@ interface TagDto {
   tagName: string;
 }
 
-interface SearchResult {
+interface gameCardDto {
   gameId: number;
   gameName: string;
   gameHeaderImg: string;
@@ -37,14 +37,19 @@ interface SearchResult {
   tagList: TagDto[];
 }
 
+interface SearchResult {
+  tagDtoList: TagDto[],
+  gameCardDtoList: gameCardDto[]
+}
+
 interface SearchState {
-  results: SearchResult[]; // 검색 결과를 저장할 상태
-  setResults: (results: SearchResult[]) => void; // 검색 결과를 업데이트하는 액션
+  results: SearchResult | null; // 검색 결과를 저장할 상태 // 검색 결과를 저장할 상태
+  setResults: (results: SearchResult) => void; // 검색 결과를 업데이트하는 액션
   fetchData: (postData: RequestData) => void;
 }
 
 const useMixAndMatchStore = create<SearchState>((set) => ({
-  results: [], // 초기 상태는 빈 배열
+  results: null, // 초기 상태는 빈 배열
   setResults: (results) => set({ results }), // 검색 결과 업데이트
 
   fetchData: async (postData: RequestData) => {
