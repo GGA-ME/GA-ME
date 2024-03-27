@@ -54,7 +54,6 @@ const useMixAndMatchStore = create<SearchState>((set) => ({
       console.log("after axios 요청");
       // Zustand 스토어에 응답 데이터를 저장합니다.
       console.log("mixAndMatchStore response: ", response.data);
-      set({ results: response.data });
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

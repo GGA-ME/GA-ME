@@ -30,11 +30,11 @@ const SearchGameList: React.FC = () => {
     gameIdAndTagDtoList,
   };
 
-  const { results, fetchData } = useMixAndMatchStore();
+  const { setResults,results, fetchData } = useMixAndMatchStore();
 
   const HandleOnClick = async () => {
-    await fetchData(requestData);
-    console.log("onclick:::", results);
+    const res = await fetchData(requestData);
+    setResults(res)
   };
 
   return (
