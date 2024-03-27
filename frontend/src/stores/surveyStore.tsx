@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 import axios, { AxiosError } from 'axios';
+import { ChoiceGame } from '../components/SurveyComponents/SurveyGame';
 
 // API 응답 데이터의 타입을 정의합니다.
 interface ApiResponse {
     isSuccess: boolean;
     message: string;
     code: number;
-    result: []; // `any` 대신 더 구체적인 타입을 사용해주세요.
+    result: ChoiceGame[]; // `any` 대신 더 구체적인 타입을 사용해주세요.
 }
 
 interface SurveyStoreState{

@@ -37,6 +37,24 @@ export const fetchUserInfo = async (code: string) => {
   }
 };
 
+// 취향조사 게임 가중치 추가
+export const addLikeWeight = async (gameList: number[]) => {
+  const userId: number = 1;
+  const page: string = 'survey';
+  const action: string = 'like';
+  try {
+    gameList.map(async (gameId: number) => {
+      try {
+        const response = await api.put(`/api/tracking/userId=${userId}/gameId=${gameId}/page=${page}/action=${action}`);
+        console.log(response);
+      } catch(error) {
+        console.error(error);
+      }
+    });
+  } catch(error) {
+    console.error(error);
+  }
+};
 
 // 게임명 검색 API 함수
 export const searchGames = async (keyword: string, userId: number) => {
