@@ -2,14 +2,14 @@
 
 import { motion } from 'framer-motion'
 import { useState } from 'react';
-import  usePoketStore  from '../../stores/poketStore';
-import likeStore from '../../stores/likeStore'
+import usePoketStore from '../../stores/poketStore';
+import useStoreLike from '../../stores/likeStore'
 import style from './GameCard.module.css'
 
 interface TagDto {
-  codeId:string
-  tagId:number
-  tagName:string
+  codeId: string
+  tagId: number
+  tagName: string
 }
 
 // 타입스크립트 타입 프롭받을 타입 정의
@@ -20,14 +20,14 @@ interface GameCardProps {
   price: string;
   tagsAll?: TagDto[] | null;
   tags: string[];
-  likes: number;
+  likes: number | null;
   isPrefer: boolean; // 추가
   onGameClick: (gameId: number) => void;
 }
 
 
 // 타입스크립트식 선언
-const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tagsAll, tags, likes, onGameClick }) => {
+const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tagsAll, tags, likes, isPrefer, onGameClick }) => {
 
   const [isHovered, setIsHovered] = useState(false);
   const { addItem } = usePoketStore();
@@ -41,7 +41,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
   };
 
   // 좋아요와 좋아요 취소 핸들러
-  const handleLikeToggle = async () => {
+  const handleLikeToggle = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 버블링 중지
     if (isPrefer) {
       await unlikeGame(); // 좋아요 취소 요청
@@ -49,18 +49,18 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
       await likeGame(); // 좋아요 요청
     }
   };
-  
+
   const hoverEffects = {
     scale: [1, 1.1], // 호버시 크기 설정
     transition: { duration: 0.3 },
   };
-  
+
   const overlayVariants = {
     hidden: { opacity: 0, backdropFilter: 'none' },
     visible: { opacity: 1, backdropFilter: 'blur(5px)' },
   };
 
-  
+
 
   return (
     <motion.div
@@ -85,22 +85,39 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
           exit="hidden"
         >
           <div className="flex justify-center items-center space-x-2">
-            <button className="rounded-full p-2">
-              <img src={'./Like.png'} alt={'Like'}></img>
-            </button>
+            {/* 좋아요 버튼 */}
+            <motion.button className="rounded-full p-2" onClick={handleLikeToggle}
+              whileHover={{ scale: 1.2, rotate: 360 }}
+              whileTap={{
+                scale: 0.8,
+                // rotate: -90,
+                borderRadius: "100%"
+              }} >
+              <img src={'./Like.png'} alt={'Like'} style={isPrefer ? { filter: 'hue-rotate(0deg) brightness(1) saturate(4.3)' } : {}}></img>            
+              </motion.button>
+
+              {/* 포켓에담기 버튼 */}
             <motion.button className="rounded-full p-2" onClick={(event) => handleAddToCart(event)}
-            whileHover={{ scale: 1.2, rotate: 360 }}
-            whileTap={{
-              scale: 0.8,
-              // rotate: -90,
-              borderRadius: "100%"
-            }} >
+              whileHover={{ scale: 1.2, rotate: 360 }}
+              whileTap={{
+                scale: 0.8,
+                // rotate: -90,
+                borderRadius: "100%"
+              }} >
               <img src={'./Cart.png'} alt={'Cart'}></img>
             </motion.button>
-            <button className="rounded-full p-2">
-              {/* Remove Icon */}
-              <img src={'./NotLike.png'} alt={'NotLike'}></img>
-            </button>
+
+            {/* 관심없음 버튼 */}
+            <motion.button className="rounded-full p-2" onClick={handleLikeToggle}
+              whileHover={{ scale: 1.2, rotate: 360 }}
+              whileTap={{
+                scale: 0.8,
+                // rotate: -90,
+                borderRadius: "100%"
+              }} >
+              <img src={'./NotLike.png'} alt={'NotLike'} style={isPrefer ? { filter: 'hue-rotate(0deg) brightness(1) saturate(4.3)' } : {}}></img>            
+              </motion.button>
+
           </div>
           <div className="flex justify-center items-center">
             {/* Tag container */}
@@ -111,9 +128,9 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
                 </span>))}
             </div>
           </div>
-          <div className="flex justify-center items-center mb-2">
+          <div className={`flex justify-center items-center mb-2`}>
             {/* Likes */}
-            <span>{`좋아요 ${likes}`}</span>
+            <span className={`${style.neonNormal}`}>{`♥ : ${likes}`}</span>
           </div>
         </motion.div>
       )}

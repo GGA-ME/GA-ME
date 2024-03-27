@@ -11,8 +11,9 @@ interface Game {
   gameName: string;
   gameHeaderImg: string;
   gamePriceFinal: number;
-// 각 태그를 기준으로 각 태그 및 이름을 가진 경우 선언방법
-tagList: Array<{ codeId: string; tagId:number; tagName: string }>;
+  tagList: Array<{ codeId: string; tagId:number; tagName: string }>;
+  isPrefer: boolean;
+  gameLike: number | null;
 }
 
 const GameComponent: React.FC = () => {
@@ -58,14 +59,16 @@ const GameComponent: React.FC = () => {
           }}
         >
           <GameCard
-            key={gameId}
+            key={game.gameId}
             gameId={game.gameId}
             imageUrl={game.gameHeaderImg}
             title={game.gameName}
             price={`₩ ${game.gamePriceFinal}`}
             tagsAll={game.tagList}
             tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
+            isPrefer={game.isPrefer}
             likes={game.gameLike}
+            // 이거 null또는 int인가?..
             onGameClick={handleClickGame} // 수정된 부분
             />
         </motion.li>
