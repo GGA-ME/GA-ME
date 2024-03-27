@@ -18,7 +18,7 @@ interface NavLinkItem {
 const Navbar: React.FC = () => {
     const location = useLocation();
     const isActive = (path: string) => location.pathname === path;
-    const { setIsLoggedIn } = useUserStore();
+    const { user, setIsLoggedIn } = useUserStore();
     const fetchAndSetUser = useUserStore((state) => state.fetchAndSetUser);
 
     const navLinkYPositions: number[] = [0, 65, 130, 195]; // 각 네비게이션 항목에 대한 Y 위치
@@ -52,7 +52,7 @@ const Navbar: React.FC = () => {
         { path: "/topic", label: "Hot Topic", icon: '/FireIcon.png', activeIcon: '/FireIcon.gif' },
         // 로그인 상태에 따라 분기 처리
         isLoggedIn ? 
-            { path: "/myPage", label: "My Page", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif' } :
+            { path: `/myPage/${user?.userId}`, label: "My Page", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif' } :
             { label: "Login", icon: '/ProfileIcon.png', activeIcon: '/ProfileIcon.gif', action: handleLoginClick }, 
     ];
 
