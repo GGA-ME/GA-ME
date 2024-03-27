@@ -28,6 +28,7 @@ export const redirectToKakaoOAuth = () => {
 
 // 서버에 인증 코드를 전송하여 사용자 정보를 받아오는 함수
 export const fetchKakaoUserInfo = async (code: string) => {
+  console.log("code: "+code);
   try {
     // 인증 코드를 서버에 전송
     const response = await api.post('/auth/kakao/callback', { code });
