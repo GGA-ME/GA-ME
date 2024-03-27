@@ -21,14 +21,13 @@ interface SaleCardProps {
 }
 
 const SalesList: React.FC<SaleCardProps> = ({ cardDtoList }) => {
-  console.log(cardDtoList);
-  const { loading, error } = useHotTopicStore(); // saleData를 사용하지 않으므로 해당 부분 제거
-  if (loading) {
+  const { sLoading, sError } = useHotTopicStore(); // saleData를 사용하지 않으므로 해당 부분 제거
+  if (sLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    const axiosError = error as AxiosError;
+  if (sError) {
+    const axiosError = sError as AxiosError;
     return <div>Error: {axiosError.message}</div>;
   }
 

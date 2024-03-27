@@ -13,15 +13,15 @@ interface NewsList {
 }
 
 const NewsList: React.FC = () => {
-  const { newsData, loading, error } = useHotTopicStore();
+  const { newsData, nLoading, nError } = useHotTopicStore();
 
 
-  if (loading) {
+  if (nLoading) {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    const axiosError = error as AxiosError;
+  if (nError) {
+    const axiosError = nError as AxiosError;
     return <div>Error: {axiosError.message}</div>;
   }
 

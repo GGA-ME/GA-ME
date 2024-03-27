@@ -47,8 +47,10 @@ interface StoreState {
     saleData30: CardDto[] | null;
     saleData50: CardDto[] | null;
     saleData75: CardDto[] | null;
-    loading: boolean;
-    error: AxiosError | null;
+    nLoading: boolean;
+    sLoading: boolean;
+    nError: AxiosError | null;
+    sError: AxiosError | null;
     userId: number;
     setUserId: (userId: number) => void;
     fetchNewsData: () => Promise<void>;
@@ -56,8 +58,8 @@ interface StoreState {
 }
 
 const api = axios.create({
-    // baseURL: 'https://j10e105.p.ssafy.io',
-    baseURL: 'http://localhost:8000',
+    baseURL: 'https://j10e105.p.ssafy.io',
+    // baseURL: 'http://localhost:8000',
     headers: {
         "Content-Type": `application/json;charset=UTF-8`,
         "Accept": "application/json",      
@@ -74,8 +76,11 @@ const api = axios.create({
     saleData30: null,
     saleData50: null,
     saleData75: null,
-    loading: false,
-    error: null,
+    nLoading: false,
+    sLoading:false,
+    nError: null,
+    sError: null,
+    
     
     userId: 1,//임시 1 처리 원래 0
     setUserId: (userId: number) => set({ userId }),
@@ -83,21 +88,23 @@ const api = axios.create({
     fetchNewsData: async () => {
         const { userId } = get();
         const postData = { userId };
-        set({ loading: true });
+        set({ nLoading: true });
         try {
             const response = await api.post<ApiResponse>(`/api/topics/news`,postData);
-            set({ newsData: response.data, loading: false });
+            set({ newsData: response.data, nLoading: false });
             console.log(response.data);
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                set({ error, loading: false });
+                
+                console.error('Error fetching news data:', error); // 오류를 콘솔에 기록
+                set({ nError: error , nLoading: false });
             }
         }
     },
     fetchSalesData: async () => {
         const { userId } = get();
         const postData = { userId };
-        set({ loading: true });
+        set({ sLoading: true });
         try {
             const response = await api.post<SaleApiResponse>(`/api/topics/discount`,postData);
             response.data.result.forEach((saleItem) => {
@@ -117,11 +124,12 @@ const api = axios.create({
                     default:
                         break;
                 }});
-            set({ saleData: response.data, loading: false });
+            set({ saleData: response.data, sLoading: false });
             console.log(response.data);
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                set({ error, loading: false });
+                console.error('Error fetching sales data:', error); // 오류를 콘솔에 기록
+                set({ sError:error, sLoading: false });
             }
         }
     }
