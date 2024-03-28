@@ -19,4 +19,6 @@ public interface GameCustomRepository {
     List<TempDto> findAllGameAndTag();
 
     List<GameCardDto> getPreferList(Integer userId);
+
+    Map<Long, Long> getLikes(List<Long> ids);
 }

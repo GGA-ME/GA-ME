@@ -129,6 +129,13 @@ public class RecommendationService {
 
     public List<GameCardDto> makeGameCardDtoList(List<Game> gameList) {
         List<GameCardDto> gameCardDtoList = new ArrayList<>();
+
+        // 받은 게임 별 총 좋아요 수 맵
+        List<Long> ids = new ArrayList<>();
+        gameList.forEach((g) -> ids.add(g.getGameId()));
+        Map<Long, Long> likesMap = gameCustomRepository.getLikes(ids);
+
+
         for (Game game : gameList) {
             GameCardDto gameCardDto = game.converToGameCardDto();
             //tagList 업데이트
@@ -137,6 +144,7 @@ public class RecommendationService {
                 tagDtoList.add(tag.convertToTagDto());
             }
             gameCardDto.updateTagList(tagDtoList);
+            gameCardDto.updateLike(likesMap.getOrDefault(game.getGameId(), 0L));
             gameCardDtoList.add(gameCardDto);
         }
         return gameCardDtoList;
@@ -306,9 +314,15 @@ public class RecommendationService {
     private List<GameCardDto> sortedGameCardDtoList(Integer userId, List<Map.Entry<Long, Double>> list) {
         List<GameCardDto> gameCardDtoList = new ArrayList<>();
 
+        // 받은 게임 별 총 좋아요 수 맵
+        List<Long> ids = new ArrayList<>();
+        list.forEach((e) -> ids.add(e.getKey()));
+        Map<Long, Long> likesMap = gameCustomRepository.getLikes(ids);
+
         for (Map.Entry<Long, Double> entry : list) {
             Game game = gameRepository.findById(entry.getKey()).orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
             GameCardDto gameCardDto = game.converToGameCardDto();
+            gameCardDto.updateLike(likesMap.getOrDefault(game.getGameId(), 0L)); // 게임 총 좋아요 수 업데이트
             // 선호 여부 업데이트
             if (preferRepository.existsByPreferId_User_UserIdAndPreferId_Game_GameId(userId, game.getGameId())) {
                 gameCardDto.updateIsPrefer(true);
@@ -339,8 +353,16 @@ public class RecommendationService {
         System.out.println("recentTop10.size() = " + recentTop10.size());
 
         List<GameCardDto> gameCardDtoList = new ArrayList<>();
+
+
+        // 받은 게임 별 총 좋아요 수 맵
+        List<Long> ids = new ArrayList<>();
+        recentTop10.forEach((g) -> ids.add(g.getGameId()));
+        Map<Long, Long> likesMap = gameCustomRepository.getLikes(ids);
         for (Game game : recentTop10) {
-            gameCardDtoList.add(game.converToGameCardDto());
+            GameCardDto gameCardDto = game.converToGameCardDto();
+            gameCardDto.updateLike(likesMap.getOrDefault(game.getGameId(), 0L));
+            gameCardDtoList.add(gameCardDto);
         }
         return gameCardDtoList;
     }

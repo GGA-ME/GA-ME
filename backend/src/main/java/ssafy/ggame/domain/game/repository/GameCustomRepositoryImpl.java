@@ -251,7 +251,7 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
     }
 
     //좋아요 수 가져오기
-    private Map<Long, Long> getLikes(List<Long> ids) {
+    public Map<Long, Long> getLikes(List<Long> ids) {
         List<GameLikeDto> likes = queryFactory.select(
                         Projections.constructor(
                                 GameLikeDto.class,
