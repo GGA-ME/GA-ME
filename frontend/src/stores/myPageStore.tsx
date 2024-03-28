@@ -88,8 +88,6 @@ const initialData: ApiResponse = {
     result: initialUser
 }
 
-
-
 interface detailState {
     data: ApiResponse;
     loading: boolean;
