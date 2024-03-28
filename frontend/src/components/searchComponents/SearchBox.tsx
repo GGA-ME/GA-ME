@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 function SearchBox() {
     const [keyword, setKeyword] = useState('');
-    const { setIsLoading, isLoading } = useSearchStore();
+    const { setIsLoading } = useSearchStore();
 
     const user = useUserStore((state) => state.user);
     const setResults = useSearchStore((state) => state.setResults);
