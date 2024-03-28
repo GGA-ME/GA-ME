@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 
 // 타입스크립트 타입 프롭받을 타입 정의
-interface SimpleGameCardProps {
+export interface SimpleGameCardProps {
     imageUrl: string;
     title: string;
     gameId: number;

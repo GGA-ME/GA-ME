@@ -15,17 +15,22 @@ interface SearchResult {
   gamePriceFinal: number;
   gameDeveloper: string;
   isPrefer: boolean | null;
+  gameLike: number | null;
   tagList: Tag[];
 }
 
 interface SearchState {
   results: SearchResult[]; // 검색 결과를 저장할 상태
+  isLoading: boolean;
   setResults: (results: SearchResult[]) => void; // 검색 결과를 업데이트하는 액션
+  setIsLoading: (loading: boolean) => void;
 }
 
 const useSearchStore = create<SearchState>((set) => ({
-  results: [], // 초기 상태는 빈 배열
-  setResults: (results) => set({ results }), // 검색 결과 업데이트
+  results: [],
+  isLoading: false,
+  setResults: (results) => set({ results }),
+  setIsLoading: (isLoading) => set({ isLoading }),
 }));
 
 export default useSearchStore;

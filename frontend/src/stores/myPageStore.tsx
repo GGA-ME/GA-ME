@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { api } from "../url/api";
+import { api } from '../url/api';
 import axios, { AxiosError } from "axios";
 
 // interface로 response data들에 대한 타입을 미리 지정해줌
@@ -10,7 +10,6 @@ interface ApiResponse {
     message: string;
     code: number;
     result: UserInfo; 
-    tagWeightList: TagWeight[];
 }
 // 유저의 기본 정보와 선호 게임이 존재
 interface UserInfo{
@@ -19,6 +18,7 @@ interface UserInfo{
     userProfileImg: string;
     userAge: number;
     preferList: Prefer[];
+    tagWeightList: TagWeight[];
 }
 // 선호하는 게임에 대한 정보가 존재
 export interface Prefer{
@@ -63,14 +63,6 @@ const initialPrefer: Prefer = {
     tagList: [initialTagList]
 }
 
-const initialUser: UserInfo ={
-    userId: 0,
-    userName: '',
-    userProfileImg: '',
-    userAge: 0,
-    preferList: [initialPrefer]
-}
-
 const initialTagWeight: TagWeight = {
     userId: 0,
     tagId: 0,
@@ -79,15 +71,22 @@ const initialTagWeight: TagWeight = {
     userTagWeight: 0
 }
 
+const initialUser: UserInfo ={
+    userId: 0,
+    userName: '',
+    userProfileImg: '',
+    userAge: 0,
+    preferList: [initialPrefer],
+    tagWeightList: [initialTagWeight]
+
+}
+
 const initialData: ApiResponse = {
     isSuccess: false,
     message: '', 
     code: 0, 
-    result: initialUser,
-    tagWeightList: [initialTagWeight]
+    result: initialUser
 }
-
-
 
 interface detailState {
     data: ApiResponse;
@@ -96,7 +95,7 @@ interface detailState {
     topTenTag: TagWeight[];
     setData: (resData: ApiResponse) => void;
     fetchData: (userId: number) => void;
-    sendFavoriteGameList: () => void;
+    addLikeWeight: (userId: number, gameList: number[][]) => void;
 }
 
 const detailStore = create<detailState>((set) => ({
@@ -107,27 +106,39 @@ const detailStore = create<detailState>((set) => ({
 
     setData: (resData: ApiResponse) => set({ data: resData}),
     fetchData: async (userId: number) => {
-        // const BASE_URL = "https://j10e105.p.ssafy.io/api";
         try{
             const response = await api.get(`/users/${userId}`);
             set({ data: response.data, loading: false });
+            set(state => {
+                const topTenTag: TagWeight[] = [];
+                state.data.result.tagWeightList.forEach((tag: TagWeight) => {
+                    topTenTag.push(tag);
+                    if (topTenTag.length > 10) return;
+                });
+                return { ...state, topTenTag };
+            })
         }
         catch(error){
             if (axios.isAxiosError(error)) {
                 set({ error, loading: false });
-            }
+            }            
         }
+        
     },
-    sendFavoriteGameList: () => {
-        set(state => {
-            const topTenTag: TagWeight[] = [];
-            state.data.tagWeightList.forEach((tag: TagWeight) => {
-                topTenTag.push(tag);
-                if (topTenTag.length > 10) return;
-            });
-            return { ...state, topTenTag };
+    addLikeWeight: async (userId: number, gameList: number[][]) => {
+        
+        const action: string = 'like';
+        gameList.map(async (arrayGame: number[]) => {
+          try {
+            arrayGame.map(async (gameId: number) => {
+              const response = await api.put(`/tracking?userId=${userId}&gameId=${gameId}&action=${action}`);
+              console.log(response);  
+            })
+          } catch(error) {
+            console.error(error);
+          }
         });
-    }
+      }
 
 })) 
 
