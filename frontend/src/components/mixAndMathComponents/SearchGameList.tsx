@@ -39,11 +39,16 @@ const SearchGameList: React.FC = () => {
     navigate(`/detail/${gameId}`)
   }
 
+  const handleGoToMain = () => {
+    navigate('/');
+  }
+
   // cartItems가 비어있을 경우 메세지를 표시
   if (cartItems.length === 0) {
     return (
-      <div className={style.box} style={{height: '275px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px'}}>
+      <div className={style.box} style={{height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
         <p>게임을 담아주세요!</p>
+        <button className={style.topicBtn} onClick={handleGoToMain}>담으러 가기</button>
       </div>
     );
   }
