@@ -37,7 +37,7 @@ const Select: React.FC = () => {
     { "tagId": 25, "codeId": "GEN", "tagName": "어드벤처" },
   ] // 전체게임 태그
   const categorys = ['전체 인기', '취향 저격']
-  const [nowCategory, setNowCategory] = useState<string>('ALL') // 전체게임 or 맞춤게임 중 현재상태
+  const [nowCategory, setNowCategory] = useState<string>('전체 인기') // 전체게임 or 맞춤게임 중 현재상태
   const [selectedTagName, setSelectedTagName] = useState<string | null>(null);  // 현재 선택된 tagWeightList
 
   // 전체 또는 취향 고를시 요청
@@ -49,6 +49,7 @@ const Select: React.FC = () => {
     } else if (category === "전체 인기") {
       setUserId(0)
     }
+    setSelectedTagName(null)
     setTagId(0) // 태그와 코드 아이디를 0으로 초기화
     setCodeId('0')
     fetchMainData(); // 바뀐 값으로 메인데이터 다시 요청

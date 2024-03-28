@@ -34,9 +34,10 @@ const api = axios.create({
     
     likeGame: async () => {
         const { userId, gameId } = get();
+        console.log(userId, gameId);
         set({ loading: true });
         try {
-            const response = await api.post(`/api/game/like`, { userId, gameId });
+            const response = await api.post(`/api/game/prefer`, { userId, gameId });
             // 요청 성공 시 데이터 업데이트
             set({ loading: false });
             console.log("Like successful", response.data);
@@ -51,7 +52,7 @@ const api = axios.create({
         const { userId, gameId } = get();
         set({ loading: true });
         try {
-            const response = await api.delete(`/api/game/like`, { data: { userId, gameId }});
+            const response = await api.delete(`/api/game/prefer`, { data: { userId, gameId }});
             // 요청 성공 시 데이터 업데이트
             set({ loading: false });
             console.log("Unlike successful", response.data);

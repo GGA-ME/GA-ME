@@ -1,7 +1,7 @@
 // 장현욱
 
 import { motion } from 'framer-motion'
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import usePoketStore from '../../stores/poketStore';
 import useStoreLike from '../../stores/likeStore'
 import useUserStore from '../../stores/userStore';
@@ -33,7 +33,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
   const [isHovered, setIsHovered] = useState(false);
   const { cartItems, addItem, removeItem } = usePoketStore();
   const [showAlert, setShowAlert] = useState(false); // 경고 메시지 상태 추가
-  const { likeGame, unlikeGame } = useStoreLike();
+  const { likeGame, unlikeGame, setGameId, setUserId } = useStoreLike();
   const { user } = useUserStore();
 
   // 카트 안에 데이터가 있는지 확인
@@ -41,10 +41,11 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
 
   // 유저정보 확인
   useEffect(() => {
-    user; // 마운트시 데이터 가져오기
-  }, []);
-  
-  console.log(user)
+    user
+  }
+    , []);
+
+  // console.log(user)
 
 
   // 포켓에 넣는 핸들러
@@ -65,10 +66,16 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
   // 좋아요와 좋아요 취소 핸들러
   const handleLikeToggle = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 버블링 중지
-    if (isPrefer) {
-      await unlikeGame(); // 좋아요 취소 요청
+    if (user) { // user가 존재하는지 확인
+      setUserId(user.userId); // user.userId를 스토어에 설정
+      setGameId(gameId); // 게임 ID를 스토어에 설정
+      if (isPrefer) {
+        await unlikeGame(); // 좋아요 취소 요청
+      } else {
+        await likeGame(); // 좋아요 요청
+      }
     } else {
-      await likeGame(); // 좋아요 요청
+      console.log('User is not logged in.'); // user가 없는 경우 로그인되지 않았음을 알림 => alert로 바꾸던가 모달도 생각중
     }
   };
 
@@ -116,7 +123,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
                   // rotate: -90,
                   borderRadius: "100%"
                 }} >
-                <img src={isPrefer ? '/OnLike':'/Like.png'} alt={'Like'} ></img>
+                <img src={isPrefer ? '/OnLike' : '/Like.png'} alt={'Like'} ></img>
               </motion.button>
 
               {/* 포켓에담기 버튼 */}
