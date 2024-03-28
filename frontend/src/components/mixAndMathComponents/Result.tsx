@@ -23,20 +23,20 @@ const Result: React.FC = () => {
         <div className={style.gameList}>
           {gameCardDtoList?.map((item, index: number) => (
             <GameCard
-              key={index}
-              gameId={item.gameId}
-              imageUrl={item.gameHeaderImg}
-              title={item.gameName}
-              price={`₩ ${item.gamePriceFinal}`}
-              tags={item.tagList
-                .filter((tag) => tag.codeId === "GEN")
-                .map((tag) => tag.tagName)}
-              tagsAll={item.tagList}
-              likes={0} // 임시 값
-              onGameClick={handleClickGame}
-              isPrefer={false} // 임시 값
-            />
-          ))}
+            key={index}
+            gameId={item.gameId}
+            imageUrl={item.gameHeaderImg}
+            title={item.gameName}
+            price={`₩ ${item.gamePriceFinal}`}
+            tags={item.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
+            tagsAll={item.tagList}
+            likes={0} // 임시 값
+            onGameClick={handleClickGame}
+            isPrefer={false} // 임시 값
+
+          />
+        ))}
+            
         </div>
       </div>
     </div>
