@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import SimpleGameCard from "../commonUseComponents/SimpleGameCard";
 import { AxiosError } from "axios";
 import { ConfigProvider, Steps } from 'antd'
-import { addLikeWeight } from '../../url/api';
 import useUserStore from "../../stores/userStore";
+import { SubmitButton } from "./SubmitButton";
 
 export interface ChoiceGame {
   gameId: number;
@@ -18,14 +18,15 @@ const SurveyGame = () => {
   // checkGameList 내부에 survey 페이지에서 선택한 게임 정보가 들어있다.
   const { data, loading, error, checkGameList, fetchData, addCheckChoiceGame, removeCheckChoiceGame } = surveyStore();
   const { user } = useUserStore();
+  console.log("User의 정보 출력하기");
+  console.log(user?.userId);
   
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
     fetchData(); // 마운트시 데이터 가져오기
-  }, [fetchData]); // 데이터 변경시 재랜더링
+  }, [fetchData, user]); // 데이터 변경시 재랜더링
   // 이 시점에 data에 정보가 들어와있음
-  console.log(user);
 
   const makeBackGroundImg = {
     backgroundImage: `url(${data?.result[current * 12].gameHeaderImg})`,
@@ -69,13 +70,12 @@ const SurveyGame = () => {
     // 존재하지 않는다면 배열에 추가한다.
     else addCheckChoiceGame(gameId, current);
   }
+
   // 마지막 페이지라면 Submit 버튼 활성화
   const isEndLine = (currentPage: number) => {
-      if (currentPage === 2 && user) {
+      if (currentPage === 2) {
         return (
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" 
-              onClick={() =>  {addLikeWeight(user.userId, checkGameList)}
-            }> Submit </button>      
+                <SubmitButton/>
         );
     } else {
         return null;
