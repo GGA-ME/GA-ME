@@ -10,9 +10,12 @@ interface ApiResponse {
     result: []; // `any` 대신 더 구체적인 타입을 사용해주세요.
 }
 
+
+
 // 스토어 상태의 타입을 정의합니다.
 interface StoreState {
     data: ApiResponse | null;
+    bannerData: ApiResponse | null;
     loading: boolean;
     error: AxiosError | null;
     userId: number;
@@ -26,6 +29,7 @@ interface StoreState {
     setPage: (page: number) => void;
     setSize: (size: number) => void;
     fetchData: () => Promise<void>;
+    mainBanner: () => Promise<void>;
 }
 
 const api = axios.create({
@@ -41,6 +45,7 @@ const api = axios.create({
 
   const useStoreMain = create<StoreState>((set, get) => ({
     data: null,
+    bannerData: null,
     loading: false,
     error: null,
     
@@ -71,7 +76,20 @@ const api = axios.create({
                 set({ error, loading: false });
             }
         }
-    }
+    },
+
+    mainBanner: async () => {
+        set({ loading: true });
+        try {
+            const response = await api.get<ApiResponse>(`/api/recommendations/recent-popular`,);
+            set({ bannerData: response.data, loading: false });
+            console.log(response.data);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                set({ error, loading: false });
+            }
+        }
+    },
 }));
 
 export default useStoreMain;

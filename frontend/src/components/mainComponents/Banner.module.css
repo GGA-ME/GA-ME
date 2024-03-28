@@ -4,8 +4,31 @@
     --swiper-pagination-color: #fff;
   }
 
+
+  @keyframes neon {
+    from, to {
+      box-shadow:
+      0 0 5px #c8c8c8,
+      0 0 10px #c8c8c8,
+      0 0 20px #608894,
+      0 0 30px #608894,
+      0 0 40px #608894
+      /* 0 0 70px #0fa; */
+    }
+    20%, 24%, 55% {        
+        box-shadow:
+        0 0 5px #c8c8c8,
+        0 0 10px #c8c8c8,
+        0 0 15px #608894,
+        0 0 20px #608894,
+        0 0 35px #608894;
+    }
+  }
+
 /* Banner.module.css */
 :global(.swiper-slide-thumb-active) {
-    outline: 2px solid #fff; /* Add border to active thumbnail */
-    box-shadow: 0 0 8px #fff; /* Optionally add shadow */
+  opacity: 0.5;
+  border: 3px solid rgb(255, 255, 255); /* 빨간색 테두리 */
+  animation: neon 2s infinite alternate;
+
   }
