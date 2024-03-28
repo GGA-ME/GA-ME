@@ -7,11 +7,12 @@ import GameCard from "../commonUseComponents/SimpleGameCard";
 // const MyProfile = ({userId}: {userId: number}) => {
 const MyProfile: React.FC = () => {
     const { data, loading, error, topTenTag, fetchData } = detailStore();
-    const [userId] = useState(1);
+    const [userId] = useState(12);
 
     useEffect(() => {
         fetchData(userId);
     }, [fetchData, userId]);
+
 
     if (loading) {
         return (
@@ -34,8 +35,8 @@ const MyProfile: React.FC = () => {
                 <div className="bg-gray-600 w-80 h-80 flex justify-center items-center">
                     <img className="rounded-full" src={data.result.userProfileImg} alt="" />
                     <p>{data.result.userName}</p>
-                    {topTenTag.map((tag: TagWeight) => (
-                        <span key={tag.codeId}>{tag.tagName}</span>
+                    {topTenTag.map((tag: TagWeight, index: number) => (
+                        <span key={index}>{tag.tagName}</span>
                     ))}
                     {data.result.preferList.map((prefer: Prefer, index: number) => (
                         <motion.div key={index}>

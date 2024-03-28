@@ -10,7 +10,6 @@ interface ApiResponse {
     message: string;
     code: number;
     result: UserInfo; 
-    tagWeightList: TagWeight[];
 }
 // 유저의 기본 정보와 선호 게임이 존재
 interface UserInfo{
@@ -19,6 +18,7 @@ interface UserInfo{
     userProfileImg: string;
     userAge: number;
     preferList: Prefer[];
+    tagWeightList: TagWeight[];
 }
 // 선호하는 게임에 대한 정보가 존재
 export interface Prefer{
@@ -63,14 +63,6 @@ const initialPrefer: Prefer = {
     tagList: [initialTagList]
 }
 
-const initialUser: UserInfo ={
-    userId: 0,
-    userName: '',
-    userProfileImg: '',
-    userAge: 0,
-    preferList: [initialPrefer]
-}
-
 const initialTagWeight: TagWeight = {
     userId: 0,
     tagId: 0,
@@ -79,12 +71,21 @@ const initialTagWeight: TagWeight = {
     userTagWeight: 0
 }
 
+const initialUser: UserInfo ={
+    userId: 0,
+    userName: '',
+    userProfileImg: '',
+    userAge: 0,
+    preferList: [initialPrefer],
+    tagWeightList: [initialTagWeight]
+
+}
+
 const initialData: ApiResponse = {
     isSuccess: false,
     message: '', 
     code: 0, 
-    result: initialUser,
-    tagWeightList: [initialTagWeight]
+    result: initialUser
 }
 
 
@@ -112,7 +113,7 @@ const detailStore = create<detailState>((set) => ({
             set({ data: response.data, loading: false });
             set(state => {
                 const topTenTag: TagWeight[] = [];
-                state.data.tagWeightList.forEach((tag: TagWeight) => {
+                state.data.result.tagWeightList.forEach((tag: TagWeight) => {
                     topTenTag.push(tag);
                     if (topTenTag.length > 10) return;
                 });
