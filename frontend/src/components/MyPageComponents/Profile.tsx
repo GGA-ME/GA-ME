@@ -10,11 +10,7 @@ const MyProfile: React.FC = () => {
     const { data, loading, error, topTenTag, fetchData } = detailStore();
     const {user} = useUserStore();
 
-    if(!user) throw new Error("유저 정보가 없습니다.")
-
-    useEffect(() => {
-        fetchData(user.userId);
-    }, [fetchData, user]);
+    useEffect(() => {if(user) fetchData(user.userId)} , [fetchData, user]);
 
 
     if (loading) {
