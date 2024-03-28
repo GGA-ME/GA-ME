@@ -29,7 +29,6 @@ public class UserTagController {
     @PutMapping()
     public ResponseEntity<BaseResponse<List<UserTagResDto>>> updateUserTagWeight(@RequestParam("userId") Integer userId,
                                                       @RequestParam("gameId") Long gameId,
-                                                      @RequestParam("page") String page,
                                                       @RequestParam("action") String action) {
         //가중치 업데이트
         List<UserTagResDto> resDto = userTagService.updateUserTagWeight(userId, gameId, action);
