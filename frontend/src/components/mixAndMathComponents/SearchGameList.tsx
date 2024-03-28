@@ -41,7 +41,7 @@ const SearchGameList: React.FC = () => {
 
   return (
     <div className={style.box}>
-      <div>
+      <div className={style.gameList}>
         {cartItems.map((item, index: number) => (
           <GameCard
             key={index}
@@ -53,10 +53,11 @@ const SearchGameList: React.FC = () => {
             tagsAll={item.tagsAll}
             likes={0} // 임시 값
             onGameClick={handleClickGame}
+            isPrefer={false} // 임시 값
           />
         ))}
       </div>
-      <button className={style.topicBtn} onClick={HandleOnClick}> 조합하기 </button>
+      <button className={style.topicBtn} onClick={HandleOnClick}> Mix! </button>
     </div>
   );
 };
