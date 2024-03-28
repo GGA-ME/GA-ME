@@ -18,16 +18,11 @@ const SurveyGame = () => {
   // checkGameList 내부에 survey 페이지에서 선택한 게임 정보가 들어있다.
   const { data, loading, error, checkGameList, backGroundImg, setBackgroundImg, fetchData, addCheckChoiceGame, removeCheckChoiceGame } = surveyStore();
   const { user } = useUserStore();
-  console.log("User의 정보 출력하기");
-  console.log(user?.userId);
-  
   const [current, setCurrent] = useState(0);
   useEffect(() => {
     fetchData(); // 마운트시 데이터 가져오기
   }, [fetchData, user, backGroundImg]); // 데이터 변경시 재랜더링
   // 이 시점에 data에 정보가 들어와있음
-
-  console.log(backGroundImg);
 
   const makeBackGroundImg = {
     backgroundImage: `url(${backGroundImg})`,
@@ -49,7 +44,7 @@ const SurveyGame = () => {
   groups.push(oneList);
   groups.push(twoList);
   groups.push(threeList);
-  if(data) for(let i = 0; i < 3; i++) for(let j = i; j < i + 12; j++) groups[i].push(data.result[j]);
+  if(data) for(let i = 0; i < 3; i++) for(let j = i * 12; j < i * 12 + 12; j++) groups[i].push(data.result[j]);
 
   const changeBackgroundImg = (image: string) => {
     setBackgroundImg(image);
