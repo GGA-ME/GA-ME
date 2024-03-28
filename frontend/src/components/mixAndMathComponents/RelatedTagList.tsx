@@ -7,8 +7,8 @@ const CombinationList: React.FC = () => {
   const tagDtoList = results?.tagDtoList;
   return (
     <div className={style.box}>
-      <div className="mt-2 mb-1 ml-3 text-[20px]">
-        관련 태그👇
+      <div className="mt-2 mb-1 ml-3 text-[20px] font-sejong">
+        관련 태그 👇
       </div>
       <hr className={style.hr}></hr>
       <div className="mb-3">

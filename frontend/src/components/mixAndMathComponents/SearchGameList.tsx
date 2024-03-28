@@ -39,8 +39,17 @@ const SearchGameList: React.FC = () => {
     navigate(`/detail/${gameId}`)
   }
 
+  // cartItems가 비어있을 경우 메세지를 표시
+  if (cartItems.length === 0) {
+    return (
+      <div className={style.box} style={{height: '275px', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px'}}>
+        <p>게임을 담아주세요!</p>
+      </div>
+    );
+  }
+
   return (
-    <div className={style.box}>
+    <div className={style.box} style={{height: '275px'}}>
       <div className={style.gameList}>
         {cartItems.map((item, index: number) => (
           <GameCard
