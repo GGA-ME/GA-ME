@@ -37,7 +37,6 @@ const SearchGameList: React.FC = () => {
 
   const handleClickGame = (gameId:number) => {
     navigate(`/detail/${gameId}`)
-    console.log('디테일페이지 이동')
   }
 
   return (
