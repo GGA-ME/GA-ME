@@ -14,9 +14,10 @@ interface SurveyStoreState{
     data: ApiResponse | null;
     loading: boolean;
     error: AxiosError | null;
+    backGroundImg: string | null;
     checkGameList: number[][];
 
-
+    setBackgroundImg: (gameImg: string) => void;
     addCheckChoiceGame: (gameId: number, current: number) => void;
     removeCheckChoiceGame: (gameId: number, current: number) => void;
     fetchData: () => Promise<void>;
@@ -28,7 +29,12 @@ export const surveyStore = create<SurveyStoreState>((set) => ({
     data: null,
     loading: false,
     error: null,
+    backGroundImg: null,
     checkGameList: [[], [], []],    
+
+    setBackgroundImg(gameImg: string){
+      set({backGroundImg: gameImg});
+    },
 
     addCheckChoiceGame(gameId: number, current: number) {
         // state라는 파라미터가 이전 값을 기억

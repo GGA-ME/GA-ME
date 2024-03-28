@@ -16,20 +16,21 @@ export interface ChoiceGame {
 
 const SurveyGame = () => {
   // checkGameList 내부에 survey 페이지에서 선택한 게임 정보가 들어있다.
-  const { data, loading, error, checkGameList, fetchData, addCheckChoiceGame, removeCheckChoiceGame } = surveyStore();
+  const { data, loading, error, checkGameList, backGroundImg, setBackgroundImg, fetchData, addCheckChoiceGame, removeCheckChoiceGame } = surveyStore();
   const { user } = useUserStore();
   console.log("User의 정보 출력하기");
   console.log(user?.userId);
   
   const [current, setCurrent] = useState(0);
-
   useEffect(() => {
     fetchData(); // 마운트시 데이터 가져오기
-  }, [fetchData, user]); // 데이터 변경시 재랜더링
+  }, [fetchData, user, backGroundImg]); // 데이터 변경시 재랜더링
   // 이 시점에 data에 정보가 들어와있음
 
+  console.log(backGroundImg);
+
   const makeBackGroundImg = {
-    backgroundImage: `url(${data?.result[current * 12].gameHeaderImg})`,
+    backgroundImage: `url(${backGroundImg})`,
     backgroundSize: 'cover', // 배경 이미지를 화면에 맞게 확대합니다.
     backgroundPosition: 'center', // 배경 이미지를 가운데 정렬합니다.
     width: '100%',
@@ -48,10 +49,11 @@ const SurveyGame = () => {
   groups.push(oneList);
   groups.push(twoList);
   groups.push(threeList);
-  if(data)
-    for(let i = 0; i < 3; i++)
-      for(let j = i; j < i + 12; j++)
-        groups[i].push(data.result[j]);
+  if(data) for(let i = 0; i < 3; i++) for(let j = i; j < i + 12; j++) groups[i].push(data.result[j]);
+
+  const changeBackgroundImg = (image: string) => {
+    setBackgroundImg(image);
+  }
 
   const stepValidation = (value: number) => {
     if(checkGameList[current].length !== 0) setCurrent(value);
@@ -63,7 +65,8 @@ const SurveyGame = () => {
     return false;
   }
 
-  const changeGameList = (gameId: number, current: number) => {
+  const changeGameList = (gameId: number, current: number, image: string) => {
+    changeBackgroundImg(image);
     // 존재한다면 배열에서 게임을 없앤다.
     if(isInGameList(gameId, current)) removeCheckChoiceGame(gameId, current);
 
@@ -112,7 +115,7 @@ const SurveyGame = () => {
         theme={{
           components: {
             Steps: {
-              colorPrimary: "#1FDA11",
+              colorPrimary: "#1d4ed8",
               colorBorderBg: "#1FDA11",
               navArrowColor: "#FFFFFF"
             }
@@ -147,7 +150,7 @@ const SurveyGame = () => {
                           transition: { duration: 0.3 },
                         },
                       }}
-                      onClick={() => changeGameList(choiceGame.gameId, current)}
+                      onClick={() => changeGameList(choiceGame.gameId, current, choiceGame.gameHeaderImg)}
                     >
                       <SimpleGameCard
                         key={index}
