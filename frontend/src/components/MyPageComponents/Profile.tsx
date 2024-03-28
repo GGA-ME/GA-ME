@@ -1,9 +1,8 @@
 // import { useEffect, useState } from "react";
 import { useEffect, useState } from "react";
-import detailStore, { Prefer, TagWeight } from "../../stores/myPageStore";
+import detailStore, { TagWeight } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
-import { motion } from "framer-motion";
-import GameCard from "../commonUseComponents/SimpleGameCard";
+
 // import useUserStore from "../../stores/userStore";
 
 // const MyProfile = ({userId}: {userId: number}) => {
@@ -45,15 +44,7 @@ const MyProfile: React.FC = () => {
                     {topTenTag.map((tag: TagWeight, index: number) => (
                         <span key={index}>{tag.tagName}</span>
                     ))}
-                    {data.result.preferList.map((prefer: Prefer, index: number) => (
-                        <motion.div key={index}>
-                            <GameCard                                
-                                gameId={prefer.gameId}
-                                imageUrl={prefer.gameHeaderImg}
-                                title={prefer.gameName}
-                            ></GameCard>
-                        </motion.div>
-                    ))}
+                    
                 </div>
             </div>
         </>
