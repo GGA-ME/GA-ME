@@ -14,7 +14,7 @@ interface UserState {
   isLoggedIn: boolean;
   setUser: (user: User | null) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
-  fetchAndSetUser: (accessToken: string) => void;
+  fetchAndSetUser: (accessToken: string) => Promise<boolean>;
 }
 
 const useUserStore = create<UserState>((set) => ({
@@ -22,7 +22,7 @@ const useUserStore = create<UserState>((set) => ({
   isLoggedIn: false,
   setUser: (user) => set({ user, isLoggedIn: true }),
   setIsLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
-  fetchAndSetUser: async (accessToken) => {
+  fetchAndSetUser: async (accessToken): Promise<boolean> => {
     try {
       const response = await axios.post('/api/auth/kakao/callback', {
         accessToken,
@@ -44,10 +44,7 @@ const useUserStore = create<UserState>((set) => ({
         console.log('사용자 정보: ');
         console.log(userInfo);
 
-        // isNewUser 상태에 따라 리디렉션
-        if (userInfo.isNewUser) {
-          window.location.href ='/survey'; // 신규 사용자는 설문조사 페이지로 이동
-        }
+        return userInfo.isNewUser;
       } else {
         // 응답이 실패했을 경우의 처리
         console.error(response.data.message);
@@ -57,6 +54,8 @@ const useUserStore = create<UserState>((set) => ({
       console.error('사용자 정보 요청 실패:', error);
       set({ isLoggedIn: false });
     }
+
+    return false;
   },
 }));
 
