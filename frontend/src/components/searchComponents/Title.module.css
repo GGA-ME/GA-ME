@@ -1,10 +1,11 @@
 .titleDiv {
   display: inline-block; /* 혹은 inline-flex */
+  margin-left: 120px;
   left: 378px;
   top: 234px;
 }
 .title {
-  /* Search 타이틀 */
+  /* Hot Topic 타이틀 */
   font-family: "TAEBAEK font TTF";
   font-style: bold;
   font-weight: 700;
@@ -27,12 +28,9 @@
   display: flex;
   align-items: center;
   margin-top: 5px;
-  margin-left: 10px;
   color: #ffffff;
 }
 
 .icon {
-  position: absolute;
-  margin-left: 28px;
-  margin-top: 35px;
+  width: 60px;
 }
