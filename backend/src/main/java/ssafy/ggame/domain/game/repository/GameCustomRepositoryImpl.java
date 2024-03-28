@@ -266,5 +266,35 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
                 .collect(Collectors.toMap(GameLikeDto::getGameId, GameLikeDto::getGameLike));
     }
 
+    @Override
+    public List<GameCardDto> getPreferList(Integer userId) {
+        List<GameCardDto> gameList = queryFactory.select(
+                        Projections.constructor(
+                                GameCardDto.class,
+                                prefer.preferId.game.gameId.as("gameId"),
+                                prefer.preferId.game.gameName.as("gameName"),
+                                prefer.preferId.game.gameHeaderImg.as("gameHeaderImg"),
+                                prefer.preferId.game.gamePriceInitial.as("gamePriceInitial"),
+                                prefer.preferId.game.gamePriceFinal.as("gamePriceFinal"),
+                                prefer.preferId.game.gameDeveloper.as("gameDeveloper")
+                        )
+                ).from(prefer)
+                .leftJoin(game).on(prefer.preferId.game.gameId.eq(game.gameId))
+                .where(prefer.preferId.user.userId.eq(userId))
+                .fetch();
+        List<Long> ids = gameList.stream()
+                .map(GameCardDto::getGameId) // Game 객체에서 id를 추출
+                .toList();
 
+        Map<Long, List<TagDto>> tagsMap = getTags(ids);
+        List<Long> preferIds = getPrefers(userId, ids);
+        Map<Long, Long> likes = getLikes(ids);
+        gameList.forEach(game -> {
+            game.updateTagList(tagsMap.get(game.getGameId()));
+            game.updateIsPrefer(preferIds.contains(game.getGameId()));
+            game.updateLike(likes.get(game.getGameId()) == null ? 0 : likes.get(game.getGameId()));
+            game.updatePrices();
+        });
+        return gameList;
+    }
 }

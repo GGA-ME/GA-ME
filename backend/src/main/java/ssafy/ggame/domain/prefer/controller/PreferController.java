@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.prefer.dto.PreferRequestDto;
 import ssafy.ggame.domain.prefer.service.PreferService;
 import ssafy.ggame.global.common.BaseResponse;
 import ssafy.ggame.global.common.StatusCode;
+
+import java.util.List;
 
 
 @RestController
@@ -40,7 +43,14 @@ public class PreferController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponse<>(StatusCode.SUCCESS));
     }
 
-
+    /*
+        선호도 리스트 가져오기
+     */
+    @PostMapping
+    public ResponseEntity<Object> getPrefers(@RequestBody PreferRequestDto saveRequestDto) {
+        List<GameCardDto> preferList = preferService.getPreferList(saveRequestDto.getUserId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponse<>(preferList));
+    }
 
 
 }
