@@ -8,7 +8,6 @@ const Result: React.FC = () => {
     const {results} = useMixAndMatchStore();
 
     const gameCardDtoList = results?.gameCardDtoList;
-    console.log("searchResult::::", gameCardDtoList)
 
     return(
         <div className={style.box}>
