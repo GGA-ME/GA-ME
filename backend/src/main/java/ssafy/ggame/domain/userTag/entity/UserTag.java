@@ -3,11 +3,15 @@ package ssafy.ggame.domain.userTag.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
+import ssafy.ggame.domain.tag.entity.Tag;
+import ssafy.ggame.domain.user.entity.User;
 
 @Entity
 @Getter
+@Data
 @ToString
 public class UserTag {
 

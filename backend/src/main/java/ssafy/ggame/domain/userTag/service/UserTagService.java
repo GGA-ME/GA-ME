@@ -12,6 +12,7 @@ import ssafy.ggame.domain.user.repository.UserRepository;
 import ssafy.ggame.domain.userTag.dto.UserTagDislikeReqDto;
 import ssafy.ggame.domain.userTag.dto.UserTagResDto;
 import ssafy.ggame.domain.userTag.entity.UserTag;
+import ssafy.ggame.domain.userTag.entity.UserTagId;
 import ssafy.ggame.domain.userTag.repository.UserTagRepository;
 import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
 import ssafy.ggame.global.common.StatusCode;
@@ -46,7 +47,23 @@ public class UserTagService {
 
             // 사용자 ID, 태그 ID, 코드 ID로 사용자 태그를 조회하거나 새로 생성
             Optional<UserTag> userTagOptional = userTagRepository.findByUserIdAndTagIdAndCodeId(userId, tagIdValue, codeIdValue);
-            UserTag userTag = userTagOptional.orElseThrow(() -> new BaseException(StatusCode.USER_TAG_NOT_FOUND));
+            UserTag userTag = userTagOptional.orElseGet(() -> {
+                User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
+                Tag findTag = tagRepository.findByCodeIdAndTagId(codeIdValue, tagIdValue).orElseThrow(() -> new BaseException(StatusCode.TAG_NOT_EXIST));
+
+                // UserTagId 복합 키 인스턴스 생성 및 설정
+                UserTagId userTagId = new UserTagId();
+                userTagId.setUser(user);
+                userTagId.setTag(tag);
+
+                // 새 UserTag 인스턴스 생성 및 초기화
+                UserTag newUserTag = new UserTag();
+                newUserTag.setUserTagId(userTagId);
+                newUserTag.setUserTagWeight((short) 0); // 초기 가중치 예: 0
+
+                return newUserTag;
+            });
+
 
             // 가중치 업데이트
             short newWeight = (short) (userTag.getUserTagWeight() + weightToAdd);
