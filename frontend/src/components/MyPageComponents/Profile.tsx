@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import detailStore, { Prefer, TagWeight } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import GameCard from "../commonUseComponents/SimpleGameCard";
+import useUserStore from "../../stores/userStore";
 
 // const MyProfile = ({userId}: {userId: number}) => {
 const MyProfile: React.FC = () => {
     const { data, loading, error, topTenTag, fetchData } = detailStore();
-    const [userId] = useState(12);
+    const {user} = useUserStore();
+
+    if(!user) throw new Error("유저 정보가 없습니다.")
 
     useEffect(() => {
-        fetchData(userId);
-    }, [fetchData, userId]);
+        fetchData(user.userId);
+    }, [fetchData, user]);
 
 
     if (loading) {
