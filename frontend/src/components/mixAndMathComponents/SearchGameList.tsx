@@ -53,6 +53,7 @@ const SearchGameList: React.FC = () => {
             tagsAll={item.tagsAll}
             likes={0} // 임시 값
             onGameClick={handleClickGame}
+            isPrefer={false} // 임시 값
           />
         ))}
       </div>
