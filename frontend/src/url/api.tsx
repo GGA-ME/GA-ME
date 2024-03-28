@@ -51,7 +51,7 @@ export const addLikeWeight = async (gameList: number[][]) => {
   gameList.map(async (arrayGame: number[]) => {
     try {
       arrayGame.map(async (gameId: number) => {
-        const response = await api.put(`/api/tracking/userId=${userId}/gameId=${gameId}/action=${action}`);
+        const response = await api.put(`/tracking/userId=${userId}/gameId=${gameId}/action=${action}`);
         console.log(response);  
       })
     } catch(error) {

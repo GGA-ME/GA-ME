@@ -96,7 +96,7 @@ interface detailState {
     topTenTag: TagWeight[];
     setData: (resData: ApiResponse) => void;
     fetchData: (userId: number) => void;
-    sendFavoriteGameList: () => void;
+    // sendFavoriteGameList: () => void;
 }
 
 const detailStore = create<detailState>((set) => ({
@@ -111,23 +111,32 @@ const detailStore = create<detailState>((set) => ({
         try{
             const response = await api.get(`/users/${userId}`);
             set({ data: response.data, loading: false });
+            set(state => {
+                const topTenTag: TagWeight[] = [];
+                state.data.tagWeightList.forEach((tag: TagWeight) => {
+                    topTenTag.push(tag);
+                    if (topTenTag.length > 10) return;
+                });
+                return { ...state, topTenTag };
+            })
         }
         catch(error){
             if (axios.isAxiosError(error)) {
                 set({ error, loading: false });
-            }
+            }            
         }
+        
     },
-    sendFavoriteGameList: () => {
-        set(state => {
-            const topTenTag: TagWeight[] = [];
-            state.data.tagWeightList.forEach((tag: TagWeight) => {
-                topTenTag.push(tag);
-                if (topTenTag.length > 10) return;
-            });
-            return { ...state, topTenTag };
-        });
-    }
+    // sendFavoriteGameList: () => {
+    //     set(state => {
+    //         const topTenTag: TagWeight[] = [];
+    //         state.data.tagWeightList.forEach((tag: TagWeight) => {
+    //             topTenTag.push(tag);
+    //             if (topTenTag.length > 10) return;
+    //         });
+    //         return { ...state, topTenTag };
+    //     });
+    // }
 
 })) 
 
