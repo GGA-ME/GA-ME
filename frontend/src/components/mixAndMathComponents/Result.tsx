@@ -31,6 +31,8 @@ const Result: React.FC = () => {
             tagsAll={item.tagList}
             likes={0} // 임시 값
             onGameClick={handleClickGame}
+            isPrefer={false} // 임시 값
+
           />
         ))}
             
