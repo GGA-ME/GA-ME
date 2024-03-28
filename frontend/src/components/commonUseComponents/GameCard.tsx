@@ -1,9 +1,10 @@
 // 장현욱
 
 import { motion } from 'framer-motion'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import usePoketStore from '../../stores/poketStore';
 import useStoreLike from '../../stores/likeStore'
+import useUserStore from '../../stores/userStore';
 import style from './GameCard.module.css'
 
 interface TagDto {
@@ -33,9 +34,17 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
   const { cartItems, addItem, removeItem } = usePoketStore();
   const [showAlert, setShowAlert] = useState(false); // 경고 메시지 상태 추가
   const { likeGame, unlikeGame } = useStoreLike();
+  const { user } = useUserStore();
 
   // 카트 안에 데이터가 있는지 확인
   const isInCart = cartItems.some(item => item.gameId === gameId);
+
+  // 유저정보 확인
+  useEffect(() => {
+    user; // 마운트시 데이터 가져오기
+  }, []);
+  
+  console.log(user)
 
 
   // 포켓에 넣는 핸들러
