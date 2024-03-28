@@ -2,12 +2,20 @@ import React from 'react'
 import useMixAndMatchStore from '../../stores/mixAndMatchStore'
 import GameCard from '../commonUseComponents/GameCard';
 import style from "./MixandMatch.module.css"
+import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
+
 
 const Result: React.FC = () => {
 
     const {results} = useMixAndMatchStore();
+    const navigate = useNavigate(); // useNavigate 인스턴스화
 
     const gameCardDtoList = results?.gameCardDtoList;
+
+    const handleClickGame = (gameId:number) => {
+        navigate(`/detail/${gameId}`)
+        console.log('디테일페이지 이동')
+      }
 
     return(
         <div className={style.box}>
@@ -23,7 +31,7 @@ const Result: React.FC = () => {
             tags={item.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
             tagsAll={item.tagList}
             likes={0} // 임시 값
-            onGameClick={() => console.log("temp onGameClick: ", item.gameName)}
+            onGameClick={handleClickGame}
           />
         ))}
             

@@ -4,6 +4,8 @@ import GameCard from "../commonUseComponents/GameCard";
 import style from "./MixandMatch.module.css";
 import useUserStore from "../../stores/userStore";
 import useMixAndMatchStore from "../../stores/mixAndMatchStore";
+import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
+
 
 
 const SearchGameList: React.FC = () => {
@@ -31,6 +33,13 @@ const SearchGameList: React.FC = () => {
     fetchData(requestData);
   };
 
+  const navigate = useNavigate(); // useNavigate 인스턴스화
+
+  const handleClickGame = (gameId:number) => {
+    navigate(`/detail/${gameId}`)
+    console.log('디테일페이지 이동')
+  }
+
   return (
     <div className={style.box}>
       <div>
@@ -44,7 +53,7 @@ const SearchGameList: React.FC = () => {
             tags={item.tagsAll?.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName) ?? []}
             tagsAll={item.tagsAll}
             likes={0} // 임시 값
-            onGameClick={() => console.log("temp onGameClick: ", item.title)}
+            onGameClick={handleClickGame}
           />
         ))}
       </div>
