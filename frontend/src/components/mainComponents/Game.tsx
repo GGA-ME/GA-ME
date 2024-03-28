@@ -17,12 +17,12 @@ interface Game {
 }
 
 const GameComponent: React.FC = () => {
-  const { data, loading, error, fetchData } = useStoreMain();
+  const { data, loading, error, fetchMainData } = useStoreMain();
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
   useEffect(() => {
-    fetchData(); // 마운트시 데이터 가져오기
-  }, [fetchData]); // 데이터 변경시 재랜더링
+    fetchMainData(); // 마운트시 데이터 가져오기
+  }, [fetchMainData]); // 데이터 변경시 재랜더링
 
   if (loading) {
     return <div>Loading...</div>;

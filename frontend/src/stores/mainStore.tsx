@@ -28,7 +28,7 @@ interface StoreState {
     setTagId: (tagId: number) => void;
     setPage: (page: number) => void;
     setSize: (size: number) => void;
-    fetchData: () => Promise<void>;
+    fetchMainData: () => Promise<void>;
     mainBanner: () => Promise<void>;
 }
 
@@ -64,7 +64,7 @@ const api = axios.create({
     size: 100,
     setSize: (size: number) => set({ size }),
 
-    fetchData: async () => {
+    fetchMainData: async () => {
         const { userId, codeId, tagId, page, size } = get();
         set({ loading: true });
         try {
