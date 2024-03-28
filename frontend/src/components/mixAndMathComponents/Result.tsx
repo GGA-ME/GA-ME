@@ -16,9 +16,9 @@ const Result: React.FC = () => {
 
   return (
     <div>
-      <h1 className="ml-[185px] mt-[30px] text-[30px]">
+      <p className="ml-[185px] mt-[30px] text-[30px] font-sejong">
         Match
-      </h1>
+      </p>
       <div className={style.box} style={{ marginTop: 0 }}>
         <div className={style.gameList}>
           {gameCardDtoList?.map((item, index: number) => (
