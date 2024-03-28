@@ -1,17 +1,25 @@
-import { useEffect } from "react";
+// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import detailStore, { Prefer, TagWeight } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import GameCard from "../commonUseComponents/SimpleGameCard";
-import useUserStore from "../../stores/userStore";
+// import useUserStore from "../../stores/userStore";
 
 // const MyProfile = ({userId}: {userId: number}) => {
 const MyProfile: React.FC = () => {
-    const { data, loading, error, topTenTag, fetchData } = detailStore();
-    const {user} = useUserStore();
+    // const { data, loading, error, topTenTag, fetchData } = detailStore();
+    const { data, loading, error, topTenTag, fetchData} = detailStore();
+    // const {user} = useUserStore();
+    const [user] = useState(12);
 
-    useEffect(() => {if(user) fetchData(user.userId)} , [fetchData, user]);
+    useEffect(() => {if(user) fetchData(user)} , [fetchData, user]);
+    // useEffect(() =>{  
+    //     if(user)
+    //         fetchData(user.userId);
+    //         },[fetchData, user]);
 
+    console.log(user);
 
     if (loading) {
         return (
