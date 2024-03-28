@@ -195,8 +195,14 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
                                 TempDto.class,
                                 game.gameId.as("gameId"),
                                 game.gameFinalScore.as("gameFinalScore"),
+                                game.gameName.as("gameName"),
+                                game.gameHeaderImg.as("gameHeaderImg"),
+                                game.gamePriceInitial.as("gamePriceInitial"),
+                                game.gamePriceFinal.as("gamePriceFinal"),
+                                game.gameDeveloper.as("gameDeveloper"),
                                 tag.tagId.code.codeId.as("codeId"),
-                                tag.tagId.tagId.as("tagId")
+                                tag.tagId.tagId.as("tagId"),
+                                tag.tagName.as("tagName")
                         )
                 ).from(game)
                 .join(game.gameTags, gameTag)

@@ -153,7 +153,7 @@ public class RecommendationService {
     public RecommendationResponseDto getPersonalList(Integer userId) {
         // 사용자 존재 유무 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
-        
+
         // 1. 사용자 가중치 전부 가져오기
         List<UserTagDto> userTagList = userTagCustomRepository.findByUserId(user.getUserId());
 
@@ -182,24 +182,33 @@ public class RecommendationService {
                 .toList();
 
         System.out.println("resultTagDtoList = " + resultTagDtoList);
-        
+
         // 6. 게임별 점수를 저장할 맵 (게임 아이디 - 가중치 합)
-        Map<Long, Double> gameScoreMap = calculateScore(tagDtoList, tagWeightMap);
+        Map<TempDto, Double> gameScoreMap = calculateScore(tagDtoList, tagWeightMap);
+
+        System.out.println("calculateScore Done =====================");
         
 
         // 점수계산을 마쳤으니 내림차순으로 정렬하고,
         // GameCardDto형식으로 변환해서
         // 개수 잘라 반환하기
-        List<Map.Entry<Long, Double>> sortedGameScoreList = getSortedGameScoreList(gameScoreMap);
+        List<Map.Entry<TempDto, Double>> sortedGameScoreList = getSortedGameScoreList(gameScoreMap);
 
+        System.out.println("getSortedGameScoreList Done =========================== ");
+
+
+        // TODO: 100개 잘라서 가져오도록 고치기
         // 100개만 잘라서 가져오기
-        List<Map.Entry<Long, Double>> subList = sortedGameScoreList.subList(0, 100);
+        List<Map.Entry<TempDto, Double>> subList = sortedGameScoreList.subList(0, 2);
 
         System.out.println("subList = " + subList);
 
+
+        //  TODO: 게임 태그가 하나만 들어가는 문제 해결하기
+        System.out.println("################## 문제구간 (sortedGameCardDtoList) - 태그가 왜 하나밖에 안담기니 ###########");
+
         // 반환형식인 gameCardDto로 변환하기
         List<GameCardDto> gameCardDtoList = sortedGameCardDtoList(userId, subList);
-
 
 
         return RecommendationResponseDto.builder()
@@ -209,38 +218,38 @@ public class RecommendationService {
 
     }
 
-    private List<Map.Entry<Long, Double>> getSortedGameScoreList(Map<Long, Double> gameScoreMap) {
+    private List<Map.Entry<TempDto, Double>> getSortedGameScoreList(Map<TempDto, Double> gameScoreMap) {
         // treeMap을 List로 변환
-        List<Map.Entry<Long, Double>> sortedGameScoreList = new ArrayList<>(gameScoreMap.entrySet());
+        List<Map.Entry<TempDto, Double>> sortedGameScoreList = new ArrayList<>(gameScoreMap.entrySet());
 
         // 점수(value)로 내림차순 정렬
         Collections.sort(sortedGameScoreList, valueComparator);
         return sortedGameScoreList;
     }
 
-    private Map<Long, Double> calculateScore(List<TagDto> tagDtoList, Map<TagDto, Long> tagWeightMap) {
+    private Map<TempDto, Double> calculateScore(List<TagDto> tagDtoList, Map<TagDto, Long> tagWeightMap) {
         // 6. 게임별 빈도수 점수 (gameId - 빈도수 점수)
-        Map<Long, Double> gameScoreMap = new TreeMap<>();
+        Map<TempDto, Double> gameScoreMap = new TreeMap<>();
 
         // 7. 게임 점수 계산을 위해 게임 정보를 담을 집합
         Set<TempDto> containGameList = new HashSet<>();
 
         List<TempDto> gameList = gameCustomRepository.findAllGameAndTag();
 
-        for(TempDto game : gameList) {
+        for (TempDto game : gameList) {
             for (TagDto tagDto : tagDtoList) {
-                if(game.getCodeId().equals(tagDto.getCodeId()) && game.getTagId() == tagDto.getTagId()){
+                if (game.getCodeId().equals(tagDto.getCodeId()) && game.getTagId() == tagDto.getTagId()) {
                     containGameList.add(game);
-                    gameScoreMap.put(game.getGameId(), gameScoreMap.getOrDefault(game.getGameId(), 0.0) + tagWeightMap.get(tagDto));
+                    gameScoreMap.put(game, gameScoreMap.getOrDefault(game, 0.0) + tagWeightMap.get(tagDto));
                 }
             }
         }
 
         // 점수계산
-        for(TempDto game : containGameList){
-            Double score1 = Math.log(gameScoreMap.get(game.getGameId()) +100)* 0.7;
-            Double score2= game.getGameFinalScore() * 0.3;
-            gameScoreMap.put(game.getGameId(), score1+score2);
+        for (TempDto game : containGameList) {
+            Double score1 = Math.log(gameScoreMap.get(game) + 100) * 0.7;
+            Double score2 = game.getGameFinalScore() * 0.3;
+            gameScoreMap.put(game, score1 + score2);
         }
 
         return gameScoreMap;
@@ -290,15 +299,15 @@ public class RecommendationService {
                 .collect(Collectors.toList());
 
         // 6. 게임별 빈도수 점수 (gameId - 빈도수 점수)
-        Map<Long, Double> gameScoreMap = calculateScore(tagDtoList, tagCntMap);
+        Map<TempDto, Double> gameScoreMap = calculateScore(tagDtoList, tagCntMap);
 
         // 점수계산을 마쳤으니 내림차순으로 정렬하고,
         // GameCardDto형식으로 변환해서
         // 개수 잘라 반환하기
-        List<Map.Entry<Long, Double>> sortedGameScoreList = getSortedGameScoreList(gameScoreMap);
+        List<Map.Entry<TempDto, Double>> sortedGameScoreList = getSortedGameScoreList(gameScoreMap);
 
         // 15개만 잘라서 가져오기
-        List<Map.Entry<Long, Double>> subList = sortedGameScoreList.subList(0, 15);
+        List<Map.Entry<TempDto, Double>> subList = sortedGameScoreList.subList(0, 15);
 
         // 반환형식인 gameCardDto로 변환하기
         Integer userId = searchGameRequestDto.getUserId();
@@ -311,22 +320,32 @@ public class RecommendationService {
 
     }
 
-    private List<GameCardDto> sortedGameCardDtoList(Integer userId, List<Map.Entry<Long, Double>> list) {
+    private List<GameCardDto> sortedGameCardDtoList(Integer userId, List<Map.Entry<TempDto, Double>> list) {
         List<GameCardDto> gameCardDtoList = new ArrayList<>();
 
         // 받은 게임 별 총 좋아요 수 맵
         List<Long> ids = new ArrayList<>();
-        list.forEach((e) -> ids.add(e.getKey()));
+        list.forEach((e) -> ids.add(e.getKey().getGameId()));
         Map<Long, Long> likesMap = gameCustomRepository.getLikes(ids);
 
-        for (Map.Entry<Long, Double> entry : list) {
-            Game game = gameRepository.findById(entry.getKey()).orElseThrow(() -> new BaseException(StatusCode.GAME_NOT_FOUND));
+
+        for (Map.Entry<TempDto, Double> entry : list) {
+            TempDto game = entry.getKey();
+            System.out.println("TempDto - game = " + game);
             GameCardDto gameCardDto = game.converToGameCardDto();
             gameCardDto.updateLike(likesMap.getOrDefault(game.getGameId(), 0L)); // 게임 총 좋아요 수 업데이트
             // 선호 여부 업데이트
             if (preferRepository.existsByPreferId_User_UserIdAndPreferId_Game_GameId(userId, game.getGameId())) {
                 gameCardDto.updateIsPrefer(true);
             }
+            List<TagDto> tagDtoList = new ArrayList<>();
+            tagDtoList.add(TagDto.builder()
+                    .codeId(game.getCodeId())
+                    .tagId(game.getTagId())
+                    .tagName(game.getTagName())
+                    .build());
+
+            gameCardDto.updateTagList(tagDtoList);
             gameCardDtoList.add(gameCardDto);
         }
         return gameCardDtoList;
@@ -343,7 +362,7 @@ public class RecommendationService {
         return gameScoreMap;
     }
 
-    private Comparator<Map.Entry<Long, Double>> valueComparator = (e1, e2) -> {
+    private Comparator<Map.Entry<TempDto, Double>> valueComparator = (e1, e2) -> {
         return e2.getValue().compareTo(e1.getValue()); // 내림차순으로 정렬;
     };
 
