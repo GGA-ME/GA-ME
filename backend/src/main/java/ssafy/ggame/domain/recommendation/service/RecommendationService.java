@@ -229,7 +229,14 @@ public class RecommendationService {
         // 입력으로 받은 태그를 빈도수 별로 정렬해서 결과로 반환
         // - tagCntMap을 value 내림차순으로 정렬
         ArrayList<Map.Entry<TagDto, Long>> tagCntList = new ArrayList<>(tagCntMap.entrySet());
-        Collections.sort(tagCntList, (e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+        tagCntList.sort((e1, e2) -> {
+            int compare = e2.getValue().compareTo(e1.getValue()); // 빈도수를 내림차순으로 정렬
+            if (compare == 0) { // 빈도수가 같을 때는 tagId 값을 비교하여 오름차순으로 정렬
+                return e1.getKey().getTagId().compareTo(e2.getKey().getTagId());
+            }
+            return compare;
+        });
+
 
         // List<TagDto> tagDtoList 지정
         List<TagDto> tagDtoList = new ArrayList<>();
