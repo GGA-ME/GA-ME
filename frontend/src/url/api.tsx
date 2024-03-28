@@ -42,11 +42,10 @@ export const fetchKakaoUserInfo = async (code: string) => {
 };
 
 // 취향조사 게임 가중치 추가
-export const addLikeWeight = async (gameList: number[][]) => {
+export const addLikeWeight = async (userId: number, gameList: number[][]) => {
 
   if(gameList[2].length === 0 ) return alert('게임을 선택해주세요!');
   
-  const userId: number = 1;
   const action: string = 'like';
   gameList.map(async (arrayGame: number[]) => {
     try {
