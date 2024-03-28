@@ -52,8 +52,7 @@ export const surveyStore = create<SurveyStoreState>((set) => ({
         set({ loading: true });
         try {
             const response = await api.get<ApiResponse>(`/api/users/choice-game`);
-            set({ data: response.data, loading: false });
-            console.log();
+            set({ data: response.data, loading: false });          
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 set({ error, loading: false });
