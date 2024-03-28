@@ -17,12 +17,19 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
     let result = '';
     let line = '';
     for (const word of words) {
-      if ((line + word).length > maxLength) {
-        result += line.trim() + '<br>';
-        line = '';
+      let remainingWord = word;
+      while (remainingWord.length > maxLength) {
+          // 남은 단어가 maxLength보다 길면 maxLength 단위로 쪼개서 추가
+          result += remainingWord.slice(0, maxLength) + '<br>';
+          remainingWord = remainingWord.slice(maxLength);
       }
-      line += word + ' ';
-    }
+      // maxLength를 넘지 않는 단어를 추가
+      line += remainingWord + ' ';
+      if (line.trim().length >= maxLength) {
+          result += line.trim() + '<br>';
+          line = '';
+      }
+  }
     result += line.trim(); // 마지막 줄 추가
     return result;
   };
@@ -54,8 +61,8 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
           </div>
           {/* 오른쪽 하단 버튼 */}
           <div className={styles.rightBottomButtons}>
-            <button className={styles.urlButton} onClick={() => console.log('첫 번째 버튼 클릭됨')}>첫 번째 버튼</button>
-            <button className={styles.urlButton} onClick={() => console.log('두 번째 버튼 클릭됨')}>두 번째 버튼</button>
+            <button className={styles.urlButton} onClick={() => console.log('첫 번째 버튼 클릭됨')}>스팀으로 이동</button>
+            <button className={styles.urlButton} onClick={() => console.log('두 번째 버튼 클릭됨')}>포켓에 담기</button>
           </div>
         </div>
       </div>

@@ -74,7 +74,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
             {/* Icons */}
             <button className="rounded-full p-2">
               {/* Heart Icon */}
-              <img src={'./Like.png'} alt={'Like'}></img>
+              <img src={'/Like.png'} alt={'Like'}></img>
             </button>
             <motion.button className="rounded-full p-2" onClick={(event) => handleAddToCart(event)}
             whileHover={{ scale: 1.2, rotate: 360 }}
@@ -84,11 +84,11 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
               borderRadius: "100%"
             }} >
               {/* Save Icon */}
-              <img src={'./Cart.png'} alt={'Cart'}></img>
+              <img src={'/Cart.png'} alt={'Cart'}></img>
             </motion.button>
             <button className="rounded-full p-2">
               {/* Remove Icon */}
-              <img src={'./NotLike.png'} alt={'NotLike'}></img>
+              <img src={'/NotLike.png'} alt={'NotLike'}></img>
             </button>
           </div>
           <div className="flex justify-center items-center">

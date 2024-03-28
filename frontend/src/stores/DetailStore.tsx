@@ -7,8 +7,10 @@ export interface Game {
     gameName: string;
     gameHeaderImg: string;
     gamePriceFinal: number;
-  // 각 태그를 기준으로 각 태그 및 이름을 가진 경우 선언방법
+    // 각 태그를 기준으로 각 태그 및 이름을 가진 경우 선언방법
     tagList: Array<{ codeId: string; tagId:number; tagName: string }>;
+    gameLike: number;
+    isPrefer: Boolean;
   }
 
 export interface Screenshot {
@@ -26,8 +28,8 @@ export interface GameData {
     gameWebsite: string;
     gameDeveloper: string;
     gamePublisher: string;
-    gamePriceInitial: number;
-    gamePriceFinal: number;
+    gamePriceInitial: number; 
+    gamePriceFinal: string; // gameCard에 맞춰서 string
     gameDiscountPercent: number;
     gameReleaseDate: string;
     screenshotList: Screenshot[];
@@ -73,7 +75,7 @@ export const useDetailStore = create<DetailState>((set) => ({
                         ...state.data,
                         result: {
                             ...state.data.result,
-                            isLike: !state.data.result.isLike
+                            isLike: !state.data.result.gameIsLike
                         }
                     }
                 };

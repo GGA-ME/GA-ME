@@ -6,7 +6,7 @@ const InfoYoutube: React.FC = () => {
   return (
     <>
     <div className={styles.container}>
-      <div>유튜브</div>
+      <div className={styles.title}>관련 영상</div>
     </div>
     </>
   );

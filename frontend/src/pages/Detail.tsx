@@ -19,7 +19,6 @@ function Detail(): JSX.Element {
 
   const handleInfoClick = () => {
     setActiveComponent('info');
-    console.log(gameId)
   };
 
   const handleStatisticsClick = () => {
@@ -29,16 +28,22 @@ function Detail(): JSX.Element {
   useEffect(() => {
     // userId와 gameId를 설정하고 fetchData 함수를 호출하여 데이터를 가져옴
     fetchData(parsedGameId, 0);
-  }, []); // 컴포넌트가 마운트될 때 한 번만 fetchData 함수 호출
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth" // 스크롤 부드럽게 이동
+  });
+  }, [parsedGameId]); // 컴포넌트가 마운트될 때 한 번만 fetchData 함수 호출
+
 
   return (
     <>
       <BackButton />
-      <DetailBanner bannerImage={data?.result.gameHeaderImg}
-      gameId={data?.result.gameId}
-      gameName={data?.result.gameName}
-      gameShortDescription={data?.result.gameShortDescription}
-      gameIsLike={data?.result.gameIsLike}/>
+      <DetailBanner bannerImage={data?.result?.gameHeaderImg}
+      gameId={data?.result?.gameId}
+      gameName={data?.result?.gameName}
+      gameShortDescription={data?.result?.gameShortDescription}
+      gameIsLike={data?.result?.gameIsLike}
+      />
       <div className={styles.detailContent}>
         <button onClick={handleInfoClick}>정보</button>
         <button onClick={handleStatisticsClick}>통계</button>
