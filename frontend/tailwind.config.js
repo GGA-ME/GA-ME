@@ -8,6 +8,9 @@ export default {
     extend: {
       colors: {
         white: '#fff',
+        'tag-gray': '#606060',
+        'box-gray': '#343434',
+        'hr': '#6A6A6A',
       },
       width: {
         '900px': '900px',

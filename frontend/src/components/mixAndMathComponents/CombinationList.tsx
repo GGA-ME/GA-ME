@@ -4,10 +4,10 @@ import RelatedTagList from "./RelatedTagList";
 
 const CombinationList: React.FC = () => {
   return (
-    <>
+    <div>
       <SearchGameList />
       <RelatedTagList />
-    </>
+    </div>
   );
 };
 
