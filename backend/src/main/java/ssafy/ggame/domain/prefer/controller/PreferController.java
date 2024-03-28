@@ -46,7 +46,7 @@ public class PreferController {
     /*
         선호도 리스트 가져오기
      */
-    @PostMapping
+    @PostMapping("/list")
     public ResponseEntity<Object> getPrefers(@RequestBody PreferRequestDto saveRequestDto) {
         List<GameCardDto> preferList = preferService.getPreferList(saveRequestDto.getUserId());
         return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponse<>(preferList));
