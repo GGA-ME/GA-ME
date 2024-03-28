@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
                 setUser(null);
 
                 // 페이지 새로고침
-                window.location.reload();
+                //window.location.reload();
             });
         }
       };

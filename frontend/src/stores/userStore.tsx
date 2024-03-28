@@ -47,9 +47,7 @@ const useUserStore = create<UserState>((set) => ({
         // isNewUser 상태에 따라 리디렉션
         if (userInfo.isNewUser) {
           window.location.href ='/survey'; // 신규 사용자는 설문조사 페이지로 이동
-        } else {
-          window.location.href = '/'; // 기존 사용자는 홈 페이지로 이동
-        }   
+        }
       } else {
         // 응답이 실패했을 경우의 처리
         console.error(response.data.message);
