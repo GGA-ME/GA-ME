@@ -1,0 +1,23 @@
+.box{
+    border: solid white;
+    margin-left:20%;
+}
+
+.topicBtn {
+    /* 기본 스타일 */
+    box-sizing: border-box;
+    width: 140px;
+    height: 45px;
+    border: 3px solid #EBFBFF;
+    box-shadow: 0px 0px 10px 2px #B181FF;
+    border-radius: 30px;
+    transition: font-size 0.3s; /* 글자 크기 변화에 대한 transition */
+  
+
+  /* 호버 시 스타일 */
+  cursor: pointer;
+}
+
+.topicBtn:hover {
+  font-size: 1.1em; /* 호버 시 폰트 크기를 1.1em으로 키움 */
+}
