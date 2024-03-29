@@ -6,12 +6,13 @@ interface TagDto {
   tagName:string
 }
 
-// 카트 아이탬 타입스크립트 선언식
+// 카트 아이탬 타입스크립트 선언식 tagsAll추가
 interface CartItem {
   gameId: number;
   imageUrl: string;
   title: string;
   price: string;
+  developer: string;
   tagsAll?: TagDto[] | null;
 }
 
@@ -27,13 +28,12 @@ interface PoketStore {
 const usePoketStore = create<PoketStore>((set) => ({
   cartItems: JSON.parse(sessionStorage.getItem('cartItems') || '[]'),
 
-  // 같은 게임 아이디의 게임은 추가 x
+  // 같은 게임 아이디의 게임은 추가하지 않고, 최대 5개까지만 허용
   addItem: (newItem) => set((state) => {
     const exists = state.cartItems.some(item => item.gameId === newItem.gameId);
-    if (!exists) {
+    if (!exists && state.cartItems.length < 5) { // 여기에 제한 조건 추가
       const newCartItems = [...state.cartItems, newItem];
       sessionStorage.setItem('cartItems', JSON.stringify(newCartItems));
-      console.log(state.cartItems)
       return { cartItems: newCartItems };
     }
     return state;

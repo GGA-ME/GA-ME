@@ -4,7 +4,7 @@ import SalesList from './SalesList';
 import useHotTopicStore from "../../stores/hotTopicStore";
 
 const SaleComponent: React.FC = () => {
-    const { saleData, saleData10, saleData30, saleData50, saleData75, fetchSalesData } = useHotTopicStore();
+    const { saleData, saleData10, saleData30, saleData50, saleData75, fetchSalesData , sLoading, sError} = useHotTopicStore();
     const [selectedRange, setSelectedRange] = useState('10-30'); // 선택된 할인 범위 상태
 
     useEffect(() => {
@@ -12,10 +12,37 @@ const SaleComponent: React.FC = () => {
             fetchSalesData(); // 초기 렌더링 시에만 실행됨            
         }
     }, []);
+    const handleRetryClick = () => {
+        fetchSalesData(); // 데이터를 다시 가져오기 위해 호출
+    };
 
     const handleRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedRange(event.target.value);
     };
+    if (sLoading) {
+        return <div className={`${style.container}`}>
+                  <div className={`${style.loader}`}></div>
+                  <div>
+                    <h1 className={`${style.loadingTitle}`}> 세일 정보를 가져오는 중입니다. </h1>  
+                    <h1> 조금만 기다려주세요 ! </h1>  
+                  </div>
+              </div>;
+      }
+    
+      if (sError) {
+        return <div className={`${style.container}`}>
+        <div className={`${style.eyes}`}></div>
+        <div>
+        <h1 className={`${style.loadingTitle}`}> 정보를 가져오는데 실패했습니다. </h1>  
+        <button className={`${style.outlineButton}`} onClick={handleRetryClick}> 다시 시도하기 </button>
+        </div>
+    </div>;
+      }
+    
+      if (!saleData || !saleData.result.length) {
+        return <div>No data available</div>;
+      }
+
 
     return (
         <div>

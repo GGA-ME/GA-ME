@@ -1,13 +1,14 @@
 import Navbar from "../components/commonUseComponents/Navbar";
-
+import Profile from "../components/MyPageComponents/Profile";
 
 function MyPage() {
-
-    return (
-      <>
-        <Navbar />
-        <h1>MyPage</h1>
-      </>
-    );
-  }
-  export default MyPage;
+  return (
+    <>
+      <Navbar />
+      <div className="pl-80 pr-52 w-full">
+        <Profile />
+      </div>
+    </>
+  );
+}
+export default MyPage;

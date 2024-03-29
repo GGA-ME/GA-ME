@@ -1,13 +1,14 @@
 import Navbar from "../components/commonUseComponents/Navbar";
 import Result from "../components/searchComponents/Result";
 import SearchBox from '../components/searchComponents/SearchBox';
+import Title from "../components/searchComponents/Title";
 
 function Search() {
     return (
         <>
             <Navbar />
-            <div className="flex flex-col items-center">
-                <h1>Search 페이지</h1>
+            <div className="ml-[250px]">
+                <Title />
                 <SearchBox />
                 <Result/>
             </div>
