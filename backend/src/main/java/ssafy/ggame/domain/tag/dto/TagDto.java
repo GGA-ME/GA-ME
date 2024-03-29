@@ -32,4 +32,10 @@ public class TagDto {
     public int hashCode() {
         return Objects.hash(codeId, tagId, tagName);
     }
+
+//    public TagDto(String codeId, Short tagId, String tagName){
+//        this.codeId = codeId;
+//        this.tagId = tagId;
+//        this.tagName = tagName;
+//    }
 }

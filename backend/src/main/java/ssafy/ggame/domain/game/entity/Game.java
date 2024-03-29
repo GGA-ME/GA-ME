@@ -77,6 +77,7 @@ public class Game extends BaseUpdatedEntity {
         for(GameTag gameTag : gameTags){
             tagDtoList.add(gameTag.convertToTagDto());
         }
+
         return GameCardDto.builder()
                 .gameId(this.gameId)
                 .gameName(this.gameName)
