@@ -8,6 +8,8 @@ import { ConfigProvider, Steps } from "antd";
 import useUserStore from "../../stores/userStore";
 import { SubmitButton } from "./SubmitButton";
 
+const { Step } = Steps;
+
 export interface ChoiceGame {
   gameId: number;
   gameChoiceName: string;
@@ -107,9 +109,8 @@ const SurveyGame = () => {
         theme={{
           components: {
             Steps: {
+              navArrowColor: '#D9D9D9',
               colorPrimary: "#036280",
-              colorBorderBg: "#D9D9D9",
-              navArrowColor: "#D9D9D9",
             },
           },
         }}
@@ -126,12 +127,16 @@ const SurveyGame = () => {
               <div className="relative w-900px h-700px bg-box-gray rounded-lg p-4 pl-8 pr-8">
                 {/* 내용 */}
                 <div className="bg-white-500">
-                  <Steps
+                  <Steps                  
                     type="navigation"
                     onChange={stepValidation}
                     current={current}
-                    items={[{}, {}, {}]}
-                  />
+                    style={{ color: "#D9D9D9" }}
+                  >
+                    <Step status={current >= 0 ? "process" : "wait"} />
+                    <Step status='process' />
+                    <Step status='process' />
+                  </Steps>
                 </div>
                 <p className="text-white mt-[20px] mb-[20px]">
                   맞춤 추천을 위해 당신의 게임 취향을 알려주세요!
@@ -142,9 +147,7 @@ const SurveyGame = () => {
                       (choiceGame: ChoiceGame, index: number) => (
                         <motion.li
                           key={index}
-                          className={
-                            "list-none "
-                          }
+                          className={"list-none "}
                           variants={{
                             hidden: { x: -60, opacity: 0 },
                             visible: {
@@ -166,7 +169,10 @@ const SurveyGame = () => {
                             gameId={choiceGame.gameId}
                             imageUrl={choiceGame.gameHeaderImg}
                             title={choiceGame.gameChoiceName}
-                            isSelected={isInGameList(choiceGame.gameId, current)} // 선택 상태 전달
+                            isSelected={isInGameList(
+                              choiceGame.gameId,
+                              current
+                            )} // 선택 상태 전달
                           />
                         </motion.li>
                       )
