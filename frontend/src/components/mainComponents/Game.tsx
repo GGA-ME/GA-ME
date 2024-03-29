@@ -1,3 +1,5 @@
+// 작성자 : 장현욱
+
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
@@ -10,7 +12,9 @@ interface Game {
   gameId: number;
   gameName: string;
   gameHeaderImg: string;
+  gamePriceInitial: number
   gamePriceFinal: number;
+  gameDeveloper: string;
   tagList: Array<{ codeId: string; tagId:number; tagName: string }>;
   isPrefer: boolean;
   gameLike: number | null;
@@ -43,7 +47,7 @@ const GameComponent: React.FC = () => {
   }
 
   return (
-    <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+    <motion.ul className="grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
       variants={{
         hidden: {},
         visible: { transition: { staggerChildren: 0.1 } }
@@ -63,7 +67,9 @@ const GameComponent: React.FC = () => {
             gameId={game.gameId}
             imageUrl={game.gameHeaderImg}
             title={game.gameName}
-            price={`₩ ${game.gamePriceFinal}`}
+            developer={game.gameDeveloper}
+            beforPrice={`₩ ${game.gamePriceInitial / 100}`}
+            price={`₩ ${game.gamePriceFinal / 100}`}
             tagsAll={game.tagList}
             tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
             isPrefer={game.isPrefer}

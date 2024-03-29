@@ -1,4 +1,4 @@
-// 장현욱
+// 담장자 : 장현욱
 
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react';
@@ -18,9 +18,11 @@ interface GameCardProps {
   gameId: number;
   imageUrl: string;
   title: string;
+  developer: string;
   price: string;
+  beforPrice: string;
   tagsAll?: TagDto[] | null;
-  tags: string[];
+  tags: string[];       
   likes: number | null;
   isPrefer: boolean; // 추가
   onGameClick: (gameId: number) => void;
@@ -28,7 +30,7 @@ interface GameCardProps {
 
 
 // 타입스크립트식 선언
-const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tagsAll, tags, likes, isPrefer, onGameClick }) => {
+const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer, price, beforPrice, tagsAll, tags, likes, isPrefer, onGameClick }) => {
 
   const [isHovered, setIsHovered] = useState(false);
   const { cartItems, addItem, removeItem } = usePoketStore();
@@ -79,8 +81,15 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
     }
   };
 
+  // 가격 ,변환을 위한 함수
+  function formatPrice(priceStr: string) {
+    const numericPrice = parseInt(priceStr.substring(1), 10);
+    return `₩${numericPrice.toLocaleString()}`;
+  }
+
+  // 카드 호버효과를 위한 변수
   const hoverEffects = {
-    scale: [1, 1.1], // 호버시 크기 설정
+    scale: [1, 1.1],
     transition: { duration: 0.3 },
   };
 
@@ -93,20 +102,43 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
 
   return (
     <>
+      {/* 게임카드 컨테이너 */}
       <motion.div
-        className={`${style.card} w-48 m-2 rounded overflow-hidden text-white text-center relative cursor-pointer`}
+        className={`${style.card} w-50 m-2 rounded overflow-hidden text-white text-center relative cursor-pointer`}
         whileHover={hoverEffects}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={() => onGameClick(gameId)}
       >
-        <div className={`${style.card} w-48 rounded overflow-hidden text-white text-center`}>
-          <img src={imageUrl} alt={title} className="w-full" />
-          <div className="p-2">
-            <h3 className="text-base">{title}</h3>
-            <p className="text-xs">{price}</p>
+        {/* 게임카드 내부 컨테이너 */}
+        <div className={`${style.card} w-50 h-48 rounded overflow-hidden text-white text-left`}>
+          <img src={imageUrl} alt={title} className="w-full h-" />
+          <div className="p-2 mt-1">
+            <h3 className={`text-lg leading-none ${style.truncateLines}`}>{title}</h3>
           </div>
-        </div>      {isHovered && (
+
+          {/* 세일정보에 따른 가격표시&개발사 : 카드의 하단 */}
+          {
+            price !== beforPrice ? (
+              <p className="absolute bottom-0 text-xs font-thin p-2">
+                <span className="text-gray-500 line-through">
+                  {formatPrice(beforPrice)}
+                </span>
+                {' => '}{formatPrice(price)}
+                <p>{developer}</p>
+              </p>
+            ) : (
+              
+              <p className="absolute bottom-0 text-xs font-thin p-2">
+                {formatPrice(price)}
+                <p>{developer}</p>
+                </p>
+            )
+          }
+        </div>
+
+        {/* 카드 내부 기능 아이콘 정의 */}
+        {isHovered && (
           <motion.div
             className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-between p-2"
             variants={overlayVariants}
@@ -151,8 +183,8 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
               </motion.button>
 
             </div>
+            {/* Tag 리스트 컨테이너 */}
             <div className="flex justify-center items-center">
-              {/* Tag 리스트 컨테이너 */}
               <div >
                 {tags.map((tag: string, index: number) => (
                   <span key={index} className="bg-black bg-opacity-50 rounded px-2 py-1 text-xs font-semibold mx-1 inline-block">{`#${tag}`}
@@ -160,7 +192,8 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, price, tag
               </div>
             </div>
             <div className={`flex justify-center items-center mb-2`}>
-              {/* Likes */}
+
+              {/* 좋아요 수 */}
               <span className={`${style.neonNormal}`}>{`♥ : ${likes}`}</span>
             </div>
           </motion.div>
