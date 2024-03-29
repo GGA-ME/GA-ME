@@ -82,11 +82,6 @@ const SurveyGame = () => {
     }
   };
 
-  const getClassForGame = (gameId: number, current: number) => {
-    if (checkGameList[current].includes(gameId)) return "border-2";
-    return "";
-  };
-
   if (loading) {
     return (
       <button type="button" className="bg-indigo-500 ..." disabled>
@@ -148,8 +143,7 @@ const SurveyGame = () => {
                         <motion.li
                           key={index}
                           className={
-                            "list-none " +
-                            getClassForGame(choiceGame.gameId, current)
+                            "list-none "
                           }
                           variants={{
                             hidden: { x: -60, opacity: 0 },
@@ -172,6 +166,7 @@ const SurveyGame = () => {
                             gameId={choiceGame.gameId}
                             imageUrl={choiceGame.gameHeaderImg}
                             title={choiceGame.gameChoiceName}
+                            isSelected={isInGameList(choiceGame.gameId, current)} // 선택 상태 전달
                           />
                         </motion.li>
                       )
