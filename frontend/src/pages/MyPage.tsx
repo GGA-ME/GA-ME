@@ -12,7 +12,7 @@ function MyPage() {
     <>
       <Navbar />
       <div className="pl-80 pr-52 w-full">
-        <p>{user?.userId}</p>
+        {/* <p>{user?.userId}</p> */}
         {/* <Profile /> */}
       </div>
     </>
