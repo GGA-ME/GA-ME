@@ -132,6 +132,14 @@ const detailStore = create<detailState>((set) => ({
             try {
                 arrayGame.map(async (gameId: number) => {
                     await api.put(`/tracking?userId=${userId}&gameId=${gameId}&action=${action}`);
+                    await api.post(`/tracking/log`, {
+                        userId: userId, // 유저 아이디
+                        page: 'survey', // 페이지
+                        action: 'like', // 사용자 행동
+                        args: [
+                          {'favorite': gameId}, // 디테일
+                        ],
+                      })
                 })
             } catch (error) {
                 console.error(error);
