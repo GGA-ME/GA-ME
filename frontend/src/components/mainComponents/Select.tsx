@@ -40,7 +40,7 @@ const Select: React.FC = () => {
   const [nowCategory, setNowCategory] = useState<string>('전체 인기') // 전체게임 or 맞춤게임 중 현재상태
   const [selectedTagName, setSelectedTagName] = useState<string | null>(null);  // 현재 선택된 tagWeightList
 
-  // 전체 또는 취향 고를시 요청
+  // 전체 또는 취향 고를시 API요청
   const handleCategoryChange = (category: string) => {
     setNowCategory(category);
     if (category === "취향 저격") {
@@ -55,7 +55,7 @@ const Select: React.FC = () => {
     fetchMainData(); // 바뀐 값으로 메인데이터 다시 요청
   };
 
-  // 태그를 고를시 요청
+  // 태그를 고를시 API요청
   const handleTagChange = (tag: Tag) => {
     setSelectedTagName(tag.tagName); // 태그 이름을 누른 태그로 지정
     setTagId(tag.tagId);
@@ -71,7 +71,7 @@ return (
           key={index}
           className={`px-3 py-1 rounded-full border-2 border-transparent text-3xl   ${nowCategory === category ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
             }`}
-          onClick={() => handleCategoryChange(category)} // 이부분을 handle클릭으로 함수넣고 싹 바꾸는 식으로 해보자
+          onClick={() => handleCategoryChange(category)}
         >
           {category}
         </button>

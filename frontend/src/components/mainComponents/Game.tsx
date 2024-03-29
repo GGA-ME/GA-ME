@@ -74,8 +74,7 @@ const GameComponent: React.FC = () => {
             tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
             isPrefer={game.isPrefer}
             likes={game.gameLike}
-            // 이거 null또는 int인가?..
-            onGameClick={handleClickGame} // 수정된 부분
+            onGameClick={handleClickGame} // 디테일 페이지 이동
             />
         </motion.li>
       ))}

@@ -33,17 +33,19 @@ const Banner: React.FC = () => {
     mainBanner(); // 마운트시 데이터 가져오기
   }, []);
 
+  // 해당 게임 디테일 페이지로 이동
   const handleClickBanner = (gameId: number) => {
     navigate(`/detail/${gameId}`)
     console.log('디테일페이지 이동')
   }
 
   return (
-    <div className="relative w-full overflow-hidden h-60vw"> {/* bannerContainer */}
-      <div className="absolute top-0 left-0 p-4 z-10 text-2xl"> {/* titleContainer */}
+    <div className="relative w-full overflow-hidden h-60vw"> {/* 베너 컨테이너 */}
+      <div className="absolute top-0 left-0 p-4 z-10 text-2xl"> {/* 베너 타이틀 컨테이너 */}
         <h2>인기게임</h2>
       </div>
 
+      {/* 베너 메인 */}
       <Swiper
         className={`${style.swiperCustom} w-full h-full`}
         modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
@@ -68,7 +70,7 @@ const Banner: React.FC = () => {
         ))}
       </Swiper>
 
-
+      {/* 베너 thumbs */}
       <Swiper
         onSwiper={setThumbsSwiper}
         loop={true}

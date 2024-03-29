@@ -25,7 +25,7 @@ interface GameCardProps {
   tags: string[];       
   likes: number | null;
   isPrefer: boolean;
-  onGameClick: (gameId: number) => void;
+  onGameClick: (gameId: number) => void; // 해당 게임 디테일로 이둉
 }
 
 

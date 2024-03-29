@@ -10,6 +10,7 @@ const Poket: React.FC = () => {
   const { removeItem } = usePoketStore();
   const navigate = useNavigate();
 
+  // 믹스앤매치 페이지로 이동하기 위한 함수
   const navigateToMixAndMatch = () => {
     navigate(`/mixAndMatch`)
     console.log('믹스엔 매치 페이지 이동')
