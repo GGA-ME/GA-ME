@@ -172,10 +172,10 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* 현재 페이지 위치를 알려줄 상태표시기 */}
-        <div className="relative pl-8">
+        <div className="relative pl-8 pr-7">
           <motion.div
-            className="absolute left-0 px-2 py-1 border-2 border-cyan-500 rounded-full"
-            style={{ width: "calc(120% - 1rem)", maxWidth: "300px" , height: "2.8rem"}}
+            className={`absolute left-0 px-2 py-1 border-2 rounded-full ${style.neonBorder2}`}
+            style={{ width: "calc(110% - 1rem)", maxWidth: "300px" , height: "2.8rem"}}
             variants={variants}
             initial={false}
             animate="active"
@@ -202,7 +202,7 @@ const Navbar: React.FC = () => {
                     }}
                     alt={`${link.label} Icon`}
                   />
-                  <span className={`${style.neonNormal} text-xl`}>
+                  <span className={`${style.labelColor} text-xl`}>
                     {link.label}
                   </span>
                 </NavLink>
@@ -213,13 +213,13 @@ const Navbar: React.FC = () => {
                 <div
                   key={index}
                   onClick={link.action}
-                  className="flex items-center space-x-2 mb-8 cursor-pointer"
+                  className="flex items-center space-x-2 mb-8 cursor-pointer ml-2"
                 >
                   <img
                     src={link.icon}
                     className="transition-all duration-300 ease-in-out"
                     style={{
-                      width: "30px",
+                      width: "28px",
                       height: "auto",
                       filter: "brightness(0) invert(1)",
                     }}
