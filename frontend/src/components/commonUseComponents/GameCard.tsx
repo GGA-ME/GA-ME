@@ -136,6 +136,44 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
             )
           }
         </div>
+<<<<<<< 1b37d142622f3cb88df5ce6cade1f83925475992
+      </div>      {isHovered && (
+        <motion.div
+          className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-between p-2"
+          variants={overlayVariants}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+        >
+          <div className="flex justify-center items-center space-x-2">
+            {/* Icons */}
+            <button className="rounded-full p-2">
+              {/* Heart Icon */}
+              <img src={'/Like.png'} alt={'Like'}></img>
+            </button>
+            <motion.button className="rounded-full p-2" onClick={(event) => handleAddToCart(event)}
+            whileHover={{ scale: 1.2, rotate: 360 }}
+            whileTap={{
+              scale: 0.8,
+              // rotate: -90,
+              borderRadius: "100%"
+            }} >
+              {/* Save Icon */}
+              <img src={'/Cart.png'} alt={'Cart'}></img>
+            </motion.button>
+            <button className="rounded-full p-2">
+              {/* Remove Icon */}
+              <img src={'/NotLike.png'} alt={'NotLike'}></img>
+            </button>
+          </div>
+          <div className="flex justify-center items-center">
+            {/* Tag container */}
+            <div >
+              {/* Tags */}
+              {tags.map((tag: string, index: number) => (
+                <span key={index} className="bg-black bg-opacity-50 rounded px-2 py-1 text-xs font-semibold mx-1 inline-block">{`#${tag}`}
+                </span>))}
+=======
 
         {/* 카드 내부 기능 아이콘 정의 */}
         {isHovered && (
@@ -182,6 +220,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
                 <img src={'/NotLike.png'} alt={'NotLike'}></img>
               </motion.button>
 
+>>>>>>> 848bdcf47af3e5fcec8a89d9bb44f072fdd4eb0d
             </div>
             {/* Tag 리스트 컨테이너 */}
             <div className="flex justify-center items-center">
