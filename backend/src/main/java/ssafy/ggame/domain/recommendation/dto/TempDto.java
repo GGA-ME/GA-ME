@@ -20,18 +20,6 @@ public class TempDto implements Comparable<TempDto>{
     private String gameName;
     private String gameHeaderImg;
     private Integer gamePriceInitial;
-
-    public TempDto(Long gameId, Double gameFinalScore, String gameName, String gameHeaderImg, Integer gamePriceInitial, Integer gamePriceFinal, String gameDeveloper, List<TagDto> tagList) {
-        this.gameId = gameId;
-        this.gameFinalScore = gameFinalScore;
-        this.gameName = gameName;
-        this.gameHeaderImg = gameHeaderImg;
-        this.gamePriceInitial = gamePriceInitial;
-        this.gamePriceFinal = gamePriceFinal;
-        this.gameDeveloper = gameDeveloper;
-        this.tagList = tagList;
-    }
-
     private Integer gamePriceFinal;
     private String gameDeveloper;
     private String codeId;

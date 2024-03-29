@@ -193,30 +193,6 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
     }
 
     @Override
-    public List<TempDto> findAllGameAndTag() {
-        // 디티오 추출
-        // 해당하는 게임 정보와 태그 가져오기
-        return queryFactory.select(
-                        Projections.constructor(
-                                TempDto.class,
-                                game.gameId.as("gameId"),
-                                game.gameFinalScore.as("gameFinalScore"),
-                                game.gameName.as("gameName"),
-                                game.gameHeaderImg.as("gameHeaderImg"),
-                                game.gamePriceInitial.as("gamePriceInitial"),
-                                game.gamePriceFinal.as("gamePriceFinal"),
-                                game.gameDeveloper.as("gameDeveloper"),
-                                tag.tagId.code.codeId.as("codeId"),
-                                tag.tagId.tagId.as("tagId"),
-                                tag.tagName.as("tagName")
-                        )
-                ).from(game)
-                .join(game.gameTags, gameTag)
-                .join(gameTag.tag, tag)
-                .fetch();
-    }
-
-    @Override
     public Page<TempDto> findAllGameAndTagList(List<Long> gameIds, Pageable pageable) {
         List<Tuple> results = queryFactory
                 .select(
@@ -273,6 +249,7 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
         // 결과를 페이지로 변환하여 반환
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), resultList.size());
+
 
         return new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
 
