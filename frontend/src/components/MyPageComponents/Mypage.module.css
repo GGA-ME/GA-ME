@@ -1,0 +1,42 @@
+.tag {
+    /* TAG */
+
+position: absolute;
+width: 72px;
+height: 27px;
+left: 604px;
+top: 372px;
+
+filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+
+
+/* Rectangle 26 */
+
+position: absolute;
+width: 72px;
+height: 27px;
+left: 604px;
+top: 372px;
+
+background: #81BECE;
+border-radius: 2px;
+
+
+/* #Magic */
+
+position: absolute;
+width: 52px;
+height: 20px;
+left: 614px;
+top: 376px;
+
+font-family: 'Microsoft YaHei UI';
+font-style: normal;
+font-weight: 700;
+font-size: 13px;
+line-height: 17px;
+
+color: #FFFFFF;
+
+
+}
