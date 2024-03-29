@@ -189,138 +189,6 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
         return sales;
     }
 
-    @Override
-    public Page<TempDto> findAllGameAndTagList(List<Long> gameIds, Pageable pageable) {
-        List<Tuple> results = queryFactory
-                .select(
-                        game.gameId,
-                        game.gameFinalScore,
-                        game.gameName,
-                        game.gameHeaderImg,
-                        game.gamePriceInitial,
-                        game.gamePriceFinal,
-                        game.gameDeveloper,
-                        tag.tagId.code.codeId,
-                        tag.tagId.tagId,
-                        tag.tagName
-                )
-                .from(game)
-                .leftJoin(game.gameTags, gameTag)
-                .leftJoin(gameTag.tag, tag)
-                .where(game.gameId.in(gameIds))
-                .orderBy(game.gameFinalScore.desc()) // gameFinalScore를 내림차순으로 정렬
-                .fetch();
-
-        Set<Long> existingGameId = new HashSet<>();
-        List<TempDto> resultList = new ArrayList<>();
-        Map<Long, List<TagDto>> gameTagMap = new HashMap<>();
-        for (Tuple result : results) {
-            Long gameId = result.get(game.gameId);
-            if (!existingGameId.contains(gameId)) {
-                TempDto tempDto = TempDto.builder()
-                        .gameId(result.get(game.gameId))
-                        .gameFinalScore(result.get(game.gameFinalScore))
-                        .gameName(result.get(game.gameName))
-                        .gameHeaderImg(result.get(game.gameHeaderImg))
-                        .gamePriceInitial(result.get(game.gamePriceInitial))
-                        .gamePriceFinal(result.get(game.gamePriceFinal))
-                        .gameDeveloper(result.get(game.gameDeveloper))
-                        .build();
-
-                resultList.add(tempDto);
-                existingGameId.add(gameId);
-            }
-
-
-            List<TagDto> tagDtos = gameTagMap.computeIfAbsent(gameId, id -> new ArrayList<>());
-
-            TagDto tagDto = TagDto.builder()
-                    .codeId(result.get(tag.tagId.code.codeId))
-                    .tagId(result.get(tag.tagId.tagId))
-                    .tagName(result.get(tag.tagName))
-                    .build();
-
-            tagDtos.add(tagDto);
-        }
-
-        for (TempDto tempDto : resultList) {
-            tempDto.updateTagList(gameTagMap.get(tempDto.getGameId()));
-        }
-
-        // 결과를 페이지로 변환하여 반환
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), resultList.size());
-
-
-        return new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
-
-
-//        return resultList;
-    }
-
-
-    @Override
-    public List<TempDto> findAllGameAndTagList(List<Long> gameIds) {
-        List<Tuple> results = queryFactory
-                .select(
-                        game.gameId,
-                        game.gameFinalScore,
-                        game.gameName,
-                        game.gameHeaderImg,
-                        game.gamePriceInitial,
-                        game.gamePriceFinal,
-                        game.gameDeveloper,
-                        tag.tagId.code.codeId,
-                        tag.tagId.tagId,
-                        tag.tagName
-                )
-                .from(game)
-                .leftJoin(game.gameTags, gameTag)
-                .leftJoin(gameTag.tag, tag)
-                .where(game.gameId.in(gameIds))
-                .fetch();
-
-        List<TempDto> resultList = new ArrayList<>();
-        Map<Long, List<TagDto>> gameTagMap = new HashMap<>();
-        for (Tuple result : results) {
-
-            TempDto tempDto = TempDto.builder()
-                    .gameId(result.get(game.gameId))
-                    .gameFinalScore(result.get(game.gameFinalScore))
-                    .gameName(result.get(game.gameName))
-                    .gameHeaderImg(result.get(game.gameHeaderImg))
-                    .gamePriceInitial(result.get(game.gamePriceInitial))
-                    .gamePriceFinal(result.get(game.gamePriceFinal))
-                    .gameDeveloper(result.get(game.gameDeveloper))
-                    .codeId(result.get(tag.tagId.code.codeId))
-                    .tagId(result.get(tag.tagId.tagId))
-                    .build();
-            resultList.add(tempDto);
-
-
-            Long gameId = result.get(game.gameId);
-            List<TagDto> tagDtos = gameTagMap.computeIfAbsent(gameId, id -> new ArrayList<>());
-
-            TagDto tagDto = TagDto.builder()
-                    .codeId(result.get(tag.tagId.code.codeId))
-                    .tagId(result.get(tag.tagId.tagId))
-                    .tagName(result.get(tag.tagName))
-                    .build();
-
-            tagDtos.add(tagDto);
-        }
-
-        for (TempDto tempDto : resultList) {
-            tempDto.updateTagList(gameTagMap.get(tempDto.getGameId()));
-        }
-
-        return resultList;
-
-
-//        return resultList;
-    }
-
-
     private static void salePercentSetting(Map<Integer, List<GameSaleCardDto>> sales) {
         sales.put(10, new ArrayList<>());
         sales.put(30, new ArrayList<>());
@@ -414,4 +282,144 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
         });
         return gameList;
     }
+
+    @Override
+    public Page<TempDto> findAllGameAndTagList(List<Long> gameIds, Pageable pageable) {
+        List<Tuple> results = queryFactory
+                .select(
+                        game.gameId,
+                        game.gameFinalScore,
+                        game.gameName,
+                        game.gameHeaderImg,
+                        game.gamePriceInitial,
+                        game.gamePriceFinal,
+                        game.gameDeveloper,
+                        tag.tagId.code.codeId,
+                        tag.tagId.tagId,
+                        tag.tagName
+                )
+                .from(game)
+                .leftJoin(game.gameTags, gameTag)
+                .leftJoin(gameTag.tag, tag)
+                .where(
+                        game.gameId.in(gameIds),
+                        game.gameName.lower().notLike("%dsl%"),
+                        game.gameName.lower().notLike("%soundtrack%")
+                )
+                .orderBy(game.gameFinalScore.desc()) // gameFinalScore를 내림차순으로 정렬
+                .fetch();
+
+        Set<Long> existingGameId = new HashSet<>();
+        List<TempDto> resultList = new ArrayList<>();
+        Map<Long, List<TagDto>> gameTagMap = new HashMap<>();
+        for (Tuple result : results) {
+            Long gameId = result.get(game.gameId);
+            if (!existingGameId.contains(gameId)) {
+                TempDto tempDto = TempDto.builder()
+                        .gameId(result.get(game.gameId))
+                        .gameFinalScore(result.get(game.gameFinalScore))
+                        .gameName(result.get(game.gameName))
+                        .gameHeaderImg(result.get(game.gameHeaderImg))
+                        .gamePriceInitial(result.get(game.gamePriceInitial))
+                        .gamePriceFinal(result.get(game.gamePriceFinal))
+                        .gameDeveloper(result.get(game.gameDeveloper))
+                        .build();
+
+                resultList.add(tempDto);
+                existingGameId.add(gameId);
+            }
+
+
+            List<TagDto> tagDtos = gameTagMap.computeIfAbsent(gameId, id -> new ArrayList<>());
+
+            TagDto tagDto = TagDto.builder()
+                    .codeId(result.get(tag.tagId.code.codeId))
+                    .tagId(result.get(tag.tagId.tagId))
+                    .tagName(result.get(tag.tagName))
+                    .build();
+
+            tagDtos.add(tagDto);
+        }
+
+        for (TempDto tempDto : resultList) {
+            tempDto.updateTagList(gameTagMap.get(tempDto.getGameId()));
+        }
+
+        // 결과를 페이지로 변환하여 반환
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), resultList.size());
+
+
+        return new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
+
+
+//        return resultList;
+    }
+
+    @Override
+    public List<TempDto> findAllGameAndTagList(List<Long> gameIds) {
+        List<Tuple> results = queryFactory
+                .select(
+                        game.gameId,
+                        game.gameFinalScore,
+                        game.gameName,
+                        game.gameHeaderImg,
+                        game.gamePriceInitial,
+                        game.gamePriceFinal,
+                        game.gameDeveloper,
+                        tag.tagId.code.codeId,
+                        tag.tagId.tagId,
+                        tag.tagName
+                )
+                .from(game)
+                .leftJoin(game.gameTags, gameTag)
+                .leftJoin(gameTag.tag, tag)
+                .where(
+                        game.gameId.in(gameIds),
+                        game.gameName.lower().notLike("%dsl%"),
+                        game.gameName.lower().notLike("%soundtrack%")
+                )
+                .fetch();
+
+        List<TempDto> resultList = new ArrayList<>();
+        Map<Long, List<TagDto>> gameTagMap = new HashMap<>();
+        for (Tuple result : results) {
+
+            TempDto tempDto = TempDto.builder()
+                    .gameId(result.get(game.gameId))
+                    .gameFinalScore(result.get(game.gameFinalScore))
+                    .gameName(result.get(game.gameName))
+                    .gameHeaderImg(result.get(game.gameHeaderImg))
+                    .gamePriceInitial(result.get(game.gamePriceInitial))
+                    .gamePriceFinal(result.get(game.gamePriceFinal))
+                    .gameDeveloper(result.get(game.gameDeveloper))
+                    .codeId(result.get(tag.tagId.code.codeId))
+                    .tagId(result.get(tag.tagId.tagId))
+                    .build();
+            resultList.add(tempDto);
+
+
+            Long gameId = result.get(game.gameId);
+            List<TagDto> tagDtos = gameTagMap.computeIfAbsent(gameId, id -> new ArrayList<>());
+
+            TagDto tagDto = TagDto.builder()
+                    .codeId(result.get(tag.tagId.code.codeId))
+                    .tagId(result.get(tag.tagId.tagId))
+                    .tagName(result.get(tag.tagName))
+                    .build();
+
+            tagDtos.add(tagDto);
+        }
+
+        for (TempDto tempDto : resultList) {
+            tempDto.updateTagList(gameTagMap.get(tempDto.getGameId()));
+        }
+
+        return resultList;
+
+
+//        return resultList;
+    }
+
+
 }
