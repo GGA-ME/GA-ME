@@ -14,8 +14,6 @@ const MyProfile: React.FC = () => {
           fetchData(user.userId);
           },[fetchData, user]);
 
-  console.log(user);
-
   if (loading) {
     return (
       <button type="button" className="bg-indigo-500 ..." disabled>

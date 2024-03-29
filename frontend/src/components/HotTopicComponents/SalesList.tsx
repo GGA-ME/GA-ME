@@ -51,7 +51,9 @@ const SalesList: React.FC<SaleCardProps> = ({ cardDtoList }) => {
             gameId={game.gameId}
             imageUrl={game.gameHeaderImg}
             title={game.gameName}
+            developer={game.gameDeveloper}
             price={`₩ ${game.gamePriceFinal}`}
+            beforPrice={`₩ ${game.gamePriceInitial}`}
             tagsAll={game.tagList}
             tags={game.tagList ? game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName) : []}
             likes={game.gameLike}

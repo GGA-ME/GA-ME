@@ -9,10 +9,10 @@ interface ApiResponse {
     isSuccess: boolean;
     message: string;
     code: number;
-    result: UserInfo; 
+    result: UserInfo;
 }
 // 유저의 기본 정보와 선호 게임이 존재
-interface UserInfo{
+interface UserInfo {
     userId: number;
     userName: string;
     userProfileImg: string;
@@ -21,7 +21,7 @@ interface UserInfo{
     tagWeightList: TagWeight[];
 }
 // 선호하는 게임에 대한 정보가 존재
-export interface Prefer{
+export interface Prefer {
     gameId: number;
     gameName: string;
     gameHeaderImg: string;
@@ -33,13 +33,13 @@ export interface Prefer{
     tagList: TagList[];
 }
 // 선호하는 게임에 대한 태그 정보들이 존재
-interface TagList{
+interface TagList {
     codeId: string;
     tagId: number;
     tagName: string;
 }
 // 유저의 태그에 대한 정보가 존재
-export interface TagWeight{
+export interface TagWeight {
     userId: number;
     tagId: number;
     codeId: string;
@@ -71,7 +71,7 @@ const initialTagWeight: TagWeight = {
     userTagWeight: 0
 }
 
-const initialUser: UserInfo ={
+const initialUser: UserInfo = {
     userId: 0,
     userName: '',
     userProfileImg: '',
@@ -83,8 +83,8 @@ const initialUser: UserInfo ={
 
 const initialData: ApiResponse = {
     isSuccess: false,
-    message: '', 
-    code: 0, 
+    message: '',
+    code: 0,
     result: initialUser
 }
 
@@ -101,12 +101,12 @@ interface detailState {
 const detailStore = create<detailState>((set) => ({
     data: initialData,
     loading: false,
-    error: null, 
+    error: null,
     topTenTag: [],
 
-    setData: (resData: ApiResponse) => set({ data: resData}),
+    setData: (resData: ApiResponse) => set({ data: resData }),
     fetchData: async (userId: number) => {
-        try{
+        try {
             const response = await api.get(`/users/${userId}`);
             set({ data: response.data, loading: false });
             set(state => {
@@ -118,27 +118,27 @@ const detailStore = create<detailState>((set) => ({
                 return { ...state, topTenTag };
             })
         }
-        catch(error){
+        catch (error) {
             if (axios.isAxiosError(error)) {
                 set({ error, loading: false });
-            }            
+            }
         }
-        
+
     },
     addLikeWeight: async (userId: number, gameList: number[][]) => {
-        
+
         const action: string = 'like';
         gameList.map(async (arrayGame: number[]) => {
-          try {
-            arrayGame.map(async (gameId: number) => {
-              await api.put(`/tracking?userId=${userId}&gameId=${gameId}&action=${action}`);              
-            })
-          } catch(error) {
-            console.error(error);
-          }
+            try {
+                arrayGame.map(async (gameId: number) => {
+                    await api.put(`/tracking?userId=${userId}&gameId=${gameId}&action=${action}`);
+                })
+            } catch (error) {
+                console.error(error);
+            }
         });
-      }
+    }
 
-})) 
+}))
 
 export default detailStore;

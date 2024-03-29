@@ -19,14 +19,14 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { user, isLoggedIn, setIsLoggedIn } = useUserStore();
-  const isActive = (path: string) => location.pathname === path;
+  const { user, isLoggedIn, setIsLoggedIn } = useUserStore();  // 유저정보 스토어
+  const isActive = (path: string) => location.pathname === path;  // 현재 위치 확인
   const fetchAndSetUser = useUserStore((state) => state.fetchAndSetUser);
   const setUser = useUserStore((state) => state.setUser);
 
   const navLinkYPositions: number[] = [0, 65, 130, 195]; // 각 네비게이션 항목에 대한 Y 위치
 
-  // 로컬 스토리지에서 indicatorY 상태를 읽어옵니다.
+  // 로컬 스토리지에서 indicatorY 상태를 읽어오기
   const initialY: number = localStorage.getItem("indicatorY")
     ? Number(localStorage.getItem("indicatorY"))
     : navLinkYPositions[0];
@@ -80,6 +80,7 @@ const Navbar: React.FC = () => {
     }
   };
 
+  // 각 네비게이션 정의
   const navLinks: NavLinkItem[] = [
     {
       path: "/",
@@ -105,6 +106,7 @@ const Navbar: React.FC = () => {
       icon: "/FireIcon.png",
       activeIcon: "/FireIcon.gif",
     },
+    
     // 로그인 상태에 따라 분기 처리
     isLoggedIn
       ? {
@@ -151,9 +153,12 @@ const Navbar: React.FC = () => {
 
   return (
     <>
+    {/* Nav박스 */}
       <div
         className={`${style.neonBorder} fixed top-0 left-5 flex flex-col items-center px-8 h-screen py-20 border-r-2 bg-gray-900 text-white z-40`}
       >
+
+        {/* 네브 로고 */}
         <div className="mb-24">
           <NavLink to="/">
             <motion.img
@@ -166,6 +171,7 @@ const Navbar: React.FC = () => {
           </NavLink>
         </div>
 
+        {/* 현재 페이지 위치를 알려줄 상태표시기 */}
         <div className="relative pl-8">
           <motion.div
             className="absolute left-0 px-2 py-1 border-2 border-cyan-500 rounded-full"

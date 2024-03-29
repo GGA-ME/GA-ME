@@ -33,7 +33,8 @@ interface gameCardDto {
   gamePriceInitial: number;
   gamePriceFinal: number;
   gameDeveloper: string;
-  isPrefer: boolean | null;
+  gameLike: number;
+  isPrefer: boolean;
   tagList: TagDto[];
 }
 
