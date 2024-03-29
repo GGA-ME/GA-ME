@@ -39,9 +39,23 @@ const SearchGameList: React.FC = () => {
     navigate(`/detail/${gameId}`)
   }
 
+  const handleGoToMain = () => {
+    navigate('/');
+  }
+
+  // cartItems가 비어있을 경우 메세지를 표시
+  if (cartItems.length === 0) {
+    return (
+      <div className={style.box} style={{height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+        <p className="mt-[70px] mb-[30px]">게임을 담아주세요!</p>
+        <button className={style.topicBtn} onClick={handleGoToMain}>담으러 가기</button>
+      </div>
+    );
+  }
+
   return (
-    <div className={style.box}>
-      <div>
+    <div className={style.box} style={{height: '275px'}}>
+      <div className={style.gameList}>
         {cartItems.map((item, index: number) => (
           <GameCard
             key={index}
@@ -53,10 +67,11 @@ const SearchGameList: React.FC = () => {
             tagsAll={item.tagsAll}
             likes={0} // 임시 값
             onGameClick={handleClickGame}
+            isPrefer={false} // 임시 값
           />
         ))}
       </div>
-      <button className={style.topicBtn} onClick={HandleOnClick}> 조합하기 </button>
+      <button className={style.topicBtn} onClick={HandleOnClick}> Mix! </button>
     </div>
   );
 };

@@ -1,6 +1,31 @@
 .box{
-    border: solid white;
-    margin-left:20%;
+    background-color: #343434;
+    border-radius: 10px;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+    
+    padding: 5px;
+    margin-top: 30px;
+
+    margin-left: 175px;
+    width: 1000px;
+}
+
+.hr{
+    background-color: #6a6a6a;
+    border-color: #6a6a6a;
+    width: 970px;
+
+    margin-left: 10px;
+    margin-bottom: 15px;
+}
+
+.gameList{
+    display: flex;
+    flex-wrap: wrap; /* 카드가 너무 많으면 다음 줄로 넘어가게 설정 */
+    gap: 20px; /* 카드 사이의 간격을 조정 */
+    justify-content: center; /* 카드들을 중앙 정렬 */
+    align-items: flex-start; /* 카드들의 시작 지점을 기준으로 정렬 */
+    margin-top: 15px;
 }
 
 .topicBtn {
@@ -8,11 +33,15 @@
     box-sizing: border-box;
     width: 140px;
     height: 45px;
+    
     border: 3px solid #EBFBFF;
-    box-shadow: 0px 0px 10px 2px #B181FF;
     border-radius: 30px;
+    box-shadow: 0px 0px 10px 2px #B181FF;
+
+    margin-left: 800px;
+    margin-bottom: 15px;
+    
     transition: font-size 0.3s; /* 글자 크기 변화에 대한 transition */
-  
 
   /* 호버 시 스타일 */
   cursor: pointer;

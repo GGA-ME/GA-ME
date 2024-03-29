@@ -88,8 +88,6 @@ const initialData: ApiResponse = {
     result: initialUser
 }
 
-
-
 interface detailState {
     data: ApiResponse;
     loading: boolean;
@@ -133,8 +131,7 @@ const detailStore = create<detailState>((set) => ({
         gameList.map(async (arrayGame: number[]) => {
           try {
             arrayGame.map(async (gameId: number) => {
-              const response = await api.put(`/tracking?userId=${userId}&gameId=${gameId}&action=${action}`);
-              console.log(response);  
+              await api.put(`/tracking?userId=${userId}&gameId=${gameId}&action=${action}`);              
             })
           } catch(error) {
             console.error(error);

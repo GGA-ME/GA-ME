@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import SimpleGameCard from "../commonUseComponents/SimpleGameCard";
 import { AxiosError } from "axios";
 import { ConfigProvider, Steps } from 'antd'
-import { addLikeWeight } from '../../url/api';
+import useUserStore from "../../stores/userStore";
+import { SubmitButton } from "./SubmitButton";
 
 export interface ChoiceGame {
   gameId: number;
@@ -15,18 +16,16 @@ export interface ChoiceGame {
 
 const SurveyGame = () => {
   // checkGameList 내부에 survey 페이지에서 선택한 게임 정보가 들어있다.
-  const { data, loading, error, checkGameList, fetchData, addCheckChoiceGame, removeCheckChoiceGame } = surveyStore();
-  
+  const { data, loading, error, checkGameList, backGroundImg, setBackgroundImg, fetchData, addCheckChoiceGame, removeCheckChoiceGame } = surveyStore();
+  const { user } = useUserStore();
   const [current, setCurrent] = useState(0);
-
   useEffect(() => {
     fetchData(); // 마운트시 데이터 가져오기
-  }, [fetchData]); // 데이터 변경시 재랜더링
+  }, [fetchData, user, backGroundImg]); // 데이터 변경시 재랜더링
   // 이 시점에 data에 정보가 들어와있음
-  
 
   const makeBackGroundImg = {
-    backgroundImage: `url(${data?.result[current * 12].gameHeaderImg})`,
+    backgroundImage: `url(${backGroundImg})`,
     backgroundSize: 'cover', // 배경 이미지를 화면에 맞게 확대합니다.
     backgroundPosition: 'center', // 배경 이미지를 가운데 정렬합니다.
     width: '100%',
@@ -45,10 +44,11 @@ const SurveyGame = () => {
   groups.push(oneList);
   groups.push(twoList);
   groups.push(threeList);
-  if(data)
-    for(let i = 0; i < 3; i++)
-      for(let j = i; j < i + 12; j++)
-        groups[i].push(data.result[j]);
+  if(data) for(let i = 0; i < 3; i++) for(let j = i * 12; j < i * 12 + 12; j++) groups[i].push(data.result[j]);
+
+  const changeBackgroundImg = (image: string) => {
+    setBackgroundImg(image);
+  }
 
   const stepValidation = (value: number) => {
     if(checkGameList[current].length !== 0) setCurrent(value);
@@ -60,20 +60,20 @@ const SurveyGame = () => {
     return false;
   }
 
-  const changeGameList = (gameId: number, current: number) => {
+  const changeGameList = (gameId: number, current: number, image: string) => {
+    changeBackgroundImg(image);
     // 존재한다면 배열에서 게임을 없앤다.
     if(isInGameList(gameId, current)) removeCheckChoiceGame(gameId, current);
 
     // 존재하지 않는다면 배열에 추가한다.
     else addCheckChoiceGame(gameId, current);
   }
+
   // 마지막 페이지라면 Submit 버튼 활성화
   const isEndLine = (currentPage: number) => {
       if (currentPage === 2) {
         return (
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" 
-              onClick={() =>  {addLikeWeight(checkGameList)}
-            }> Submit </button>      
+                <SubmitButton/>
         );
     } else {
         return null;
@@ -110,7 +110,7 @@ const SurveyGame = () => {
         theme={{
           components: {
             Steps: {
-              colorPrimary: "#1FDA11",
+              colorPrimary: "#1d4ed8",
               colorBorderBg: "#1FDA11",
               navArrowColor: "#FFFFFF"
             }
@@ -145,7 +145,7 @@ const SurveyGame = () => {
                           transition: { duration: 0.3 },
                         },
                       }}
-                      onClick={() => changeGameList(choiceGame.gameId, current)}
+                      onClick={() => changeGameList(choiceGame.gameId, current, choiceGame.gameHeaderImg)}
                     >
                       <SimpleGameCard
                         key={index}
