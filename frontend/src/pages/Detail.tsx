@@ -38,11 +38,13 @@ function Detail(): JSX.Element {
   return (
     <>
       <BackButton />
-      <DetailBanner bannerImage={data?.result?.gameHeaderImg}
-      gameId={data?.result?.gameId}
-      gameName={data?.result?.gameName}
+      <DetailBanner bannerImage={data?.result?.gameHeaderImg ?? ""}
+      gameId={data?.result?.gameId || 0}
+      gameName={data?.result?.gameName ?? ""}
       gameShortDescription={data?.result?.gameShortDescription}
       gameIsLike={data?.result?.gameIsLike}
+      price= {data?.result?.gamePriceFinal ?? ""}
+      tagsAll= {data?.result?.gameTagList}
       />
       <div className={styles.detailContent}>
         <button onClick={handleInfoClick}>정보</button>

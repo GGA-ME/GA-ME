@@ -34,7 +34,7 @@ export interface GameData {
     gameReleaseDate: string;
     screenshotList: Screenshot[];
     relatedGameList: Game[]; // 관련 게임 데이터에 대한 정확한 타입이 없는 경우 any로 지정
-    gameTagList: Array<{ codeId: string; tagId:number; tagName: string }>;
+    gameTagList: Array<{ codeId: string; tagId:number; tagName: string }> | undefined;
     gameIsLike: boolean;
 }
 
@@ -49,9 +49,14 @@ type DetailState = {
     data: ApiResponse | null;
 
     fetchData: (userId: number | undefined, gameId: number | undefined) => Promise<void>;
-    toggleIsLike: ()=> void;
+    toggleIsLike: (gameIsLike: boolean | undefined, gameId: number | undefined, userId: number | undefined) => Promise<void>;
 };
 
+interface ApiResponse {
+    isSuccess: boolean;
+    message: string;
+    code: number;
+  }
 
 export const useDetailStore = create<DetailState>((set) => ({
     data: null,
@@ -65,23 +70,34 @@ export const useDetailStore = create<DetailState>((set) => ({
         console.log(error)
     }
   },
-    // isLike 값을 변경하는 함수
-    toggleIsLike: () => {
-        set((state: DetailState) => {
-            if (state.data) {
-                return {
-                    ...state,
-                    data: {
-                        ...state.data,
-                        result: {
-                            ...state.data.result,
-                            isLike: !state.data.result.gameIsLike
-                        }
-                    }
-                };
+
+  
+    toggleIsLike: async (gameIsLike, gameId, userId) => {
+    try {
+      let response;
+      if (gameIsLike) {
+        response = await api.delete<ApiResponse>(`/game/prefer`, { data : { userId, gameId }});
+      } else {
+        response = await api.post<ApiResponse>(`/game/prefer`, { userId, gameId });
+      }
+      
+      // 요청이 성공하고 응답 코드가 100인 경우에만 gameIsLike 값을 토글합니다.
+      if (response && response.data.code === 100) {
+        set((state) => ({
+          ...state,
+          data: {
+            ...state.data!,
+            result: {
+              ...state.data!.result,
+              gameIsLike: !gameIsLike
             }
-            return state; // data가 null인 경우에는 상태를 그대로 반환
-        });
+          }
+        }));
+      } else {
+        console.error('응답 코드가 100이 아닙니다.');
+      }
+    } catch (error) {
+      console.error('요청이 실패했습니다.', error);
     }
-}
-));
+  }
+}));
