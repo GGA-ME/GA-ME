@@ -37,8 +37,7 @@ const Poket: React.FC = () => {
           </svg>
           <span className={`absolute opacity-0 -translate-y-5 group-hover:opacity-100 group-hover:-translate-x-5 duration-700 text-sm ${style.bubble}`}>
             <img src={'/Cart.png'} alt="Cart" style={{marginLeft: '10px', marginBottom:'5px'}}/>
-            <p> 아이콘을 클릭하여,<br/>
-            게임을 2개 이상 추가 후 Mix! <br/>
+            <p> 아이콘을 클릭하여, 게임을 2개 이상 추가 후 Mix! <br/>
             선택한 게임과 비슷한 장르의 게임을 찾아보세요!<br/>
             </p>
           </span>
