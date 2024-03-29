@@ -10,6 +10,9 @@ export default {
         white: '#fff',
         'tag-gray': '#606060',
         'box-gray': '#343434',
+        'light-gray': '#d9d9d9',
+        'primary': '#81BECE',
+        'secondary': '#036280',
         'hr': '#6A6A6A',
       },
       width: {
