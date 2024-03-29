@@ -12,6 +12,7 @@ interface CartItem {
   imageUrl: string;
   title: string;
   price: string;
+  developer: string;
   tagsAll?: TagDto[] | null;
 }
 

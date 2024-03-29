@@ -31,7 +31,9 @@ const Result: React.FC = () => {
               gameId={game.gameId}
               imageUrl={game.gameHeaderImg}
               title={game.gameName}
+              beforPrice={game.gamePriceInitial.toLocaleString()}
               price={game.gamePriceFinal.toLocaleString()}
+              developer={game.gameDeveloper}
               tagsAll={game.tagList}
               tags={game.tagList ? game.tagList.map((tag) => tag.tagName) : []}
               likes={game.gameLike}

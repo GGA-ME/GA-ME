@@ -10,13 +10,14 @@ const Poket: React.FC = () => {
   const { removeItem } = usePoketStore();
   const navigate = useNavigate();
 
+  // 믹스앤매치 페이지로 이동하기 위한 함수
   const navigateToMixAndMatch = () => {
     navigate(`/mixAndMatch`)
     console.log('믹스엔 매치 페이지 이동')
   }
 
   return (
-    <div className='fixed right-5 flex flex-col items-center justify-center h-screen'>
+    <div className='fixed right-3 flex flex-col items-center justify-center h-screen'>
 
       {/* 포켓 박스 */}
       <div className={`${style.neonBorder} -translate-y-20 flex flex-col items-center justify-center px-8 mt-44 rounded-full border-r-2 border-l-2 bg-gray-900 text-white z-40 h-96`}

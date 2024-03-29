@@ -1,5 +1,12 @@
+<<<<<<< frontend/src/components/commonUseComponents/SimpleGameCard.tsx
 import { motion } from "framer-motion";
 import { MdCheckCircle } from "react-icons/md"; // 체크 아이콘 import
+=======
+// 작성자 : 장현욱
+
+import { motion } from 'framer-motion';
+
+>>>>>>> frontend/src/components/commonUseComponents/SimpleGameCard.tsx
 
 // 타입스크립트 타입 프롭받을 타입 정의
 export interface SimpleGameCardProps {
@@ -21,15 +28,8 @@ const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ imageUrl, title, isSele
           <MdCheckCircle className="text-white text-5xl" /> {/* 체크 아이콘 */}
         </div>
       )}
-      <div
-        className={`w-48 rounded overflow-hidden bg-gray-600 text-white text-center`}
-      >
-        <img
-          src={imageUrl}
-          alt={title}
-          className="object-cover w-50 h-50"
-          style={{ width: "192px", height: "110px", objectFit: "cover" }}
-        />
+      <div className={`w-48 h-26 rounded overflow-hidden bg-gray-600 text-white text-center`}>
+          <img src={imageUrl} alt={title} className='object-cover w-50 h-50'  style={{width: '192px', height: '110px' , objectFit :'cover'  }}/>
         <div className="p-1">
           <h3 className="text-sm">{title}</h3>
         </div>
