@@ -57,13 +57,13 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
   }
   const { addItem } = usePoketStore();
 
-  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation(); // 이벤트 버블링 중지
-    const imageUrl = bannerImage
-    const title = gameName
-    const itemToAdd = { gameId, imageUrl, title, price, tagsAll };
-    addItem(itemToAdd);
-  };
+  // const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
+  //   event.stopPropagation(); // 이벤트 버블링 중지
+  //   const imageUrl = bannerImage
+  //   const title = gameName
+  //   const itemToAdd = { gameId, imageUrl, title, price, tagsAll };
+  //   addItem(itemToAdd);
+  // };
   return (
     <>
     <div className={styles.bannerContainer}>
@@ -92,7 +92,7 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
           {/* 오른쪽 하단 버튼 */}
           <div className={styles.rightBottomButtons}>
             <button className={styles.urlButton} onClick={steamButtonClickHandler}>스팀으로 이동</button>
-            <button className={styles.urlButton} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button>
+            {/* <button className={styles.urlButton} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button> */}
           </div>
         </div>
       </div>
