@@ -23,6 +23,7 @@ const LikeComponent: React.FC = () => {
   const navigate = useNavigate();
 
   const getDetailPage = (gameId: number) => {
+    // 라엘아 여기서 로그 남겨줘
     navigate(`/detail/${gameId}`);
   };
 
