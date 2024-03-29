@@ -9,10 +9,9 @@ const MyProfile: React.FC = () => {
   const { data, loading, error, topTenTag, fetchData } = detailStore();
   const user = useUserStore((state) => state.user);
 
-  useEffect(() =>{
-      if(user)
-          fetchData(user.userId);
-          },[fetchData, user]);
+  useEffect(() => {
+    if (user) fetchData(user.userId);
+  }, [fetchData, user]);
 
   if (loading) {
     return (
@@ -32,7 +31,10 @@ const MyProfile: React.FC = () => {
   return (
     <>
       <div className="flex justify-center items-center h-screen">
-        <div className="bg-gray-600 rounded-xl items-center" style={{margin: '50px', padding: '20px', }}>
+        <div
+          className="bg-gray-600 rounded-xl items-center"
+          style={{ margin: "50px", padding: "20px" }}
+        >
           <img
             className="rounded-full"
             src={data.result.userProfileImg}
@@ -40,20 +42,22 @@ const MyProfile: React.FC = () => {
           />
           <p>{data.result.userName}</p>
           {topTenTag.map((tag: TagWeight, index: number) => (
-            
-            <span key={index} className="mr-4 mb-3 rounded bg-indigo-700 border-2 border-stone-950" >#{tag.tagName}  </span>
+            <span
+              key={index}
+              className="mr-4 mb-3 rounded bg-indigo-700 border-2 border-stone-950"
+            >
+              #{tag.tagName}{" "}
+            </span>
           ))}
           <br />
           <br />
           <hr />
           <br />
-            <LikeComponent />      
-          
+          <LikeComponent />
+
           <div className="flex flex-col items-center">
-                  
             <StatisticsComponent />
           </div>
-          
         </div>
       </div>
     </>

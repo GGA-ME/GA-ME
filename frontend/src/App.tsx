@@ -22,7 +22,7 @@ const router = createBrowserRouter([
   // 게임 디테일 페이지
   { path: 'detail/:id', element: <Detail/> },
   // 마이페이지
-  { path: 'myPage/:id',element: <MyPage/>},
+  { path: 'myPage',element: <MyPage/>},
   // 토픽 페이지
   { path: 'topic', element: <Topic/>},
   // 선호도 조사 페이지

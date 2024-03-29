@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { user, isLoggedIn, setIsLoggedIn } = useUserStore();  // 유저정보 스토어
+  const { isLoggedIn, setIsLoggedIn } = useUserStore();  // 유저정보 스토어
   const isActive = (path: string) => location.pathname === path;  // 현재 위치 확인
   const fetchAndSetUser = useUserStore((state) => state.fetchAndSetUser);
   const setUser = useUserStore((state) => state.setUser);
@@ -110,7 +110,7 @@ const Navbar: React.FC = () => {
     // 로그인 상태에 따라 분기 처리
     isLoggedIn
       ? {
-          path: `/myPage/${user?.userId}`,
+          path: `/myPage`,
           label: "My Page",
           icon: "/ProfileIcon.png",
           activeIcon: "/ProfileIcon.gif",
