@@ -24,7 +24,7 @@ interface GameCardProps {
   tagsAll?: TagDto[] | null;
   tags: string[];       
   likes: number | null;
-  isPrefer: boolean; // 추가
+  isPrefer: boolean;
   onGameClick: (gameId: number) => void;
 }
 
@@ -61,7 +61,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
         setTimeout(() => setShowAlert(false), 3000);
         return;
       }
-      addItem({ gameId, imageUrl, title, price, tagsAll });
+      addItem({ gameId, imageUrl, title, price, tagsAll, developer });
     }
   };
 
