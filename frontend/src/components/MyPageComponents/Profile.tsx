@@ -7,7 +7,7 @@ import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
   const { data, loading, error, topTenTag, fetchData } = detailStore();
-  const {user} = useUserStore();
+  const user = useUserStore((state) => state.user);
 
   useEffect(() =>{
       if(user)
