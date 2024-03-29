@@ -16,8 +16,6 @@ public interface GameCustomRepository {
     // 할인 게임 검색 메소드 ( 25, 50, 75 만 가져옴 )
     Map<Integer,List<GameSaleCardDto>> findSaleGames(Integer userId);
 
-    List<TempDto> findAllGameAndTag();
-
     Page<TempDto> findAllGameAndTagList(List<Long> gameIds, Pageable pageable);
 
     List<TempDto> findAllGameAndTagList(List<Long> gameIds);
