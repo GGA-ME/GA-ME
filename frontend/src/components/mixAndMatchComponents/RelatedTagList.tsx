@@ -34,11 +34,7 @@ const CombinationList: React.FC = () => {
         </div>
       )}
 
-      {/* 로딩 중일 때 스피너 표시
-      {loading ? null : (
-        // 로딩이 완료되면 태그 표시
-        
-      )} */}
+      
     </div>
   );
 };
