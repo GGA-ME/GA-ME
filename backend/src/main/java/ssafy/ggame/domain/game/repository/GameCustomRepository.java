@@ -20,7 +20,10 @@ public interface GameCustomRepository {
 
     Page<TempDto> findAllGameAndTagList(List<Long> gameIds, Pageable pageable);
 
-    List<GameCardDto> getPreferList(Integer userId);
+    List<TempDto> findAllGameAndTagList(List<Long> gameIds);
+
+
+        List<GameCardDto> getPreferList(Integer userId);
 
     Map<Long, Long> getLikes(List<Long> ids);
 }
