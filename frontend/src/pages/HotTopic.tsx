@@ -59,9 +59,11 @@ const HotTopic: React.FC = () => {
         </div>
         
       </div>
-      <Poket />
-
+      {showSale && (
+           <Poket />
+          )}
       
+
     </>
   );
 }
