@@ -14,7 +14,7 @@ interface TagDto {
 }
 
 // 타입스크립트 타입 프롭받을 타입 정의
-interface GameCardProps {
+export interface GameCardProps {
   gameId: number;
   imageUrl: string;
   title: string;
