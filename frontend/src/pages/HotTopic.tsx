@@ -6,17 +6,19 @@ import NewsButton from "../components/HotTopicComponents/NewsButton";
 import NewsList from '../components/HotTopicComponents/NewsList';
 import SaleComponent from '../components/HotTopicComponents/SaleComponent';
 import useHotTopicStore from "../stores/hotTopicStore";
-
+import Poket from "../components/commonUseComponents/Poket";
 const HotTopic: React.FC = () => {
   const [showSale, setShowSale] = useState(true);
-  const { fetchNewsData } = useHotTopicStore();
+  const { newsData,fetchNewsData } = useHotTopicStore();
 
   useEffect(() => {
     const fetchData = async () => {
       await fetchNewsData();
     };
-  
-    fetchData(); // 함수 호출
+    if(newsData==null){
+      fetchData(); // 함수 호출
+    }
+    
     
   }, []); // 두 번째 매개변수로 빈 배열 전달
   
@@ -30,7 +32,7 @@ const HotTopic: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="w-full" 
+      <div 
         style={{
           backgroundImage: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.05) 100%)',
           position: 'absolute',
@@ -55,7 +57,9 @@ const HotTopic: React.FC = () => {
             )
           }
         </div>
+        
       </div>
+      <Poket />
 
       
     </>
