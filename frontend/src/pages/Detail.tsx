@@ -45,7 +45,6 @@ function Detail(): JSX.Element {
       gameIsLike={data?.result?.gameIsLike}
       price= {data?.result?.gamePriceFinal ?? ""}
       tagsAll= {data?.result?.gameTagList}
-      developer= {data?.result?.gameDeveloper ?? ""}
       />
       <div className={styles.detailContent}>
         <button onClick={handleInfoClick}>정보</button>
