@@ -1,3 +1,5 @@
+// 작성자 : 장현욱
+
 import { motion } from 'framer-motion';
 
 
@@ -15,7 +17,7 @@ const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ imageUrl, title }) => {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 300 }}
         >
-            <div className={`w-48 rounded overflow-hidden bg-gray-600 text-white text-center`}>
+            <div className={`w-48 h-26 rounded overflow-hidden bg-gray-600 text-white text-center`}>
                 <img src={imageUrl} alt={title} className='object-cover w-50 h-50'  style={{width: '192px', height: '110px' , objectFit :'cover'  }}/>
                 <div className="p-1">
                     <h3 className="text-sm">{title}</h3>
