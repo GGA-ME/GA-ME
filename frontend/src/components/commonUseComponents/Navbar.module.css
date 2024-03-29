@@ -22,3 +22,12 @@
 .neonBorder {
   animation: neon 2s infinite alternate;
 }
+
+.arrow{
+  margin: 3px;
+  margin-left: 5px;
+}
+
+.navBox{
+  margin-top: 5px;
+}
