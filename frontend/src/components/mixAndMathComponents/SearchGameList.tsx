@@ -47,7 +47,7 @@ const SearchGameList: React.FC = () => {
   if (cartItems.length === 0) {
     return (
       <div className={style.box} style={{height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
-        <p>게임을 담아주세요!</p>
+        <p className="mt-[70px] mb-[30px]">게임을 담아주세요!</p>
         <button className={style.topicBtn} onClick={handleGoToMain}>담으러 가기</button>
       </div>
     );
