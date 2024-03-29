@@ -1,12 +1,5 @@
-<<<<<<< frontend/src/components/commonUseComponents/SimpleGameCard.tsx
 import { motion } from "framer-motion";
 import { MdCheckCircle } from "react-icons/md"; // 체크 아이콘 import
-=======
-// 작성자 : 장현욱
-
-import { motion } from 'framer-motion';
-
->>>>>>> frontend/src/components/commonUseComponents/SimpleGameCard.tsx
 
 // 타입스크립트 타입 프롭받을 타입 정의
 export interface SimpleGameCardProps {
