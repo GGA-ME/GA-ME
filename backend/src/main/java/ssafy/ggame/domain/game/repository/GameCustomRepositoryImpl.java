@@ -16,10 +16,7 @@ import ssafy.ggame.domain.recommendation.dto.TempDto;
 import ssafy.ggame.domain.search.dto.SearchLikeRequestDto;
 import ssafy.ggame.domain.tag.dto.TagDto;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ssafy.ggame.domain.game.entity.QGame.game;
@@ -214,23 +211,27 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
                 .orderBy(game.gameFinalScore.desc()) // gameFinalScore를 내림차순으로 정렬
                 .fetch();
 
+        Set<Long> existingGameId = new HashSet<>();
         List<TempDto> resultList = new ArrayList<>();
         Map<Long, List<TagDto>> gameTagMap = new HashMap<>();
         for (Tuple result : results) {
-
-            TempDto tempDto = TempDto.builder()
-                    .gameId(result.get(game.gameId))
-                    .gameFinalScore(result.get(game.gameFinalScore))
-                    .gameName(result.get(game.gameName))
-                    .gameHeaderImg(result.get(game.gameHeaderImg))
-                    .gamePriceInitial(result.get(game.gamePriceInitial))
-                    .gamePriceFinal(result.get(game.gamePriceFinal))
-                    .gameDeveloper(result.get(game.gameDeveloper))
-                    .build();
-            resultList.add(tempDto);
-
-
             Long gameId = result.get(game.gameId);
+            if (!existingGameId.contains(gameId)) {
+                TempDto tempDto = TempDto.builder()
+                        .gameId(result.get(game.gameId))
+                        .gameFinalScore(result.get(game.gameFinalScore))
+                        .gameName(result.get(game.gameName))
+                        .gameHeaderImg(result.get(game.gameHeaderImg))
+                        .gamePriceInitial(result.get(game.gamePriceInitial))
+                        .gamePriceFinal(result.get(game.gamePriceFinal))
+                        .gameDeveloper(result.get(game.gameDeveloper))
+                        .build();
+
+                resultList.add(tempDto);
+                existingGameId.add(gameId);
+            }
+
+
             List<TagDto> tagDtos = gameTagMap.computeIfAbsent(gameId, id -> new ArrayList<>());
 
             TagDto tagDto = TagDto.builder()
