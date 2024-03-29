@@ -273,7 +273,7 @@ public class RecommendationService {
         // codeId, tagId 둘 다 0이 아닐 때
         if (!codeId.equals("0") && tagId != 0) {
             // 모든 게임의 아이디 가져오기
-            List<Long> gameIdList = gameTagRepository.findAllGameIdByCodeIdAndTagId(codeId, tagId);
+            List<Long> gameIdList = new HashSet<>(gameTagRepository.findAllGameIdByCodeIdAndTagId(codeId, tagId)).stream().toList();
             // 게임카드디티오를 만들기위해 필요한 정보를 게임 아이디를 통해 가져오기(게임 가치점수로 정렬됨)
             Page<TempDto> gameTempDtoList = gameCustomRepository.findAllGameAndTagList(gameIdList, pageable);
 
