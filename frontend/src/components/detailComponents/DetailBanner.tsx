@@ -9,13 +9,13 @@ interface BannerProps {
   gameIsLike: boolean | undefined;
   price: string;
   tagsAll: Array<{ codeId: string; tagId:number; tagName: string }> | undefined;
+  developer: string;
 }
 
-import LikeImage from '/Like.png';
 import { useDetailStore } from '../../stores/DetailStore';
 // import OnLikeImage from '/OnLike.png';
 
-const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, tagsAll }) => {
+const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, tagsAll, developer }) => {
 
   // 줄넘김이 적용된 텍스트
   const MAX_LENGTH = 51; // 최대 길이 지정
@@ -61,7 +61,7 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
     event.stopPropagation(); // 이벤트 버블링 중지
     const imageUrl = bannerImage
     const title = gameName
-    const itemToAdd = { gameId, imageUrl, title, price, tagsAll };
+    const itemToAdd = { gameId, imageUrl, title, price, tagsAll, developer };
     addItem(itemToAdd);
   };
   return (
