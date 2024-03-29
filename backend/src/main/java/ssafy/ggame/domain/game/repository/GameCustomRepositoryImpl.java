@@ -4,6 +4,9 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.dto.GameLikeDto;
@@ -13,7 +16,10 @@ import ssafy.ggame.domain.recommendation.dto.TempDto;
 import ssafy.ggame.domain.search.dto.SearchLikeRequestDto;
 import ssafy.ggame.domain.tag.dto.TagDto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ssafy.ggame.domain.game.entity.QGame.game;
@@ -209,6 +215,71 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
                 .join(gameTag.tag, tag)
                 .fetch();
     }
+
+    @Override
+    public Page<TempDto> findAllGameAndTagList(List<Long> gameIds, Pageable pageable) {
+        List<Tuple> results = queryFactory
+                .select(
+                        game.gameId,
+                        game.gameFinalScore,
+                        game.gameName,
+                        game.gameHeaderImg,
+                        game.gamePriceInitial,
+                        game.gamePriceFinal,
+                        game.gameDeveloper,
+                        tag.tagId.code.codeId,
+                        tag.tagId.tagId,
+                        tag.tagName
+                )
+                .from(game)
+                .leftJoin(game.gameTags, gameTag)
+                .leftJoin(gameTag.tag, tag)
+                .where(game.gameId.in(gameIds))
+                .orderBy(game.gameFinalScore.desc()) // gameFinalScore를 내림차순으로 정렬
+                .fetch();
+
+        List<TempDto> resultList = new ArrayList<>();
+        Map<Long, List<TagDto>> gameTagMap = new HashMap<>();
+        for (Tuple result : results) {
+
+            TempDto tempDto = TempDto.builder()
+                    .gameId(result.get(game.gameId))
+                    .gameFinalScore(result.get(game.gameFinalScore))
+                    .gameName(result.get(game.gameName))
+                    .gameHeaderImg(result.get(game.gameHeaderImg))
+                    .gamePriceInitial(result.get(game.gamePriceInitial))
+                    .gamePriceFinal(result.get(game.gamePriceFinal))
+                    .gameDeveloper(result.get(game.gameDeveloper))
+                    .build();
+            resultList.add(tempDto);
+
+
+            Long gameId = result.get(game.gameId);
+            List<TagDto> tagDtos = gameTagMap.computeIfAbsent(gameId, id -> new ArrayList<>());
+
+            TagDto tagDto = TagDto.builder()
+                    .codeId(result.get(tag.tagId.code.codeId))
+                    .tagId(result.get(tag.tagId.tagId))
+                    .tagName(result.get(tag.tagName))
+                    .build();
+
+            tagDtos.add(tagDto);
+        }
+
+        for(TempDto tempDto : resultList){
+            tempDto.updateTagList(gameTagMap.get(tempDto.getGameId()));
+        }
+
+        // 결과를 페이지로 변환하여 반환
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), resultList.size());
+
+        return new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
+
+
+//        return resultList;
+    }
+
 
     private static void salePercentSetting(Map<Integer, List<GameSaleCardDto>> sales) {
         sales.put(10, new ArrayList<>());

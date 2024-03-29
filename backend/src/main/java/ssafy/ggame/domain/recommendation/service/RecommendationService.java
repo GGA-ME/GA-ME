@@ -1,7 +1,9 @@
 package ssafy.ggame.domain.recommendation.service;
 
 import com.querydsl.core.Tuple;
+import jdk.javadoc.doclet.Taglet;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -110,18 +112,36 @@ public class RecommendationService {
         // codeId, tagId 둘 다 0이 아닐 때
         if (!codeId.equals("0") && tagId != 0) {
             // game을 인기순으로 가져온다
-            List<Game> gameList = gameRepository.findAllByOrderByGameFinalScore(pageable);
-            // 거기서 코드아이디(gen), tagId 로 필터링 한다.
-            // - 입력으로 받은 게임태그 가져오기
-            GameTag gameTag = gameTagRepository.findByCodeIdAndTagId(codeId, tagId);
-            List<Game> filteredGameList = new ArrayList<>();
-            for (Game game : gameList) {
-                // - 만약 게임이 해당 게임 태그를 가졌다면 걸러진 게임 목록에 추가
-                if (game.getGameTags().contains(gameTag)) {
-                    filteredGameList.add(game);
-                }
+            // TODO: 1. game 가져와서 TempDto 적용해서 gameCardDto 만들기
+            // `모든 게임 아이디 받아오기
+
+            // 해당 태그를 갖고 있는 모든 게임의 아이디 가져오기
+            List<Long> gameIdList = gameTagRepository.findAllGameIdByCodeIdAndTagId(codeId, tagId);
+            // 게임카드디티오를 만들기위해 필요한 정보를 게임 아이디를 통해 가져오기(게임 가치점수로 정렬됨)
+            Page<TempDto> gameTempDtoList = gameCustomRepository.findAllGameAndTagList(gameIdList, pageable);
+
+            gameCardDtoList = new ArrayList<>();
+            //tempDto -> convertToGameCard
+            for(TempDto tempDto : gameTempDtoList){
+                gameCardDtoList.add(tempDto.converToGameCardDto());
             }
-            gameCardDtoList = makeGameCardDtoList(filteredGameList);
+
+            // pageable 적용하기
+
+
+//            List<Game> gameList = gameRepository.findAllByOrderByGameFinalScore(pageable);
+//            // 거기서 코드아이디(gen), tagId 로 필터링 한다.
+//            // - 입력으로 받은 게임태그 가져오기
+////            Tag gameTag = tagRepository.findByCodeIdAndTagId(codeId, tagId).orElseThrow(()->new BaseException(StatusCode.TAG_NOT_EXIST));
+//            List<Game> filteredGameList = new ArrayList<>();
+//            for (Game game : gameList) {
+//                // - 만약 게임이 해당 게임 태그를 가졌다면 걸러진 게임 목록에 추가
+//                GameTag gameTag = gameTagRepository.findByCodeIdAndTagId(codeId, tagId);
+//                if (game.getGameTags().contains(gameTag)) {
+//                    filteredGameList.add(game);
+//                }
+//            }
+//            gameCardDtoList = makeGameCardDtoList(filteredGameList);
         }
 
         return gameCardDtoList;

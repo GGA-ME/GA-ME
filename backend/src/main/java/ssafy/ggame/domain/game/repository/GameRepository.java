@@ -21,5 +21,7 @@ public interface GameRepository extends JpaRepository<Game,Long> {
     // 각 사용자가 선호하는 게임 목록을 가져오는 쿼리 메서드
     @Query("SELECT p.preferId.game FROM Prefer p WHERE p.preferId.user = :user")
     List<Game> findPreferredGamesByUser(@Param("user") User user);
-    
+
+    @Query("SELECT g.gameId FROM Game g")
+    List<Long> findAllGameId();
 }

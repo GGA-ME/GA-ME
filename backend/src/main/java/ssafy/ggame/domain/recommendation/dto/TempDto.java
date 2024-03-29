@@ -20,11 +20,26 @@ public class TempDto implements Comparable<TempDto>{
     private String gameName;
     private String gameHeaderImg;
     private Integer gamePriceInitial;
+
+    public TempDto(Long gameId, Double gameFinalScore, String gameName, String gameHeaderImg, Integer gamePriceInitial, Integer gamePriceFinal, String gameDeveloper, List<TagDto> tagList) {
+        this.gameId = gameId;
+        this.gameFinalScore = gameFinalScore;
+        this.gameName = gameName;
+        this.gameHeaderImg = gameHeaderImg;
+        this.gamePriceInitial = gamePriceInitial;
+        this.gamePriceFinal = gamePriceFinal;
+        this.gameDeveloper = gameDeveloper;
+        this.tagList = tagList;
+    }
+
     private Integer gamePriceFinal;
     private String gameDeveloper;
     private String codeId;
     private Short tagId;
     private String tagName;
+    private List<TagDto> tagList;
+
+    public void updateTagList(List<TagDto> tagList) { this.tagList = tagList;}
 
     public GameCardDto converToGameCardDto(){
 
@@ -35,6 +50,7 @@ public class TempDto implements Comparable<TempDto>{
                 .gamePriceInitial(this.gamePriceInitial)
                 .gamePriceFinal(this.gamePriceFinal)
                 .gameDeveloper(this.gameDeveloper)
+                .tagList(this.tagList)
                 .isPrefer(false)
                 .build();
     }
@@ -56,25 +72,5 @@ public class TempDto implements Comparable<TempDto>{
     public int compareTo(TempDto other) {
         return this.gameId.compareTo(other.gameId);
     }
-
-    //    @Override
-//    public boolean equals(Object obj) {
-//        if (this == obj) {
-//            return true;
-//        }
-//        if (obj == null || getClass() != obj.getClass()) {
-//            return false;
-//        }
-//        TempDto other = (TempDto) obj;
-//        return Objects.equals(gameId, other.gameId)
-//                && Objects.equals(gameFinalScore, other.gameFinalScore)
-//                && Objects.equals(codeId, other.codeId)
-//                && Objects.equals(tagId, other.tagId);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(gameId, gameFinalScore, codeId, tagId);
-//    }
 
 }
