@@ -52,6 +52,7 @@ const api = axios.create({
         const { userId, gameId } = get();
         set({ loading: true });
         try {
+            // 데이터를 지워서 한번 해보자..
             const response = await api.delete(`/api/game/prefer`, { data: { userId, gameId }});
             // 요청 성공 시 데이터 업데이트
             set({ loading: false });

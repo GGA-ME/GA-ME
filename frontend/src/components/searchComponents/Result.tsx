@@ -20,7 +20,7 @@ const Result: React.FC = () => {
     <div className="p-4 mt-[50px]">
       <h2 className="mb-4 ml-[105px] font-sejong text-25">검색 결과</h2>
       <hr className={style.hr}></hr>
-      <div className="flex flex-wrap justify-center">
+      <div className="ml-20 mr-4 grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {/* 로딩 중일 때는 로딩 스피너 표시 */}
         {isLoading ? (
           <div className={style.loadingSpinner}></div>

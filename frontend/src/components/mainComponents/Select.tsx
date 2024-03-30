@@ -14,7 +14,7 @@ const Select: React.FC = () => {
 
   const { data, fetchData } = useMyPageStore()  // 유저기반 태그 가져오는 스토어
   const { user } = useUserStore();  // 유저의 유저ID가져오는 스토어
-  const { setUserId, setTagId, setCodeId, fetchMainData } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
+  const { setUserId, setTagId, setCodeId, fetchMainData, setPage } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
 
   useEffect(() => {
     if (user) { // user가 null이 아닐 때만 fetchData 호출
@@ -42,6 +42,7 @@ const Select: React.FC = () => {
 
   // 전체 또는 취향 고를시 API요청
   const handleCategoryChange = (category: string) => {
+    setPage(1)
     setNowCategory(category);
     if (category === "취향 저격") {
       // 만약 카테고리를 취향저격을 골랐다면
@@ -57,6 +58,7 @@ const Select: React.FC = () => {
 
   // 태그를 고를시 API요청
   const handleTagChange = (tag: Tag) => {
+    setPage(1)
     setSelectedTagName(tag.tagName); // 태그 이름을 누른 태그로 지정
     setTagId(tag.tagId);
     setCodeId(tag.codeId);

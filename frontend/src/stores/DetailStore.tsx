@@ -50,6 +50,7 @@ type DetailState = {
 
     fetchData: (userId: number | undefined, gameId: number | undefined) => Promise<void>;
     toggleIsLike: (gameIsLike: boolean | undefined, gameId: number | undefined, userId: number | undefined) => Promise<void>;
+    statisticsData: (gameId: number | undefined) => Promise<void>;
 };
 
 interface ApiResponse {
@@ -99,5 +100,17 @@ export const useDetailStore = create<DetailState>((set) => ({
     } catch (error) {
       console.error('요청이 실패했습니다.', error);
     }
-  }
+  },
+
+  statisticsData: async (gameId) => {
+    // 데이터 가져오는 비동기 요청
+    try {
+        const response = await api.get<ApiResponse>(`/games/${gameId}/statistics`,);
+        set({ data: response.data });
+        console.log(response.data);
+    } catch (error) {
+        console.log(error)
+    }
+  },
+
 }));

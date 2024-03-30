@@ -155,7 +155,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
                   // rotate: -90,
                   borderRadius: "100%"
                 }} >
-                <img src={isPrefer ? '/OnLike' : '/Like.png'} alt={'Like'} ></img>
+                <img src={isPrefer ? '/OnLike.png' : '/Like.png'} alt={'Like'} ></img>
               </motion.button>
 
               {/* 포켓에담기 버튼 */}
