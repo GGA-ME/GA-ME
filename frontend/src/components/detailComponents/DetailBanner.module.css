@@ -37,25 +37,27 @@
 }
 
 /* 중앙에 배치할 이미지 스타일 */
-/*
-.centerImage {
+/* .centerImage {
   width: 100%;
   height: auto;
   position: relative;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  overflow: visible; }/* 이미지의 테두리가 외부 이미지를 벗어나도록 함 */
+  overflow: visible; } */
+/* 이미지의 테두리가 외부 이미지를 벗어나도록 함 */
 
 /* 좋아요 버튼 스타일 */
 .likeButton {
   position: relative;
+  background-size: cover;
+  max-width: 100%; /* 이미지의 최대 너비를 부모 요소의 너비에 맞게 설정 */
+  max-height: 100%; /* 이미지의 최대 높이를 부모 요소의 높이에 맞게 설정 */
   top: 10%; /* 중앙 이미지 상단으로부터의 상대적인 위치 */
   left: -43%; /* 중앙 이미지 왼쪽으로부터의 상대적인 위치 */
   transform: translate(-50%, -50%);
   padding: 5px 10px;
-  background-color: #fff;
-  color: #000;
+  background-color: #ffffff00;
   border: none;
   cursor: pointer;
 }
