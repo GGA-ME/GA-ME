@@ -1,5 +1,5 @@
 import Navbar from "../components/commonUseComponents/Navbar";
-// import Profile from "../components/MyPageComponents/Profile";
+import Profile from "../components/MyPageComponents/Profile";
 import useUserStore from '../stores/userStore';
 
 function MyPage() {
@@ -10,11 +10,12 @@ function MyPage() {
 
   return (
     <>
+      <div style={{ position: 'relative' }}>
       <Navbar />
-      <div className="pl-80 pr-52 w-full">
-        {/* <p>{user?.userId}</p> */}
-        {/* <Profile /> */}
+      <div style={{ position: 'absolute', top: '150px', left: '300px' }}>
+        <Profile />
       </div>
+    </div>
     </>
   );
 }

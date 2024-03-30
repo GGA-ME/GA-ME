@@ -1,17 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import detailStore, { TagWeight } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
 import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
-import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
   const { data, loading, error, topTenTag, fetchData } = detailStore();
-  const user = useUserStore((state) => state.user);
+  // const user = useUserStore((state) => state.user);
+  const [user] = useState(17);
 
   useEffect(() => {
-    if (user) fetchData(user.userId);
-  }, [fetchData, user]);
+    fetchData(user);
+  }, [fetchData]);
 
   if (loading) {
     return (
@@ -30,33 +30,27 @@ const MyProfile: React.FC = () => {
   /** 이미지가 없을때 처리도 해줘야됌 */
   return (
     <>
-      <div className="flex justify-center items-center h-screen">
-        <div
-          className="bg-gray-600 rounded-xl items-center"
-          style={{ margin: "50px", padding: "20px" }}
-        >
-          <img
-            className="rounded-full"
-            src={data.result.userProfileImg}
-            alt=""
-          />
-          <p>{data.result.userName}</p>
-          {topTenTag.map((tag: TagWeight, index: number) => (
-            <span
-              key={index}
-              className="mr-4 mb-3 rounded bg-indigo-700 border-2 border-stone-950"
-            >
-              #{tag.tagName}{" "}
-            </span>
-          ))}
-          <br />
-          <br />
-          <hr />
-          <br />
-          <LikeComponent />
+      <div className="relative z-1">
+        <img className="rounded-full" src={data.result.userProfileImg} alt="" />
+      </div>
 
-          <div className="flex flex-col items-center">
-            <StatisticsComponent />
+      <div className="flex justify-center items-center h-screen mb-100">
+        <div className="bg-stone-900 rounded-xl items-center" style={{ marginBottom: "10%", marginTop: "10%", padding: "10px" }}>
+          <div className="rounded-2xl" style={{ padding: "20px", border: "3px solid white" }}>
+            <p>{data.result.userName}</p>
+            {topTenTag.map((tag: TagWeight, index: number) => (
+              <span key={index} className="mr-4 mb-3 rounded " style={{ backgroundColor: "#036280", border: "#036280", color: "white" }}>
+                #{tag.tagName}{" "}
+              </span>
+            ))}
+            <br />
+            <br />
+            <hr />
+            <br />
+            <LikeComponent />
+            <div className="max-h-[700px]">
+              <StatisticsComponent />
+            </div>
           </div>
         </div>
       </div>
