@@ -17,8 +17,9 @@ const CombinationList: React.FC = () => {
 
       {!loading && hasTags && (
         <div className={style.box}>
+          <img src="./MixMatchBearker.PNG"/>
           <div className="mt-2 mb-1 ml-3 text-[20px] font-sejong">
-            관련 태그 👇
+            주요 Mix 태그🧪
           </div>
           <hr className={style.hr}></hr>
           <div className="mb-3">
