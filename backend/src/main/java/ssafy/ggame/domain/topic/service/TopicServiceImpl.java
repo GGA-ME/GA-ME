@@ -40,6 +40,7 @@ public class TopicServiceImpl implements TopicService {
             //인기게임 추가 로직 필요
         } else {//있으면
             int size = preferGameNames.size();
+
             int newsSize = size > 10 ? 5 : 10;
             for (String gameName : preferGameNames) { //데이터 추가
                 getCrawlingData(gameName, newsSize, hotTopicDtoList);
@@ -77,17 +78,17 @@ public class TopicServiceImpl implements TopicService {
         options.addArguments("--disable-dev-shm-usage"); // /dev/shm 파티션 사용 안 함
         options.addArguments("--disable-gpu"); // GPU 가속 사용 안 함
         options.addArguments("--remote-debugging-port=9222"); // 원격 디버깅 포트 설정
-        System.out.println("크롬 드라이버 실행전");
+        System.out.println(keyword+" 크롬 드라이버 실행전");
         // ChromeDriver 생성
         WebDriver driver = new ChromeDriver(options);
-        System.out.println("크롬 드라이버 실행후");
+        System.out.println(keyword+" 크롬 드라이버 실행후");
         try {
             //시작 URL
             String URL = "https://www.gamemeca.com/search.php?q=" + keyword;
             driver.get(URL);
 
             // 크롤링하려는 웹 페이지가 로딩 되는 시간을 기다림
-            driver.manage().timeouts().implicitlyWait(Duration.ofMillis(300));
+            driver.manage().timeouts().implicitlyWait(Duration.ofMillis(50));
 
 
             // 게임 정보로 이동
