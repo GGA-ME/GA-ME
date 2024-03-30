@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import axios, { AxiosError } from 'axios';
 
-
 const api = axios.create({
+    
     baseURL: 'https://j10e105.p.ssafy.io',
     headers: {
         "Content-Type": `application/json;charset=UTF-8`,
@@ -22,6 +22,7 @@ const api = axios.create({
     setGameId: (gameId: number) => void;
     likeGame: () => Promise<void>;
     unlikeGame: () => Promise<void>;
+    disLike: () => Promise<void>;
 }
 
   const useStoreLike = create<StoreState>((set, get) => ({
@@ -62,7 +63,21 @@ const api = axios.create({
                 set({ error, loading: false });
             }
         }
-    }
+    },
+
+    disLike: async () => {
+        const { userId } = get();
+        set({ loading: true });
+        try {
+            const response = await api.put(`/api/tracking/dislike?userId=${userId}&tagIdList`,);
+            set({ loading: false });
+            console.log(response.data);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                set({ error, loading: false });
+            }
+        }
+    },
     
 }));
 

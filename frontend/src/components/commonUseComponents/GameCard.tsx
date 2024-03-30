@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import usePoketStore from '../../stores/poketStore';
 import useStoreLike from '../../stores/likeStore'
 import useUserStore from '../../stores/userStore';
+import Swal from 'sweetalert2';
 import style from './GameCard.module.css'
 
 interface TagDto {
@@ -35,19 +36,17 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
   const [isHovered, setIsHovered] = useState(false);
   const { cartItems, addItem, removeItem } = usePoketStore();
   const [showAlert, setShowAlert] = useState(false); // 경고 메시지 상태 추가
-  const { likeGame, unlikeGame, setGameId, setUserId } = useStoreLike();
-  const { user } = useUserStore();
+  const { likeGame, unlikeGame, setGameId, setUserId, disLike } = useStoreLike();
+  const { user, isLoggedIn } = useUserStore();
 
   // 카트 안에 데이터가 있는지 확인
   const isInCart = cartItems.some(item => item.gameId === gameId);
 
   // 유저정보 확인
   useEffect(() => {
-    user
-  }
-    , []);
-
-  // console.log(user)
+    // 정보가 있으면 유저ID 없으면 0 으로 세팅
+    setUserId(user?.userId ?? 0);
+  }, [user]);
 
 
   // 포켓에 넣는 핸들러
@@ -68,7 +67,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
   // 좋아요와 좋아요 취소 핸들러
   const handleLikeToggle = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 버블링 중지
-    if (user) { // user가 존재하는지 확인
+    if (user && isLoggedIn) { // user가 존재하는지 확인, 로그인 되어있는지 확인
       setUserId(user.userId); // user.userId를 스토어에 설정
       setGameId(gameId); // 게임 ID를 스토어에 설정
       if (isPrefer) {
@@ -77,9 +76,32 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
         await likeGame(); // 좋아요 요청
       }
     } else {
-      console.log('User is not logged in.'); // user가 없는 경우 로그인되지 않았음을 알림 => alert로 바꾸던가 모달도 생각중
+      Swal.fire({
+        icon: 'error',
+        title: '로그인 후 이용 가능합니다!',
+        text: '왼쪽 아래 Login 버튼을 통해 로그인해주세요.',
+    });
     }
   };
+
+    // 관심없음 핸들러
+    const handleDisLikeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      if (user && isLoggedIn) { // user가 존재하는지 확인, 로그인 되어있는지 확인
+        disLike()
+        Swal.fire({
+          icon: 'success',
+          title: '가중치를 감소시켰습니다.',
+          text: '가중치가 감소되면 해당 태그의 게임들이 노출되는 횟수를 줄여줘요.',
+      });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 후 이용 가능합니다!',
+          text: '왼쪽 아래 Login 버튼을 통해 로그인해주세요.',
+      });
+      }
+    };
 
   // 가격 ,변환을 위한 함수
   function formatPrice(priceStr: string) {
@@ -172,7 +194,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
               </motion.button>
 
               {/* 관심없음 버튼 */}
-              <motion.button className="rounded-full p-2" onClick={handleLikeToggle}
+              <motion.button className="rounded-full p-2" onClick={handleDisLikeClick}
                 whileHover={{ scale: 1.2, rotate: 360 }}
                 whileTap={{
                   scale: 0.8,

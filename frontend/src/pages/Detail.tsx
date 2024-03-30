@@ -15,7 +15,7 @@ function Detail(): JSX.Element {
   const parsedGameId = gameId ? parseInt(gameId, 10) : undefined;
 
   const [activeComponent, setActiveComponent] = useState<ActiveComponentType>('info');
-  const { data, fetchData } = useDetailStore();
+  const { data, statisticsResult, statisticsData, fetchData } = useDetailStore();
 
   const handleInfoClick = () => {
     setActiveComponent('info');
@@ -28,6 +28,7 @@ function Detail(): JSX.Element {
   useEffect(() => {
     // userId와 gameId를 설정하고 fetchData 함수를 호출하여 데이터를 가져옴
     fetchData(parsedGameId, 0);
+    statisticsData(parsedGameId)
     window.scrollTo({
       top: 0,
       behavior: "smooth" // 스크롤 부드럽게 이동
@@ -51,7 +52,7 @@ function Detail(): JSX.Element {
         <button onClick={handleStatisticsClick}>통계</button>
         <div>
           {activeComponent === 'info' && <DetailInfo data={data?.result} />}
-          {activeComponent === 'statistics' && <Statistics />}
+          {activeComponent === 'statistics' && <Statistics ratioData={statisticsResult?.result.statisticsDto} gameName={data?.result?.gameName ?? ""}/>}
         </div>
       </div>
     </>
