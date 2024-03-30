@@ -67,14 +67,12 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
         //좋아요 수 가져오기
         Map<Long, Long> likes = getLikes(ids);
 
-        //게임에 매칭( tag, prefer )
+        //게임에 매칭( tag, prefer, likes )
         searchGames.forEach(game -> {
             game.updateTagList(tagsMap.get(game.getGameId()));
             game.updateIsPrefer(preferIds.contains(game.getGameId()));
             game.updateLike(likes.get(game.getGameId()) == null ? 0 : likes.get(game.getGameId()));
-            game.updatePrices();
         });
-
         return searchGames;
     }
 
@@ -196,63 +194,10 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
         sales.put(75, new ArrayList<>());
     }
 
-    private Map<Long, List<TagDto>> getTags(List<Long> ids) {
-        //해당하는 게임들 태그 가져오기
-        List<GameTagsDto> gameTags = queryFactory.select(
-                        Projections.constructor(
-                                GameTagsDto.class,
-                                game.gameId.as("gameId"),
-                                tag.tagId.code.codeId.as("codeId"),
-                                tag.tagId.tagId.as("tagId"),
-                                tag.tagName.as("tagName")
-                        )
-                ).from(gameTag)
-                .join(gameTag.game, game)
-                .join(gameTag.tag, tag)
-                .where(gameTag.game.gameId.in(ids)).distinct().fetch();
-
-        //게임Id를 기준으로 tags 묶어서 가져옴.
-        return gameTags.stream()
-                .collect(Collectors.groupingBy(GameTagsDto::getGameId,
-                        Collectors.mapping(
-                                gameTagsDto ->
-                                        TagDto.builder()
-                                                .codeId(gameTagsDto.getCodeId())
-                                                .tagId(gameTagsDto.getTagId())
-                                                .tagName(gameTagsDto.getTagName())
-                                                .build()
-                                , Collectors.toList())));
-
-    }
-
-    //User prefer 가져오기
-    private List<Long> getPrefers(Integer userId, List<Long> ids) {
-
-        return queryFactory.select(
-                        prefer.preferId.game.gameId
-                ).from(prefer)
-                .where(prefer.preferId.game.gameId.in(ids).and(prefer.preferId.user.userId.eq(userId)))
-                .fetch();
-    }
-
-    //좋아요 수 가져오기
-    public Map<Long, Long> getLikes(List<Long> ids) {
-        List<GameLikeDto> likes = queryFactory.select(
-                        Projections.constructor(
-                                GameLikeDto.class,
-                                prefer.preferId.game.gameId.as("gameId"),
-                                prefer.preferId.game.gameId.count().as("gameLike")
-                        )
-                ).from(prefer)
-                .where(prefer.preferId.game.gameId.in(ids))
-                .groupBy(prefer.preferId.game.gameId)
-                .fetch();
-        return likes.stream()
-                .collect(Collectors.toMap(GameLikeDto::getGameId, GameLikeDto::getGameLike));
-    }
 
     @Override
     public List<GameCardDto> getPreferList(Integer userId) {
+        //선호하는 게임들 추출
         List<GameCardDto> gameList = queryFactory.select(
                         Projections.constructor(
                                 GameCardDto.class,
@@ -270,15 +215,15 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
         List<Long> ids = gameList.stream()
                 .map(GameCardDto::getGameId) // Game 객체에서 id를 추출
                 .toList();
-
+        //해당 게임 Tag들 가져옴.
         Map<Long, List<TagDto>> tagsMap = getTags(ids);
-        List<Long> preferIds = getPrefers(userId, ids);
+        // 좋아요 수 추출
         Map<Long, Long> likes = getLikes(ids);
+        //돌면서 DTO값 세팅
         gameList.forEach(game -> {
             game.updateTagList(tagsMap.get(game.getGameId()));
-            game.updateIsPrefer(preferIds.contains(game.getGameId()));
+            game.updateIsPrefer(true);
             game.updateLike(likes.get(game.getGameId()) == null ? 0 : likes.get(game.getGameId()));
-            game.updatePrices();
         });
         return gameList;
     }
@@ -417,9 +362,65 @@ public class GameCustomRepositoryImpl implements GameCustomRepository {
 
         return resultList;
 
-
-//        return resultList;
     }
 
+    /*
+        공통 메소드
+        getPrefers : 유저의 선호게임 Id들만 가져온다.
+        getTags : 해당하는 게임의 태그를 join해서 가져옴.
+        getLikes : 좋아요 수
+     */
 
+    //User prefer Id List 가져오기
+    private List<Long> getPrefers(Integer userId, List<Long> ids) {
+        return queryFactory.select(
+                        prefer.preferId.game.gameId
+                ).from(prefer)
+                .where(prefer.preferId.game.gameId.in(ids).and(prefer.preferId.user.userId.eq(userId)))
+                .fetch();
+    }
+    // Map<게임ID,List<해당게임태그>> -> 게임 ID당 태그 묶어서 return
+    private Map<Long, List<TagDto>> getTags(List<Long> ids) {
+        //해당하는 게임들 태그 가져오기
+        List<GameTagsDto> gameTags = queryFactory.select(
+                        Projections.constructor(
+                                GameTagsDto.class,
+                                game.gameId.as("gameId"),
+                                tag.tagId.code.codeId.as("codeId"),
+                                tag.tagId.tagId.as("tagId"),
+                                tag.tagName.as("tagName")
+                        )
+                ).from(gameTag)
+                .join(gameTag.game, game)
+                .join(gameTag.tag, tag)
+                .where(gameTag.game.gameId.in(ids)).distinct().fetch();
+
+        //게임Id를 기준으로 tags 묶어서 가져옴.
+        return gameTags.stream()
+                .collect(Collectors.groupingBy(GameTagsDto::getGameId,
+                        Collectors.mapping(
+                                gameTagsDto ->
+                                        TagDto.builder()
+                                                .codeId(gameTagsDto.getCodeId())
+                                                .tagId(gameTagsDto.getTagId())
+                                                .tagName(gameTagsDto.getTagName())
+                                                .build()
+                                , Collectors.toList())));
+
+    }
+    //좋아요 수 가져오기 (Map<게임ID,좋아요 수>)
+    public Map<Long, Long> getLikes(List<Long> ids) {
+        List<GameLikeDto> likes = queryFactory.select(
+                        Projections.constructor(
+                                GameLikeDto.class,
+                                prefer.preferId.game.gameId.as("gameId"),
+                                prefer.preferId.game.gameId.count().as("gameLike")
+                        )
+                ).from(prefer)
+                .where(prefer.preferId.game.gameId.in(ids))
+                .groupBy(prefer.preferId.game.gameId)
+                .fetch();
+        return likes.stream()
+                .collect(Collectors.toMap(GameLikeDto::getGameId, GameLikeDto::getGameLike));
+    }
 }
