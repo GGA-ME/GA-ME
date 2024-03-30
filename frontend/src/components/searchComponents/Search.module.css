@@ -27,7 +27,7 @@
 
 .searchButton {
   position: absolute;
-  right: 410px; /* input 필드 내부 오른쪽에 위치 */
+  right: 430px; /* input 필드 내부 오른쪽에 위치 */
   background: transparent;
   border: none;
   cursor: pointer;

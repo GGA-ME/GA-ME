@@ -17,10 +17,18 @@ interface UserState {
   fetchAndSetUser: (accessToken: string) => Promise<boolean>;
 }
 
+const getStoredUser = () => {
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user) : null;
+};
+
 const useUserStore = create<UserState>((set) => ({
-  user: null,
-  isLoggedIn: false,
-  setUser: (user) => set({ user, isLoggedIn: true }),
+  user: getStoredUser(),
+  isLoggedIn: !!getStoredUser(),
+  setUser: (user) => {
+    localStorage.setItem('user', JSON.stringify(user));
+    set({ user, isLoggedIn: true });
+  },
   setIsLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
   fetchAndSetUser: async (accessToken): Promise<boolean> => {
     try {
