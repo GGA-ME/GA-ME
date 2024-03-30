@@ -9,7 +9,7 @@ import ApexCharts from 'apexcharts';
 
 
 interface StatisticsProps {
-    ratioData: statisticsDto | null
+    ratioData: statisticsDto | undefined
     gameName: string | null
 }
 
