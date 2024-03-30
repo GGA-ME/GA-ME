@@ -9,9 +9,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
+import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.dto.GameSaleCardDto;
 import ssafy.ggame.domain.game.repository.GameCustomRepository;
 import ssafy.ggame.domain.prefer.repository.PreferCustomRepository;
+import ssafy.ggame.domain.recommendation.controller.RecommendationController;
+import ssafy.ggame.domain.recommendation.service.RecommendationService;
 import ssafy.ggame.domain.topic.dto.SaleGameDto;
 import ssafy.ggame.domain.topic.dto.TopicNewsResDto;
 import ssafy.ggame.global.common.StatusCode;
@@ -21,11 +24,13 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class TopicServiceImpl implements TopicService {
+    private final RecommendationService recommendationService;
     private final PreferCustomRepository preferRepository;
     private final GameCustomRepository gameCustomRepository;
 //    private final WebDriver driver;
@@ -37,7 +42,10 @@ public class TopicServiceImpl implements TopicService {
         List<TopicNewsResDto> hotTopicDtoList = new ArrayList<>();
         if (preferGameNames.isEmpty()) {//선호 게임이 없으면
             //인기게임 10개 조회해서 가져옴
-            //인기게임 추가 로직 필요
+            List<GameCardDto> recentGame = recommendationService.getRecentPopularGameList();
+            for(GameCardDto game:recentGame){
+                getCrawlingData(game.getGameName(), 5, hotTopicDtoList);
+            }
         } else {//있으면
             int size = preferGameNames.size();
             int newsSize = size > 10 ? 5 : 10;
@@ -77,17 +85,17 @@ public class TopicServiceImpl implements TopicService {
         options.addArguments("--disable-dev-shm-usage"); // /dev/shm 파티션 사용 안 함
         options.addArguments("--disable-gpu"); // GPU 가속 사용 안 함
         options.addArguments("--remote-debugging-port=9222"); // 원격 디버깅 포트 설정
-        System.out.println("크롬 드라이버 실행전");
+        System.out.println(keyword+" 크롬 드라이버 실행전");
         // ChromeDriver 생성
         WebDriver driver = new ChromeDriver(options);
-        System.out.println("크롬 드라이버 실행후");
+        System.out.println(keyword+" 크롬 드라이버 실행후");
         try {
             //시작 URL
             String URL = "https://www.gamemeca.com/search.php?q=" + keyword;
             driver.get(URL);
 
             // 크롤링하려는 웹 페이지가 로딩 되는 시간을 기다림
-            driver.manage().timeouts().implicitlyWait(Duration.ofMillis(300));
+            driver.manage().timeouts().implicitlyWait(Duration.ofMillis(50));
 
 
             // 게임 정보로 이동
@@ -103,7 +111,6 @@ public class TopicServiceImpl implements TopicService {
 
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-
 
             List<WebElement> news = driver.findElements(By.cssSelector("#content > div.content-left > div.news-list > ul > li"));
             if(size>=news.size()) size = news.size();

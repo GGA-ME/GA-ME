@@ -21,7 +21,7 @@ public class PreferCustomRepositoryImpl implements PreferCustomRepository{
                             )
                 .from(prefer)
                 .join(prefer.preferId.game, game)
-                .where()
+                .where(prefer.preferId.user.userId.eq(userId))
                 .fetch();
     }
 }
