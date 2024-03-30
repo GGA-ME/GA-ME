@@ -43,7 +43,8 @@ function Detail(): JSX.Element {
       gameName={data?.result?.gameName ?? ""}
       gameShortDescription={data?.result?.gameShortDescription}
       gameIsLike={data?.result?.gameIsLike}
-      price= {data?.result?.gamePriceFinal ?? ""}
+      price= {`₩ ${data?.result?.gamePriceFinal}` ?? ""}
+      developer= {data?.result?.gameDeveloper ?? ""}
       tagsAll= {data?.result?.gameTagList}
       />
       <div className={styles.detailContent}>
