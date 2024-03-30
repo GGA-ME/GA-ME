@@ -1,54 +1,67 @@
-// import { useEffect, useState } from "react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import detailStore, { TagWeight } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
+import LikeComponent from "./Like";
+import StatisticsComponent from "./Statistics";
+import useUserStore from "../../stores/userStore";
 
-// import useUserStore from "../../stores/userStore";
-
-// const MyProfile = ({userId}: {userId: number}) => {
 const MyProfile: React.FC = () => {
-    // const { data, loading, error, topTenTag, fetchData } = detailStore();
-    const { data, loading, error, topTenTag, fetchData} = detailStore();
-    // const {user} = useUserStore();
-    const [user] = useState(12);
+  const { data, loading, error, topTenTag, fetchData } = detailStore();
+  const user = useUserStore((state) => state.user);
 
-    useEffect(() => {if(user) fetchData(user)} , [fetchData, user]);
-    // useEffect(() =>{  
-    //     if(user)
-    //         fetchData(user.userId);
-    //         },[fetchData, user]);
+  useEffect(() => {
+    if (user) fetchData(user.userId);
+  }, [fetchData, user]);
 
-    console.log(user);
-
-    if (loading) {
-        return (
-            <button type="button" className="bg-indigo-500 ..." disabled>
-                <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-                    Processing...
-                </svg>
-            </button>
-        );
-    }
-    if (error) {
-        const axiosError = error as AxiosError;
-        return <div>Error: {axiosError.message}</div>;
-    }
-
-    /** 이미지가 없을때 처리도 해줘야됌 */
+  if (loading) {
     return (
-        <>
-            <div className="flex justify-center items-center h-screen">
-                <div className="bg-gray-600 w-80 h-80 flex justify-center items-center">
-                    <img className="rounded-full" src={data.result.userProfileImg} alt="" />
-                    <p>{data.result.userName}</p>
-                    {topTenTag.map((tag: TagWeight, index: number) => (
-                        <span key={index}>{tag.tagName}</span>
-                    ))}
-                    
-                </div>
-            </div>
-        </>
-    )
-}
+      <button type="button" className="bg-indigo-500 ..." disabled>
+        <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+          Processing...
+        </svg>
+      </button>
+    );
+  }
+  if (error) {
+    const axiosError = error as AxiosError;
+    return <div>Error: {axiosError.message}</div>;
+  }
+
+  /** 이미지가 없을때 처리도 해줘야됌 */
+  return (
+    <>
+      <div className="flex justify-center items-center h-screen">
+        <div
+          className="bg-gray-600 rounded-xl items-center"
+          style={{ margin: "50px", padding: "20px" }}
+        >
+          <img
+            className="rounded-full"
+            src={data.result.userProfileImg}
+            alt=""
+          />
+          <p>{data.result.userName}</p>
+          {topTenTag.map((tag: TagWeight, index: number) => (
+            <span
+              key={index}
+              className="mr-4 mb-3 rounded bg-indigo-700 border-2 border-stone-950"
+            >
+              #{tag.tagName}{" "}
+            </span>
+          ))}
+          <br />
+          <br />
+          <hr />
+          <br />
+          <LikeComponent />
+
+          <div className="flex flex-col items-center">
+            <StatisticsComponent />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default MyProfile;

@@ -1,18 +1,21 @@
-// import Navbar from "../components/commonUseComponents/Navbar";
-import LikeComponent from "../components/MyPageComponents/Like";
-import Profile from "../components/MyPageComponents/Profile"
-import Statistics from '../components/MyPageComponents/Statistics'
+import Navbar from "../components/commonUseComponents/Navbar";
+// import Profile from "../components/MyPageComponents/Profile";
+import useUserStore from '../stores/userStore';
 
-  function MyPage() {
-    return (
-        // <><Navbar /><Profile userId={userId}/><h1>MyPage</h1></>
-        <>
-          {/* <Navbar /> */}
-          <Profile />
-          <LikeComponent />
-          <Statistics />
-          <h1>YyPage</h1>
-        </>
-    )
-  }
-  export default MyPage;
+function MyPage() {
+  const { user } = useUserStore();
+
+  console.log('MyPage() user: ');
+  console.log(user);
+
+  return (
+    <>
+      <Navbar />
+      <div className="pl-80 pr-52 w-full">
+        {/* <p>{user?.userId}</p> */}
+        {/* <Profile /> */}
+      </div>
+    </>
+  );
+}
+export default MyPage;

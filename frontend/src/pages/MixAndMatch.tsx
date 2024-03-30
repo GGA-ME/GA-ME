@@ -1,7 +1,7 @@
 import Navbar from "../components/commonUseComponents/Navbar";
-import CombinationList from "../components/mixAndMathComponents/CombinationList";
-import Result from "../components/mixAndMathComponents/Result";
-import Title from "../components/mixAndMathComponents/Title";
+import CombinationList from "../components/mixAndMatchComponents/CombinationList";
+import Result from "../components/mixAndMatchComponents/Result";
+import Title from "../components/mixAndMatchComponents/Title";
 
 function MixAndMatch() {
   return (

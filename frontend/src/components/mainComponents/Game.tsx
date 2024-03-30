@@ -1,3 +1,5 @@
+// 작성자 : 장현욱
+
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
@@ -10,19 +12,21 @@ interface Game {
   gameId: number;
   gameName: string;
   gameHeaderImg: string;
+  gamePriceInitial: number
   gamePriceFinal: number;
+  gameDeveloper: string;
   tagList: Array<{ codeId: string; tagId:number; tagName: string }>;
   isPrefer: boolean;
   gameLike: number | null;
 }
 
 const GameComponent: React.FC = () => {
-  const { data, loading, error, fetchData } = useStoreMain();
+  const { data, loading, error, fetchMainData } = useStoreMain();
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
   useEffect(() => {
-    fetchData(); // 마운트시 데이터 가져오기
-  }, [fetchData]); // 데이터 변경시 재랜더링
+    fetchMainData(); // 마운트시 데이터 가져오기
+  }, [fetchMainData]); // 데이터 변경시 재랜더링
 
   if (loading) {
     return <div>Loading...</div>;
@@ -43,7 +47,7 @@ const GameComponent: React.FC = () => {
   }
 
   return (
-    <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+    <motion.ul className="grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
       variants={{
         hidden: {},
         visible: { transition: { staggerChildren: 0.1 } }
@@ -63,13 +67,14 @@ const GameComponent: React.FC = () => {
             gameId={game.gameId}
             imageUrl={game.gameHeaderImg}
             title={game.gameName}
-            price={`₩ ${game.gamePriceFinal}`}
+            developer={game.gameDeveloper}
+            beforPrice={`₩ ${game.gamePriceInitial / 100}`}
+            price={`₩ ${game.gamePriceFinal / 100}`}
             tagsAll={game.tagList}
             tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
             isPrefer={game.isPrefer}
             likes={game.gameLike}
-            // 이거 null또는 int인가?..
-            onGameClick={handleClickGame} // 수정된 부분
+            onGameClick={handleClickGame} // 디테일 페이지 이동
             />
         </motion.li>
       ))}

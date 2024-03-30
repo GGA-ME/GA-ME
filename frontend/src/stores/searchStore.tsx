@@ -8,15 +8,15 @@ interface Tag {
 }
 
 interface SearchResult {
-  gameId: number;
-  gameName: string;
-  gameHeaderImg: string;
-  gamePriceInitial: number;
-  gamePriceFinal: number;
-  gameDeveloper: string;
-  isPrefer: boolean | null;
-  gameLike: number | null;
-  tagList: Tag[];
+  gameId: number,
+  gameName: string,
+  gameHeaderImg: string,
+  gamePriceInitial: number,
+  gamePriceFinal: number,
+  gameDeveloper: string,
+  gameLike: null,
+  isPrefer: false,
+  tagList: Tag[]
 }
 
 interface SearchState {

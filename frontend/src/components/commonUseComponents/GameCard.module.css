@@ -72,3 +72,12 @@
   /* 0 0 70px #608894 */
   ;
 }
+
+/* 글자수 제한 두기 */
+.truncateLines {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

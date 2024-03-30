@@ -29,13 +29,13 @@ const SearchGameList: React.FC = () => {
 
   const { fetchData } = useMixAndMatchStore();
 
-  const HandleOnClick =  () => {
+  const HandleOnClick = () => {
     fetchData(requestData);
   };
 
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
-  const handleClickGame = (gameId:number) => {
+  const handleClickGame = (gameId: number) => {
     navigate(`/detail/${gameId}`)
   }
 
@@ -46,15 +46,15 @@ const SearchGameList: React.FC = () => {
   // cartItems가 비어있을 경우 메세지를 표시
   if (cartItems.length === 0) {
     return (
-      <div className={style.box} style={{height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
-        <p>게임을 담아주세요!</p>
+      <div className={style.box} style={{ height: '200px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+        <p className="mt-[70px] mb-[30px]">게임을 담아주세요!</p>
         <button className={style.topicBtn} onClick={handleGoToMain}>담으러 가기</button>
       </div>
     );
   }
 
   return (
-    <div className={style.box} style={{height: '275px'}}>
+    <div className={style.box} style={{ height: '275px' }}>
       <div className={style.gameList}>
         {cartItems.map((item, index: number) => (
           <GameCard
@@ -65,9 +65,11 @@ const SearchGameList: React.FC = () => {
             price={`₩ ${item.price}`}
             tags={item.tagsAll?.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName) ?? []}
             tagsAll={item.tagsAll}
-            likes={0} // 임시 값
+            likes={0} 
             onGameClick={handleClickGame}
-            isPrefer={false} // 임시 값
+            isPrefer={false} 
+            developer={item.developer}
+            beforPrice={`₩ ${item.price}`}
           />
         ))}
       </div>
