@@ -18,16 +18,13 @@ const Poket: React.FC = () => {
 
   return (
     <div className='fixed right-3 flex flex-col items-center justify-center h-screen'
-      style={{ marginRight: '10px', zIndex: '9999'}}
+      style={{ zIndex: '9999'}}
     >
 
       {/* 포켓 박스 */}
-      <div className={`${style.neonBorder} -translate-y-20 flex flex-col items-center justify-center px-8 rounded-full border-r-2 border-l-2 bg-gray-900 text-white z-40 h-96`}
-        style={{ 
-          height: '29rem' ,
-          marginTop: '150px'
-      
-        }}>
+      <div className={`${style.neonBorder} -translate-y-20 flex flex-col items-center justify-center px-8 mt-44 rounded-full border-r-2 border-l-2 bg-gray-900 text-white z-40 h-96`}
+        style={{ height: '28rem' }}>
+
 
                 {/* Info아이콘 */}
       <section className="fixed top-3 justify-center items-center mb-4"> {/* mb-4는 하단 요소와의 간격 조정 */}
