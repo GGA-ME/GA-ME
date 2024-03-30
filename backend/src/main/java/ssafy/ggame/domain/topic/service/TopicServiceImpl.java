@@ -9,9 +9,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Service;
+import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.dto.GameSaleCardDto;
 import ssafy.ggame.domain.game.repository.GameCustomRepository;
 import ssafy.ggame.domain.prefer.repository.PreferCustomRepository;
+import ssafy.ggame.domain.recommendation.controller.RecommendationController;
+import ssafy.ggame.domain.recommendation.service.RecommendationService;
 import ssafy.ggame.domain.topic.dto.SaleGameDto;
 import ssafy.ggame.domain.topic.dto.TopicNewsResDto;
 import ssafy.ggame.global.common.StatusCode;
@@ -21,11 +24,13 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class TopicServiceImpl implements TopicService {
+    private final RecommendationService recommendationService;
     private final PreferCustomRepository preferRepository;
     private final GameCustomRepository gameCustomRepository;
 //    private final WebDriver driver;
@@ -37,10 +42,12 @@ public class TopicServiceImpl implements TopicService {
         List<TopicNewsResDto> hotTopicDtoList = new ArrayList<>();
         if (preferGameNames.isEmpty()) {//선호 게임이 없으면
             //인기게임 10개 조회해서 가져옴
-            //인기게임 추가 로직 필요
+            List<GameCardDto> recentGame = recommendationService.getRecentPopularGameList();
+            for(GameCardDto game:recentGame){
+                getCrawlingData(game.getGameName(), 5, hotTopicDtoList);
+            }
         } else {//있으면
             int size = preferGameNames.size();
-
             int newsSize = size > 10 ? 5 : 10;
             for (String gameName : preferGameNames) { //데이터 추가
                 getCrawlingData(gameName, newsSize, hotTopicDtoList);
@@ -104,7 +111,6 @@ public class TopicServiceImpl implements TopicService {
 
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
-
 
             List<WebElement> news = driver.findElements(By.cssSelector("#content > div.content-left > div.news-list > ul > li"));
             if(size>=news.size()) size = news.size();
