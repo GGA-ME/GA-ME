@@ -8,6 +8,7 @@ import Topic from './pages/HotTopic';
 import MixAndMatch from './pages/MixAndMatch'
 import Survey from './pages/Survey';
 import { useEffect } from 'react';
+import useHotTopicStore from "./stores/hotTopicStore";
 
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID as string;
 
@@ -66,10 +67,18 @@ declare global {
 }
 
 const App: React.FC = () => {
+  const { newsData,fetchNewsData } = useHotTopicStore();
   useEffect(() => {
     // 카카오 SDK 초기화
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(KAKAO_CLIENT_ID);
+    }
+    //뉴스 데이터 미리 받기
+    const fetchData = async () => {
+      await fetchNewsData();
+    };
+    if(newsData==null){
+      fetchData(); // 함수 호출
     }
   }, []);
 

@@ -5,19 +5,15 @@ import SaleButton from "../components/HotTopicComponents/SaleButton";
 import NewsButton from "../components/HotTopicComponents/NewsButton";
 import NewsList from '../components/HotTopicComponents/NewsList';
 import SaleComponent from '../components/HotTopicComponents/SaleComponent';
-import useHotTopicStore from "../stores/hotTopicStore";
+// import useHotTopicStore from "../stores/hotTopicStore";
 import Poket from "../components/commonUseComponents/Poket";
 const HotTopic: React.FC = () => {
   const [showSale, setShowSale] = useState(true);
-  const { newsData,fetchNewsData } = useHotTopicStore();
+  // const { newsData,fetchNewsData } = useHotTopicStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      await fetchNewsData();
-    };
-    if(newsData==null){
-      fetchData(); // 함수 호출
-    }
+   
+   
     
     
   }, []); // 두 번째 매개변수로 빈 배열 전달
