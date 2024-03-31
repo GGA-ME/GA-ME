@@ -1,7 +1,7 @@
 // src/stores/useUserStore.tsx
 import create from 'zustand';
 import axios from 'axios';
-import useHotTopicStore from './hotTopicStore';
+// import useHotTopicStore from './hotTopicStore';
 interface User {
   userId: number;
   userName: string;
@@ -23,7 +23,7 @@ const useUserStore = create<UserState>((set) => ({
   setUser: (user) => set({ user, isLoggedIn: true }),
   setIsLoggedIn: (isLoggedIn) => set({ isLoggedIn }),
   fetchAndSetUser: async (accessToken): Promise<boolean> => {
-    const { fetchNewsData , setUserId } = useHotTopicStore();
+    // const { fetchNewsData , setUserId } = useHotTopicStore();
     try {
       const response = await axios.post('/api/auth/kakao/callback', {
         accessToken,
@@ -41,10 +41,10 @@ const useUserStore = create<UserState>((set) => ({
           },
           isLoggedIn: true,
         });
-        setUserId(userInfo.userId)
-        console.log('hotTopicStore에 userId 저장 완료')
-        fetchNewsData();
-        console.log('hotTopicStore에 fetchNewsData실행 완료')
+        // setUserId(userInfo.userId)
+        // console.log('hotTopicStore에 userId 저장 완료')
+        // fetchNewsData();
+        // console.log('hotTopicStore에 fetchNewsData실행 완료')
         console.log('사용자 정보: ');
         console.log(userInfo);
 
