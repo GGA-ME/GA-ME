@@ -8,6 +8,8 @@ import useUserStore from "../../stores/userStore";
 const MyProfile: React.FC = () => {
   const { data, loading, error, topTenTag, fetchData } = myPageStore();
   const {user} = useUserStore();
+  console.log(`user= ${user}`);
+  console.log(`data= ${data}`);
   // const { userId }: { userId?: string } = useParams<{ userId?: string }>();
     // userId가 undefined일 때의 처리
     // const userIdAsNumber: number = parseInt(userId);
