@@ -64,7 +64,7 @@ const SearchGameList: React.FC = () => {
   }
 
   return (
-    <div className={style.box} style={{ height: "300px" }}>
+    <div className={style.box} style={{ height: "310px" }}>
       <div className={style.gameList}>
         <motion.ul
           className="grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"

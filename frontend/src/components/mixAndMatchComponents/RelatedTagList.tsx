@@ -17,9 +17,10 @@ const CombinationList: React.FC = () => {
 
       {!loading && hasTags && (
         <div className={style.box}>
-          <img src="./MixMatchBearker.PNG"/>
-          <div className="mt-2 mb-1 ml-3 text-[20px] font-sejong">
-            주요 Mix 태그🧪
+          <div className={style.tagTitle}>
+          <img src="/HotTopicSaleIcon.png" className={style.icon}/>            <div className="mt-2 mb-1 ml-3 text-[20px] font-sejong">
+              주요 Mix 태그
+            </div>
           </div>
           <hr className={style.hr}></hr>
           <div className="mb-3">
@@ -34,8 +35,6 @@ const CombinationList: React.FC = () => {
           </div>
         </div>
       )}
-
-      
     </div>
   );
 };
