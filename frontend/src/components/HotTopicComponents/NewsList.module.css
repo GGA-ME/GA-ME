@@ -3,6 +3,12 @@
     font-family: 'SejonghospitalBold';
     
 }
+.loadingTitle2{
+  font-size: 30px;
+  font-family: 'SejonghospitalBold';
+  margin-top: 15px;
+  
+}
 .container{
     display: flex;          /* Flex 컨테이너 활성화 */
     margin-left: 380px;

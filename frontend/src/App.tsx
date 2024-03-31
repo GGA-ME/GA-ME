@@ -9,6 +9,7 @@ import MixAndMatch from './pages/MixAndMatch'
 import Survey from './pages/Survey';
 import { useEffect } from 'react';
 import useHotTopicStore from "./stores/hotTopicStore";
+import useUserStore from "./stores/userStore";
 
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID as string;
 
@@ -68,6 +69,7 @@ declare global {
 
 const App: React.FC = () => {
   const { newsData,fetchNewsData } = useHotTopicStore();
+  const {isLoggedIn} = useUserStore();
   useEffect(() => {
     // 카카오 SDK 초기화
     if (window.Kakao && !window.Kakao.isInitialized()) {
@@ -77,7 +79,7 @@ const App: React.FC = () => {
     const fetchData = async () => {
       await fetchNewsData();
     };
-    if(newsData==null){
+    if(newsData==null&&isLoggedIn){
       fetchData(); // 함수 호출
     }
   }, []);

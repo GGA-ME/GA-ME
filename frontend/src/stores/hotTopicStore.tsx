@@ -81,8 +81,7 @@ const api = axios.create({
     nError: null,
     sError: null,
     
-    
-    userId: 1,//임시 1 처리 원래 0
+    userId: 0,//임시 1 처리 원래 0
     setUserId: (userId: number) => set({ userId }),
 
     fetchNewsData: async () => {

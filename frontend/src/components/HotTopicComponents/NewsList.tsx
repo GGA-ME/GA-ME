@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import NewsCard from '../HotTopicComponents/NewsCard';
 import useHotTopicStore from "../../stores/hotTopicStore";
 import style from './NewsList.module.css';
+import useUserStore from '../../stores/userStore';
 
 // 사용 스토어의 구조를 기반으로 하는 구조
 interface NewsList {
@@ -14,11 +15,19 @@ interface NewsList {
 
 const NewsList: React.FC = () => {
   const { newsData, nLoading, nError ,fetchNewsData} = useHotTopicStore();
+  const {isLoggedIn} = useUserStore();
      // 버튼 클릭 시 뉴스 데이터를 다시 가져오는 함수
   const handleRetry = () => {
     fetchNewsData(); // 데이터 재요청
   };
-
+  if(!isLoggedIn){
+    return <div className={`${style.container}`}>
+    <div className={`${style.eyes}`}></div>
+    <div>
+    <h1 className={`${style.loadingTitle2}`}> 로그인이 필요한 페이지입니다 . </h1>   
+    </div>
+</div>;
+  }
   if (nLoading) {
     return <div className={`${style.container}`}>
               <div className={`${style.loader}`}></div>
