@@ -31,8 +31,8 @@ export interface GameData {
     gameDeveloper: string;
     gamePublisher: string;
     gamePriceInitial: number; 
-    gamePriceFinal: number; // gameCard에 맞춰서 string
-    gameDiscountPercent: string;
+    gamePriceFinal: number | 0; // gameCard에 맞춰서 string
+    gameDiscountPercent: number;
     gameReleaseDate: string;
     screenshotList: Screenshot[];
     relatedGameList: Game[]; // 관련 게임 데이터에 대한 정확한 타입이 없는 경우 any로 지정
