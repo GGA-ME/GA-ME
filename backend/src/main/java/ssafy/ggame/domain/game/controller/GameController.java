@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.dto.GameDetailResDto;
 import ssafy.ggame.domain.game.entity.Game;
 import ssafy.ggame.domain.game.repository.GameRepository;
 import ssafy.ggame.domain.game.service.GameService;
+import ssafy.ggame.domain.recommendation.service.RecommendationService;
 import ssafy.ggame.domain.statistics.dto.GameStatisticsResDto;
 import ssafy.ggame.domain.statistics.dto.StatisticsDto;
 import ssafy.ggame.domain.statistics.entity.Statistics;
@@ -31,6 +33,7 @@ public class GameController {
     private final GameRepository gameRepository;
     private final StatisticsRepository statisticsRepository;
     private final GameService gameService;
+    private final RecommendationService recommendationService;
 
     @GetMapping("/{game_id}/info/{user_id}")
     public ResponseEntity<Object> getGameInfo(@PathVariable("game_id") Long gameId, @PathVariable("user_id") Long userId) {

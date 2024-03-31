@@ -74,6 +74,8 @@ public class GameService {
         List<GameCardDto> relatedGames = null;
         if (relatedGameList != null) {
             relatedGames = recommendationService.makeGameCardDtoList(relatedGameList);
+        } else {
+            relatedGames = recommendationService.getPopularList(Math.toIntExact(userId), "0", (short) 0, 0, 4);
         }
         boolean isLikedByUser = preferRepository.existsByPreferIdUserUserIdAndPreferIdGameGameId(userId, gameId);
 
@@ -104,7 +106,8 @@ public class GameService {
                 .build();
     }
 
-    private List<Game> getPopularGamesByGameId(Game detailGame) {
+    private List<Game>
+    getPopularGamesByGameId(Game detailGame) {
 
         List<User> users = userRepository.findAllUsersByGame(detailGame);
 
@@ -120,7 +123,9 @@ public class GameService {
         for (User user : users) {
             List<Game> preferredGames = gameRepository.findPreferredGamesByUser(user);
             for (Game game : preferredGames) {
-                gameCountMap.put(game, gameCountMap.getOrDefault(game, 0) + 1); // 해당 게임의 count를 증가시킴
+                if (game != detailGame) {
+                    gameCountMap.put(game, gameCountMap.getOrDefault(game, 0) + 1); // 해당 게임의 count를 증가시킴
+                }
             }
         }
         // gameCountMap이 완전히 비어 있는 경우 처리
@@ -140,8 +145,8 @@ public class GameService {
             sortedGames.add(entry.getKey());
             count++;
 
-            if (count >= 5) {
-                break; // 5개의 게임을 추가하면 반복문을 종료합니다.
+            if (count >= 4) {
+                break; // 4개의 게임을 추가하면 반복문을 종료합니다.
             }
         }
         return sortedGames;
