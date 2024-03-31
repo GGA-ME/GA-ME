@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../../stores/userStore";
-import detailStore from "../../stores/myPageStore";
+import {myPageStore} from "../../stores/myPageStore";
 import { surveyStore } from "../../stores/surveyStore";
 
 const SubmitButton: React.FC = () => {
     const navigate = useNavigate();
     const { user } = useUserStore();
-    const { addLikeWeight } = detailStore();
+    const { addLikeWeight } = myPageStore();
     const {checkGameList} = surveyStore();
     
     const clickSubmit = () => {

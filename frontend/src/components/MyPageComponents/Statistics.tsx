@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import detailStore from "../../stores/myPageStore";
+import {myPageStore} from "../../stores/myPageStore";
 
 interface opts {
   seriesIndex: number;
 }
 
 const statisticsComponent: React.FC = () => {
-  const { data, topTenTag } = detailStore();
+  const { data, topTenTag } = myPageStore();
 
   const userTagWeights: number[] = topTenTag.map((item) => item.userTagWeight);
   const userGameName: string[] = topTenTag.map((item) => item.tagName);

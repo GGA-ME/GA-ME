@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import useMyPageStore, { TagWeight } from '../../stores/myPageStore'
+import {myPageStore, TagWeight } from '../../stores/myPageStore'
 import useUserStore from '../../stores/userStore';
 import useStoreMain from '../../stores/mainStore';
 import style from './Select.module.css'
@@ -12,7 +12,7 @@ interface Tag {
 
 const Select: React.FC = () => {
 
-  const { data, fetchData } = useMyPageStore()  // 유저기반 태그 가져오는 스토어
+  const { data, fetchData } = myPageStore()  // 유저기반 태그 가져오는 스토어
   const { user } = useUserStore();  // 유저의 유저ID가져오는 스토어
   const { setUserId, setTagId, setCodeId, fetchMainData } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
 

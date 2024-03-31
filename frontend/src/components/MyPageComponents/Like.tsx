@@ -1,4 +1,4 @@
-import detailStore, { Prefer } from "../../stores/myPageStore";
+import {myPageStore, Prefer } from "../../stores/myPageStore";
 import { motion } from "framer-motion";
 import GameCard from "../commonUseComponents/SimpleGameCard";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import "swiper/css/thumbs";
 import "swiper/css/pagination";
 
 const LikeComponent: React.FC = () => {
-  const { data } = detailStore();
+  const { data } = myPageStore();
   const navigate = useNavigate();
 
   const getDetailPage = (gameId: number) => {

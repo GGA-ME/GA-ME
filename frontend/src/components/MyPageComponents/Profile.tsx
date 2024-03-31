@@ -1,32 +1,36 @@
-import { useEffect, useState } from "react";
-import detailStore, { TagWeight } from "../../stores/myPageStore";
+import { useEffect } from "react";
+import { myPageStore, TagWeight } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
 import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
+import { useParams } from "react-router-dom";
 
 const MyProfile: React.FC = () => {
-  const { data, loading, error, topTenTag, fetchData } = detailStore();
-  // const user = useUserStore((state) => state.user);
-  const [user] = useState(17);
+  const { data, loading, error, topTenTag, fetchData } = myPageStore();
+  const { userId }: { userId?: string } = useParams<{ userId?: string }>();
+  if (userId) {
+    // userId가 undefined일 때의 처리
+    const userIdAsNumber: number = parseInt(userId);
+    console.log(userIdAsNumber); // userId를 number로 변환한 값 출력
 
-  useEffect(() => {
-    fetchData(user);
-  }, [fetchData]);
+    useEffect(() => {
+      fetchData(userIdAsNumber);
+    }, [fetchData]);
 
-  if (loading) {
-    return (
-      <button type="button" className="bg-indigo-500 ..." disabled>
-        <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
-          Processing...
-        </svg>
-      </button>
-    );
+    if (loading) {
+      return (
+        <button type="button" className="bg-indigo-500 ..." disabled>
+          <svg className="animate-spin h-5 w-5 mr-3 ..." viewBox="0 0 24 24">
+            Processing...
+          </svg>
+        </button>
+      );
+    }
+    if (error) {
+      const axiosError = error as AxiosError;
+      return <div>Error: {axiosError.message}</div>;
+    }
   }
-  if (error) {
-    const axiosError = error as AxiosError;
-    return <div>Error: {axiosError.message}</div>;
-  }
-
   /** 이미지가 없을때 처리도 해줘야됌 */
   return (
     <>
