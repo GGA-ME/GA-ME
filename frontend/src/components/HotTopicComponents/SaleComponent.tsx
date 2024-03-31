@@ -45,7 +45,7 @@ const SaleComponent: React.FC = () => {
 
 
     return (
-        <div>
+        <div className={`${style.saleBox}`}>
             <div className={`${style.select}`}>
                 {/* 라디오 버튼 */}
                 <input type="radio" id="select" name="shop" value="10-30" checked={selectedRange === '10-30'} onChange={handleRangeChange} />

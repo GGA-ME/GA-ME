@@ -41,7 +41,7 @@ return (
 
             {/* 태그 정보 반복문으로 출력 */}
             <div className={styles.tags}>
-            {data?.gameTagList.map((tag, index) => (
+            {data?.gameTagList?.map((tag, index) => (
                 <span key={index} className={styles.tag}>
                 {tag.tagName}
                 </span>
