@@ -1,29 +1,24 @@
 /* neon-border.css */
 @keyframes neon {
-    from, to {
-      box-shadow:
-      0 0 5px #c8c8c8,
-      0 0 10px #c8c8c8,
-      0 0 20px #608894,
-      0 0 30px #608894,
-      0 0 40px #608894
-      /* 0 0 70px #0fa; */
-    }
-    20%, 24%, 55% {        
-        box-shadow:
-        0 0 5px #c8c8c8,
-        0 0 10px #c8c8c8,
-        0 0 15px #608894,
-        0 0 20px #608894,
-        0 0 35px #608894;
-    }
+  from,
+  to {
+    box-shadow: 0 0 5px #c8c8c8, 0 0 10px #c8c8c8, 0 0 20px #608894,
+      0 0 30px #608894, 0 0 40px #608894;
+    /* 0 0 70px #0fa; */
   }
-  
-  .neonBorder {
-    animation: neon 2s infinite alternate;
+  20%,
+  24%,
+  55% {
+    box-shadow: 0 0 5px #c8c8c8, 0 0 10px #c8c8c8, 0 0 15px #608894,
+      0 0 20px #608894, 0 0 35px #608894;
   }
-  
-  /* 버튼 css */
+}
+
+.neonBorder {
+  animation: neon 2s infinite alternate;
+}
+
+/* 버튼 css */
 .lightButton button.bt {
   position: relative;
   height: 100px;
@@ -49,6 +44,7 @@
   transition: 300ms;
   outline: #0f0f0f 2px solid;
   outline-offset: 20;
+  margin-bottom: 20px;
 }
 
 .lightButton button.bt .buttonHolder img {
@@ -91,8 +87,8 @@
 }
 
 .lightButton button.bt:hover .buttonHolder {
-  color: rgba(88, 101, 242, 1);
-  outline: rgba(88, 101, 242, 1) 2px solid;
+  color: rgb(113, 142, 175);
+  outline: rgb(113, 142, 175) 2px solid;
   outline-offset: 2px;
 }
 
@@ -104,4 +100,58 @@
     rgba(255, 255, 255, 0) 75%,
     rgba(255, 255, 255, 0) 100%
   );
+}
+.bubble {
+  position: relative;
+  margin-right: 100px;
+  margin-bottom: 355px;
+  right: 10px;
+  padding: 20px;
+  width: 330px;
+  height: auto;
+  color: #fff;
+  border-radius: 10px;
+  background-color: rgb(113, 142, 175);
+  transform: translateY(-10px);
+  opacity: 1;
+  animation: fadeIn 0.7s ease forwards; /* 애니메이션 적용 */
+  transition: opacity 0.7s ease;
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  right: -20px;
+  border-left: 30px solid #718eaf;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+
+.bubble.hidden {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeOut 0.7s ease forwards; /* 애니메이션 적용 */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 }

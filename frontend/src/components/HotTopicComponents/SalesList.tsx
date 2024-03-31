@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import GameCard from '../commonUseComponents/GameCard';
+import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 import useHotTopicStore from "../../stores/hotTopicStore";
 import { AxiosError } from 'axios';
 
@@ -22,6 +23,7 @@ interface SaleCardProps {
 
 const SalesList: React.FC<SaleCardProps> = ({ cardDtoList }) => {
   const { sLoading, sError } = useHotTopicStore(); // saleData를 사용하지 않으므로 해당 부분 제거
+  const navigate = useNavigate(); // useNavigate 인스턴스화
   if (sLoading) {
     return <div>Loading...</div>;
   }
@@ -30,7 +32,9 @@ const SalesList: React.FC<SaleCardProps> = ({ cardDtoList }) => {
     const axiosError = sError as AxiosError;
     return <div>Error: {axiosError.message}</div>;
   }
-
+  const handleClickGame = (gameId:number) => {
+    navigate(`/detail/${gameId}`)
+  }
   return (
     <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
       variants={{
@@ -58,7 +62,7 @@ const SalesList: React.FC<SaleCardProps> = ({ cardDtoList }) => {
             tags={game.tagList ? game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName) : []}
             likes={game.gameLike}
             isPrefer={game.isPrefer} // `isPrefer` 속성 추가
-            onGameClick={() => console.log(`Clicked on game ${game.gameId}`)}
+            onGameClick={handleClickGame} // 디테일 페이지 이동
           />
         </motion.li>
       ))}
