@@ -19,7 +19,7 @@ import { useDetailStore } from '../../stores/DetailStore';
 const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, developer, tagsAll }) => {
 
   // 줄넘김이 적용된 텍스트
-  const MAX_LENGTH = 51; // 최대 길이 지정
+  const MAX_LENGTH = 40; // 최대 길이 지정
   const { toggleIsLike } = useDetailStore()
   // 텍스트 길이가 이 값 이상이면 공백을 찾아서 줄넘김을 추가하는 함수
   // 문장이 끝날 때까지 단어 단위로 자르고, 각 줄의 길이를 체크하여 줄넘김을 추가하는 함수
@@ -92,7 +92,7 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
           {/* 오른쪽 하단 버튼 */}
           <div className={styles.rightBottomButtons}>
             <button className={styles.urlButton} onClick={steamButtonClickHandler}>스팀으로 이동</button>
-            <button className={styles.urlButton} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button>
+            <button className={`${styles.urlButton} ${styles.addToCartBtn}`} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button>
           </div>
         </div>
       </div>
