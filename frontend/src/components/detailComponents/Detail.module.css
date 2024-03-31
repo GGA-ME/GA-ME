@@ -28,3 +28,8 @@
   color: #aeeeff;
   font-weight: bolder;
 }
+
+.inActiveButton{
+  color: #606060;
+  font-weight: bolder;
+}

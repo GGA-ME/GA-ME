@@ -49,13 +49,13 @@ function Detail(): JSX.Element {
       />
       <div className={styles.detailContent}>
         <button
-          className={activeComponent === "info" ? styles.activeButton : ""}
+          className={activeComponent === "info" ? styles.activeButton : styles.inActiveButton}
           onClick={handleInfoClick}
         >
           정보
         </button>
         <button
-          className={activeComponent === "statistics" ? styles.activeButton : ""}
+          className={activeComponent === "statistics" ? styles.activeButton : styles.inActiveButton}
           onClick={handleStatisticsClick}
         >
           통계
