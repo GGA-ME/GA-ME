@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import useMyPageStore, { TagWeight } from '../../stores/myPageStore'
 import useUserStore from '../../stores/userStore';
 import useStoreMain from '../../stores/mainStore';
+import Swal from 'sweetalert2';
 import style from './Select.module.css'
 
 interface Tag {
@@ -13,7 +14,7 @@ interface Tag {
 const Select: React.FC = () => {
 
   const { data, fetchData } = useMyPageStore()  // 유저기반 태그 가져오는 스토어
-  const { user } = useUserStore();  // 유저의 유저ID가져오는 스토어
+  const { user, isLoggedIn } = useUserStore();  // 유저의 유저ID가져오는 스토어
   const { setUserId, setTagId, setCodeId, fetchMainData, setPage } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
 
   useEffect(() => {
@@ -42,18 +43,32 @@ const Select: React.FC = () => {
 
   // 전체 또는 취향 고를시 API요청
   const handleCategoryChange = (category: string) => {
-    setPage(1)
-    setNowCategory(category);
     if (category === "취향 저격") {
       // 만약 카테고리를 취향저격을 골랐다면
-      setUserId(user?.userId ?? 0); // 유저아이디를 담아서 스토어에 전송 0일 경우도 있으므로 만약의경우0 넣기
+      if (isLoggedIn) {
+        setPage(1)
+        setSelectedTagName(null)
+        setTagId(0) // 태그와 코드 아이디를 0으로 초기화
+        setCodeId('0')
+        setNowCategory(category)
+        setUserId(user?.userId ?? 0) // 유저아이디를 담아서 스토어에 전송 0일 경우도 있으므로 만약의경우0 넣기
+        fetchMainData(); // 바뀐 값으로 메인데이터 다시 요청
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 후 이용 가능합니다!',
+          text: '로그인 후에 자신이 관심있는 태그의 게임을 찾아드려요.',
+        });
+      }
     } else if (category === "전체 인기") {
+      setPage(1)
+      setSelectedTagName(null)
+      setTagId(0) // 태그와 코드 아이디를 0으로 초기화
+      setCodeId('0')
+      setNowCategory(category);
       setUserId(0)
+      fetchMainData(); // 바뀐 값으로 메인데이터 다시 요청
     }
-    setSelectedTagName(null)
-    setTagId(0) // 태그와 코드 아이디를 0으로 초기화
-    setCodeId('0')
-    fetchMainData(); // 바뀐 값으로 메인데이터 다시 요청
   };
 
   // 태그를 고를시 API요청
@@ -65,43 +80,43 @@ const Select: React.FC = () => {
     fetchMainData(); // Fetch data based on tagId and codeId
   }
 
-return (
-  <>
-    <div className="flex space-x-2 p-4">
-      {categorys.map((category, index: number) => (
-        <button
-          key={index}
-          className={`px-3 py-1 rounded-full border-2 border-transparent text-3xl   ${nowCategory === category ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
-            }`}
-          onClick={() => handleCategoryChange(category)}
-        >
-          {category}
-        </button>
-      ))}
-    </div>
-    <div className="flex space-x-2 p-4">
-      {nowCategory === categorys[0] ? defaultTags.map((tag, index: number) => (
-        <button
-          key={index}
-          className={`ml-6 px-3 py-1 rounded-full border-2 border-transparent  ${selectedTagName === tag.tagName ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
-            }`}
-          onClick={() => handleTagChange(tag)}
-        >
-          {tag.tagName}
-        </button>
-      )) : nowCategory === categorys[1] ? userTags.map((tag, index: number) => (
-        <button
-          key={index}
-          className={`ml-6 px-3 py-1 rounded-full border-2 border-transparent ${selectedTagName === tag.tagName ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
-            }`}
-          onClick={() => handleTagChange(tag)}
-        >
-          {tag.tagName}
-        </button>
-      )) : null}
-    </div>
-  </>
-);
+  return (
+    <>
+      <div className="flex space-x-2 p-4">
+        {categorys.map((category, index: number) => (
+          <button
+            key={index}
+            className={`px-3 py-1 rounded-full border-2 border-transparent text-3xl   ${nowCategory === category ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
+              }`}
+            onClick={() => handleCategoryChange(category)}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+      <div className="flex space-x-2 p-4">
+        {nowCategory === categorys[0] ? defaultTags.map((tag, index: number) => (
+          <button
+            key={index}
+            className={`ml-6 px-3 py-1 rounded-full border-2 border-transparent  ${selectedTagName === tag.tagName ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
+              }`}
+            onClick={() => handleTagChange(tag)}
+          >
+            {tag.tagName}
+          </button>
+        )) : nowCategory === categorys[1] ? userTags.map((tag, index: number) => (
+          <button
+            key={index}
+            className={`ml-6 px-3 py-1 rounded-full border-2 border-transparent ${selectedTagName === tag.tagName ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
+              }`}
+            onClick={() => handleTagChange(tag)}
+          >
+            {tag.tagName}
+          </button>
+        )) : null}
+      </div>
+    </>
+  );
 };
 
 export default Select;
