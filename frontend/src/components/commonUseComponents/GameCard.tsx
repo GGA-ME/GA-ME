@@ -83,7 +83,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
 
   // 가격 ,변환을 위한 함수
   function formatPrice(priceStr: string) {
-    const numericPrice = parseInt(priceStr.substring(1), 10);
+    const numericPrice = parseInt(priceStr?.substring(1), 10);
     return `₩${numericPrice.toLocaleString()}`;
   }
 
