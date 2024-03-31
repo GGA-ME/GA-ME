@@ -4,6 +4,7 @@
     margin-top: 5%;
 
     background-color: rgb(43, 43, 44); /* 배경색 설정 */
+    border-radius: 10px;
 }
 
 .title {

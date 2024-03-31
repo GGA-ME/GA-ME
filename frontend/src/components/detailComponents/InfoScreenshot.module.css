@@ -6,6 +6,8 @@
     margin-top: 5%;
     background-size: cover; /* 이미지가 화면을 꽉 채우도록 조정 */
     background-position: center; /* 이미지를 중앙에 배치 */
+    border-radius: 10px;
+    overflow: hidden;
 }
 .imageContainer {
     flex: 4;
