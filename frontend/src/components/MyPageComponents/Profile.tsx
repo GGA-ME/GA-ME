@@ -4,17 +4,18 @@ import { AxiosError } from "axios";
 import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
 import { useParams } from "react-router-dom";
+import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
   const { data, loading, error, topTenTag, fetchData } = myPageStore();
-  const { userId }: { userId?: string } = useParams<{ userId?: string }>();
-  if (userId) {
+  const {user} = useUserStore();
+  // const { userId }: { userId?: string } = useParams<{ userId?: string }>();
     // userId가 undefined일 때의 처리
-    const userIdAsNumber: number = parseInt(userId);
-    console.log(userIdAsNumber); // userId를 number로 변환한 값 출력
-
+    // const userIdAsNumber: number = parseInt(userId);
+    // console.log(userIdAsNumber); // userId를 number로 변환한 값 출력
+  if(user){
     useEffect(() => {
-      fetchData(userIdAsNumber);
+      fetchData(user.userId);
     }, [fetchData]);
 
     if (loading) {
