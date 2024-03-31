@@ -41,9 +41,10 @@ public class TopicServiceImpl implements TopicService {
         List<String> preferGameNames = preferRepository.findPreferGameNames(userId);
         List<TopicNewsResDto> hotTopicDtoList = new ArrayList<>();
         if (preferGameNames.isEmpty()) {//선호 게임이 없으면
-            //인기게임 10개 조회해서 가져옴
+            //인기게임 5개 조회해서 가져옴
             List<GameCardDto> recentGame = recommendationService.getRecentPopularGameList();
-            for(GameCardDto game:recentGame){
+            List<GameCardDto> gameCardDtos = recentGame.subList(0, 5);
+            for(GameCardDto game:gameCardDtos){
                 getCrawlingData(game.getGameName(), 5, hotTopicDtoList);
             }
         } else {//있으면
