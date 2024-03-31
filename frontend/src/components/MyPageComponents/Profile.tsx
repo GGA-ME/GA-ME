@@ -3,7 +3,6 @@ import { myPageStore, TagWeight } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
 import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
-import { useParams } from "react-router-dom";
 import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
