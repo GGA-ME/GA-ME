@@ -20,5 +20,11 @@
     margin-right: 30px;
     right: 40%; /* 중앙 이미지 왼쪽으로부터의 상대적인 위치 */
     font-size: 35px;
+    font-weight: bold;
   }
   
+
+.activeButton{
+  color: #aeeeff;
+  font-weight: bolder;
+}
