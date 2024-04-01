@@ -75,11 +75,11 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
       setGameId(gameId); // 게임 ID를 스토어에 설정
       if (isLiked) {
         await unlikeGame(); // 좋아요 취소 요청
-        setIsLiked(!isPrefer)
+        setIsLiked(isPrefer)
         setLikeCount((prevCount) => (prevCount ? prevCount - 1 : 0)); // Ensure not going below 0
       } else {
         await likeGame(); // 좋아요 요청
-        setIsLiked(!isPrefer)
+        setIsLiked(isPrefer)
         setLikeCount((prevCount) => (prevCount ? prevCount + 1 : 1)); // Initialize to 1 if null
 
       }
