@@ -121,7 +121,7 @@ const Navbar: React.FC = () => {
         action: handleLoginClick,
       } : 
       {
-          path: `/myPage/`,
+          path: `/myPage/${user.userId}`,
           label: "My Page",
           icon: "/ProfileIcon.png",
           activeIcon: "/ProfileIcon.gif",
