@@ -20,7 +20,6 @@
 .title {
     width: 90%;
     height: 10%;
-    border: solid skyblue;
     font-size: 35px; /* 제목의 글꼴 크기 설정 */
     font-weight: bold; /* 제목의 글꼴 두껍게 설정 */
     margin-bottom: 3%; /* 제목과 게임 목록 사이의 간격 설정 */

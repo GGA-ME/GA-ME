@@ -23,7 +23,8 @@ export default {
       },
       fontFamily: {
         sejong: ['SejonghospitalBold', 'sans-serif'], // 'sejong'는 커스텀 클래스 이름입니다.
-        taebaek: ['TAEBAEKfont', 'sans-serif']
+        taebaek: ['TAEBAEKfont', 'sans-serif'],
+        pretendard: ['Pretendard', 'sans-serif']
       },
       fontSize: {
         '20': '20px',

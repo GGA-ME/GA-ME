@@ -17,26 +17,45 @@
 }
 
 .title {
-    width: 100%;
+    width: 90%;
     height: 10%;
 
     font-size: 35px; /* 제목의 글꼴 크기 설정 */
     font-weight: bold; /* 제목의 글꼴 두껍게 설정 */
     margin-bottom: 3%; /* 제목과 게임 목록 사이의 간격 설정 */
     margin-top: 3%;
-}
-/* 
-strong{
-    font-size: 25px;
+
+    text-align: left;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
-img{
+
+.desc{
+    text-align: left;
+    display: flex;
+    padding: 0 13% 5% 13%;
+    line-height: 30px; 
+    font-size: 16px; 
+    justify-content: center; 
+    align-items: left;
+    flex-direction: column; 
+    font-family: "Pretendard";
+}
+
+.desc strong{
+    font-size: 25px;
+    margin-bottom: 2%;
+    display: block;
+}
+
+.desc img{
     padding: 0;
-    margin: 6.5% 0%;
+    margin: 5% 0;
     border-radius: 10px;
 }
 
-img:first-child {
+.desc img:first-child {
     padding: 0;
-    margin: 5% 0 0 0; 
-} */
+    margin: 3% 0 0 0; 
+} 

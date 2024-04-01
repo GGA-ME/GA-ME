@@ -27,14 +27,14 @@ const InfoDetailDesc: React.FC<InfoDetailDescProps> = ({ data }) => {
           {/* 중간에 테두리가 있는 박스 */}
           <div className={styles.infoBox}>
             {/* 왼쪽 편에 3개의 정보 */}
-            <div className={styles.leftInfo}>
+            <div className={`${styles.leftInfo} font-pretendard`}>
               <div>출시일 : {data?.gameReleaseDate}</div>
               <div>개발자 : {data?.gameDeveloper}</div>
               <div>배급사 : {data?.gamePublisher}</div>
             </div>
 
             {/* 오른쪽에 3개의 정보 */}
-            <div className={styles.rightInfo}>
+            <div className={`${styles.rightInfo} font-pretendard`}>
               <div>
               {data?.gameDiscountPercent != 0 ? (
                 <div className={styles.beforePrice}>
@@ -57,7 +57,7 @@ const InfoDetailDesc: React.FC<InfoDetailDescProps> = ({ data }) => {
           {/* 태그 정보 반복문으로 출력 */}
           <div className={styles.tags}>
             {data?.gameTagList?.map((tag, index) => (
-              <span key={index} className={styles.tag}>
+              <span key={index} className={`${styles.tag} font-sejong`}>
                 # {tag.tagName}
               </span>
             ))}
