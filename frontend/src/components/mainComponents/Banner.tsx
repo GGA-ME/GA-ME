@@ -58,7 +58,8 @@ const Banner: React.FC = () => {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        // pagination={{ clickable: true }}
+        watchSlidesProgress={true}
+
         {...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {})}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
@@ -84,7 +85,7 @@ const Banner: React.FC = () => {
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
           <SwiperSlide key={index} className="cursor-pointer">
-            <img key = {index} src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
+            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
           </SwiperSlide>
         ))}
       </Swiper>
