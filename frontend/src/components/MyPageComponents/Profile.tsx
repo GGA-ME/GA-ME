@@ -5,15 +5,18 @@ import StatisticsComponent from "./Statistics";
 import styles from "./MyPage.module.css";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
+import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
+  const {user} = useUserStore();
   const { userId }: { userId?: string } = useParams<{ userId: string }>();
   const { data, loading, error, topTenTag, fetchData } = myPageStore();
-  console.log(userId);
 
-  if (userId) {
-    const userIdAsNumber: number = parseInt(userId);
-    console.log(userIdAsNumber);
+  if (user) {
+    // const userIdAsNumber: number = parseInt(userId);
+    console.log("Profile Component에서 출력한 USER!!")
+    console.log(user)
+    // console.log(userIdAsNumber);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       fetchData(userIdAsNumber);
