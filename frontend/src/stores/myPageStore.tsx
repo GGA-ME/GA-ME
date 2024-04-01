@@ -120,6 +120,7 @@ const myPageStore = create<myPageDetail>((set) => ({
             })
         }
         catch (error) {
+            console.error(error);
             if (axios.isAxiosError(error)) {
                 set({ error, loading: false });
             }
