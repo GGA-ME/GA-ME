@@ -43,6 +43,7 @@ const Select: React.FC = () => {
 
   // 전체 또는 취향 고를시 API요청
   const handleCategoryChange = (category: string) => {
+    setUserId(user?.userId ?? 0) // 유저아이디를 담아서 스토어에 전송 0일 경우도 있으므로 만약의경우0 넣기
     if (category === "취향 저격") {
       // 만약 카테고리를 취향저격을 골랐다면
       if (isLoggedIn) {
@@ -51,7 +52,6 @@ const Select: React.FC = () => {
         setTagId(0) // 태그와 코드 아이디를 0으로 초기화
         setCodeId('0')
         setNowCategory(category)
-        setUserId(user?.userId ?? 0) // 유저아이디를 담아서 스토어에 전송 0일 경우도 있으므로 만약의경우0 넣기
         fetchMainData(); // 바뀐 값으로 메인데이터 다시 요청
       } else {
         Swal.fire({
@@ -66,7 +66,6 @@ const Select: React.FC = () => {
       setTagId(0) // 태그와 코드 아이디를 0으로 초기화
       setCodeId('0')
       setNowCategory(category);
-      setUserId(0)
       fetchMainData(); // 바뀐 값으로 메인데이터 다시 요청
     }
   };
