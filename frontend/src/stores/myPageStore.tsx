@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { api } from '../url/api';
 import axios, { AxiosError } from "axios";
+import { log } from "../url/api";
 
 // interface로 response data들에 대한 타입을 미리 지정해줌
 // dto랑 비슷한 느낌으로 사용
@@ -127,27 +128,24 @@ const myPageStore = create<myPageDetail>((set) => ({
 
     },
     addLikeWeight: async (userId: number, gameList: number[][]) => {
-
-        const action: string = 'like';
-        gameList.map(async (arrayGame: number[]) => {
-            try {
-                arrayGame.map(async (gameId: number) => {
-                    await api.put(`/tracking?userId=${userId}&gameId=${gameId}&action=${action}`);
-                    await api.post(`/tracking/log`, {
-                        userId: userId, // 유저 아이디
-                        page: 'survey', // 페이지
-                        action: 'like', // 사용자 행동
-                        args: [
-                          {'favorite': gameId}, // 디테일
-                        ],
-                      })
-                })
-            } catch (error) {
-                console.error(error);
-            }
-        });
-    }
-
+      const action: string = "like";
+      const page: string = "survey";
+      gameList.map(async (arrayGame: number[]) => {
+        try {
+          arrayGame.map(async (gameId: number) => {
+            await api.put(
+              `/tracking?userId=${userId}&gameId=${gameId}&action=${action}`
+            );
+            // 사용자 패턴 로그
+            log(userId, page, action, [
+              { 'favorite': gameId }, // 디테일
+            ]);
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    },
 }))
 
 // eslint-disable-next-line react-refresh/only-export-components
