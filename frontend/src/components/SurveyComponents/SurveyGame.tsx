@@ -7,6 +7,8 @@ import { AxiosError } from "axios";
 import { ConfigProvider, Steps } from "antd";
 import useUserStore from "../../stores/userStore";
 import { SubmitButton } from "./SubmitButton";
+import { useNavigate } from "react-router-dom";
+import { myPageStore } from "../../stores/myPageStore";
 
 const { Step } = Steps;
 
@@ -16,26 +18,18 @@ export interface ChoiceGame {
   gameHeaderImg: string;
 }
 
-const SurveyGame = () => {
+const SurveyGame: React.FC = () => {
+  const navigate = useNavigate();
   // checkGameList 내부에 survey 페이지에서 선택한 게임 정보가 들어있다.
-  const {
-    data,
-    loading,
-    error,
-    checkGameList,
-    backGroundImg,
-    setBackgroundImg,
-    fetchData,
-    addCheckChoiceGame,
-    removeCheckChoiceGame,
-  } = surveyStore();
+  const { data, loading, error, checkGameList, backGroundImg, setBackgroundImg, fetchData, addCheckChoiceGame, removeCheckChoiceGame } = surveyStore();
   const { user } = useUserStore();
   const [current, setCurrent] = useState(0);
+  const { addLikeWeight } = myPageStore();
   useEffect(() => {
     fetchData(); // 마운트시 데이터 가져오기
   }, [fetchData, user]); // 데이터 변경시 재랜더링
   // 이 시점에 data에 정보가 들어와있음
-
+  console.log(current);
   const oneList: ChoiceGame[] = [];
   const twoList: ChoiceGame[] = [];
   const threeList: ChoiceGame[] = [];
@@ -45,17 +39,15 @@ const SurveyGame = () => {
   groups.push(oneList);
   groups.push(twoList);
   groups.push(threeList);
-  if (data)
-    for (let i = 0; i < 3; i++)
-      for (let j = i * 12; j < i * 12 + 12; j++) groups[i].push(data.result[j]);
+  if (data) for (let i = 0; i < 3; i++) for (let j = i * 12; j < i * 12 + 12; j++) groups[i].push(data.result[j]);
 
   const changeBackgroundImg = (image: string) => {
     setBackgroundImg(image);
   };
 
-  const stepValidation = (value: number) => {
-    if (checkGameList[current].length !== 0) setCurrent(value);
-    else alert("게임을 선택해주세요");
+  const stepValidation = () => {
+    if (checkGameList[current].length !== 0) return true;
+    return false;
   };
 
   const isInGameList = (gameId: number, current: number) => {
@@ -71,19 +63,33 @@ const SurveyGame = () => {
     else addCheckChoiceGame(gameId, current);
   };
 
-  // 마지막 페이지라면 Submit 버튼 활성화
-  const isEndLine = (currentPage: number) => {
-    if (currentPage === 2) {
-      return (
-        <div className="mt-[20px]">
-          <SubmitButton />
-        </div>
-      );
-    } else {
-      return null;
+  const clickSubmit = () => {
+    if (!user) {
+      alert("유저 정보가 존재하지 않습니다.");
+      navigate("/");
+      throw new Error("유저 정보가 존재하지 않습니다.");
     }
+
+    if(stepValidation()) {
+      addLikeWeight(user.userId, checkGameList);
+      // 라엘아 여기에 좋아요 로그 남겨줘
+      navigate("/");
+    }
+    else alert("게임을 최소 하나를 선택해주세요!");
   };
 
+  const nextClick = () => {
+    if(stepValidation()) setCurrent(current + 1);
+    else alert("게임을 최소 하나를 선택해주세요!");
+    
+  };
+
+  const prevClick = () => {
+    setCurrent(current - 1);
+    
+  };
+
+  // 마지막 페이지라면 Submit 버튼 활성화
   if (loading) {
     return (
       <button type="button" className="bg-indigo-500 ..." disabled>
@@ -109,7 +115,7 @@ const SurveyGame = () => {
         theme={{
           components: {
             Steps: {
-              navArrowColor: '#D9D9D9',
+              navArrowColor: "#D9D9D9",
               colorPrimary: "#036280",
             },
           },
@@ -117,69 +123,74 @@ const SurveyGame = () => {
       >
         <div className={styles.container}>
           {/* 배경 이미지와 필터를 적용하는 div */}
-          <div
-            className={styles.backgroundImage}
-            style={{ backgroundImage: `url(${backGroundImg})` }}
-          />
+          <div className={styles.backgroundImage} style={{ backgroundImage: `url(${backGroundImg})` }} />
           <div className={styles.contentWrapper}></div>
           <div className={styles.contentWrapper}>
             <div className="flex justify-center items-center h-full">
               <div className="relative w-900px h-700px bg-box-gray rounded-lg p-4 pl-8 pr-8">
                 {/* 내용 */}
                 <div className="bg-white-500">
-                  <Steps                  
-                    type="navigation"
-                    onChange={stepValidation}
-                    current={current}
-                    style={{ color: "#D9D9D9" }}
-                  >
+                  <Steps type="navigation" onChange={stepValidation} current={current} style={{ color: "#D9D9D9" }}>
                     <Step status={current >= 0 ? "process" : "wait"} />
-                    <Step status='process' />
-                    <Step status='process' />
+                    <Step status="process" />
+                    <Step status="process" />
                   </Steps>
                 </div>
-                <p className="text-white mt-[20px] mb-[20px]">
-                  맞춤 추천을 위해 당신의 게임 취향을 알려주세요!
-                </p>
+                <p className="text-white mt-[20px] mb-[20px]">맞춤 추천을 위해 당신의 게임 취향을 알려주세요!</p>
                 <div className="bg-stone-900 ">
                   <div className="grid grid-cols-4 gap-3">
-                    {groups[current].map(
-                      (choiceGame: ChoiceGame, index: number) => (
-                        <motion.li
+                    {groups[current].map((choiceGame: ChoiceGame, index: number) => (
+                      <motion.li
+                        key={index}
+                        className={"list-none "}
+                        variants={{
+                          hidden: { x: -60, opacity: 0 },
+                          visible: {
+                            x: 0,
+                            opacity: 1,
+                            transition: { duration: 0.3 },
+                          },
+                        }}
+                        onClick={() => changeGameList(choiceGame.gameId, current, choiceGame.gameHeaderImg)}
+                      >
+                        <SimpleGameCard
                           key={index}
-                          className={"list-none "}
-                          variants={{
-                            hidden: { x: -60, opacity: 0 },
-                            visible: {
-                              x: 0,
-                              opacity: 1,
-                              transition: { duration: 0.3 },
-                            },
-                          }}
-                          onClick={() =>
-                            changeGameList(
-                              choiceGame.gameId,
-                              current,
-                              choiceGame.gameHeaderImg
-                            )
-                          }
-                        >
-                          <SimpleGameCard
-                            key={index}
-                            gameId={choiceGame.gameId}
-                            imageUrl={choiceGame.gameHeaderImg}
-                            title={choiceGame.gameChoiceName}
-                            isSelected={isInGameList(
-                              choiceGame.gameId,
-                              current
-                            )} // 선택 상태 전달
-                          />
-                        </motion.li>
-                      )
-                    )}
+                          gameId={choiceGame.gameId}
+                          imageUrl={choiceGame.gameHeaderImg}
+                          title={choiceGame.gameChoiceName}
+                          isSelected={isInGameList(choiceGame.gameId, current)} // 선택 상태 전달
+                        />
+                      </motion.li>
+                    ))}
                   </div>
                 </div>
-                {isEndLine(current)}
+                {current === 2 && (
+                  <>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={prevClick}>
+                      Prev
+                    </button>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={clickSubmit}>
+                      Submit
+                    </button>
+                  </>
+                )}
+                {current === 1 && (
+                  <>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={prevClick}>
+                      Prev
+                    </button>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={nextClick}>
+                      Next
+                    </button>
+                  </>
+                )}
+                {current === 0 && (
+                  <>
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={nextClick}>
+                      Next
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
