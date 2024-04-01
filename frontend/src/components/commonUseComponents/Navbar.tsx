@@ -121,11 +121,10 @@ const Navbar: React.FC = () => {
         action: handleLoginClick,
       } : 
       {
-          path: `/myPage/${user.userId}`,
+          path: `/myPage`,
           label: "My Page",
           icon: "/ProfileIcon.png",
           activeIcon: "/ProfileIcon.gif",
-          action: getMyPage,
       },
     // isLoggedIn이 true일 때만 로그아웃 버튼 객체를 배열에 추가
     ...(isLoggedIn
