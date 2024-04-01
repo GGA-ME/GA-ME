@@ -18,6 +18,7 @@ import ssafy.ggame.domain.gameTag.repository.GameTagRepository;
 import ssafy.ggame.global.common.StatusCode;
 import ssafy.ggame.global.exception.BaseException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -88,7 +89,7 @@ public class UserTagService {
     // '관심없음' 태그 가중치 -20
     @Transactional
     public List<UserTagResDto> dislikeUserTagWeight(Integer userId, List<UserTagDislikeReqDto.TagCodePair> tags) throws BaseException {
-        List<UserTagResDto> resDto = null;
+        List<UserTagResDto> resDto = new ArrayList<>(); // 변경: null 대신 빈 리스트 초기화
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
@@ -97,11 +98,23 @@ public class UserTagService {
             Tag tag = tagRepository.findByCodeIdAndTagId(tagPair.getCodeId(), tagPair.getTagId())
                     .orElseThrow(() -> new BaseException(StatusCode.TAG_NOT_EXIST));
 
+            Optional<UserTag> userTagOptional = userTagRepository.findByUserIdAndTagIdAndCodeId(userId, tag.getTagId().getTagId(), tag.getTagId().getCode().getCodeId());
 
-            UserTag userTag = userTagRepository.findByUserIdAndTagIdAndCodeId(user.getUserId(), tag.getTagId().getTagId(), tag.getTagId().getCode().getCodeId())
-                    .orElseThrow(() -> new BaseException(StatusCode.USER_TAG_NOT_FOUND));
+            UserTag userTag = userTagOptional.orElseGet(() -> {
+                // UserTagId 복합 키 인스턴스 생성 및 설정
+                UserTagId userTagId = new UserTagId();
+                userTagId.setUser(user);
+                userTagId.setTag(tag);
 
-            short newWeight = (short) (userTag.getUserTagWeight() - 20);    // '관심 없음' 태그에 대한 가중치 -20
+                // 새 UserTag 인스턴스 생성 및 초기화
+                UserTag newUserTag = new UserTag();
+                newUserTag.setUserTagId(userTagId);
+                newUserTag.setUserTagWeight((short) 0); // 초기 가중치 예: 0
+
+                return newUserTag;
+            });
+
+            short newWeight = (short) (userTag.getUserTagWeight() - 20); // '관심 없음' 태그에 대한 가중치 -20
             userTag.setUserTagWeight(newWeight);
 
             UserTagResDto subDto = UserTagResDto.builder()
@@ -118,6 +131,7 @@ public class UserTagService {
 
         return resDto;
     }
+
 
     private short determineWeightToAdd(String action) {
         short weightToAdd = 0;
