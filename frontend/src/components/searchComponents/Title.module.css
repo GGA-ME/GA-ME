@@ -21,10 +21,11 @@
 .detail {
   /* 게임 소식확인 */
   font-weight: bold;
+  font-size: 18px;
 
   line-height: 30px;
   display: flex;
   align-items: center;
-  margin-top: 5px;
+  margin-left: 10px;
   color: #ffffff;
 }
