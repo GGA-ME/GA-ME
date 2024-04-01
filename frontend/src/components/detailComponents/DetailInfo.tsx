@@ -26,7 +26,7 @@ const DetailInfo: React.FC<DetailInfoProps> = ({ data }) => {
                     <InfoDetailDesc data={data} />
 
                     {/* InfoYoutube 컴포넌트는 따로 데이터를 내려주지 않습니다 */}
-                    <InfoYoutube />
+                    <InfoYoutube gameId={data.gameId} gameName={data.gameName}/>
 
                     {/* data.relatedGameList가 유효한 경우에만 InfoGame 컴포넌트를 렌더링합니다 */}
                     <InfoGame relatedGameList={data?.relatedGameList} isGame={isGame} />
