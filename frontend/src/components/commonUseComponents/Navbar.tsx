@@ -81,9 +81,9 @@ const Navbar: React.FC = () => {
     }
   };
 
-  // const getMyPage = () => {
-  //   if(user) navigate(`/myPage/${user.userId}`)
-  // } 
+  const getMyPage = () => {
+    if(user) navigate(`/myPage/${user.userId}`)
+  } 
 
   // 각 네비게이션 정의
   const navLinks: NavLinkItem[] = [
@@ -121,10 +121,11 @@ const Navbar: React.FC = () => {
         action: handleLoginClick,
       } : 
       {
-          path: `/myPage`,
+          path: `/myPage/${user.userId}`,
           label: "My Page",
           icon: "/ProfileIcon.png",
           activeIcon: "/ProfileIcon.gif",
+          action: getMyPage
       },
     // isLoggedIn이 true일 때만 로그아웃 버튼 객체를 배열에 추가
     ...(isLoggedIn
