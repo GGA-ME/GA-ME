@@ -23,6 +23,7 @@ const Navbar: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;  // 현재 위치 확인
   const fetchAndSetUser = useUserStore((state) => state.fetchAndSetUser);
   const setUser = useUserStore((state) => state.setUser);
+  const { user } = useUserStore();
 
   const navLinkYPositions: number[] = [0, 58, 118, 183]; // 각 네비게이션 항목에 대한 Y 위치
 
@@ -80,6 +81,10 @@ const Navbar: React.FC = () => {
     }
   };
 
+  const getMyPage = () => {
+    if(user) navigate(`/myPage/${user.userId}`)
+  } 
+
   // 각 네비게이션 정의
   const navLinks: NavLinkItem[] = [
     {
@@ -108,19 +113,20 @@ const Navbar: React.FC = () => {
     },
     
     // 로그인 상태에 따라 분기 처리
-    isLoggedIn
+    !user
       ? {
-          path: `/myPage`,
+        label: "Login",
+        icon: "/ProfileIcon.png",
+        activeIcon: "/ProfileIcon.gif",
+        action: handleLoginClick,
+      } : 
+      {
+          path: `/myPage/${user.userId}`,
           label: "My Page",
           icon: "/ProfileIcon.png",
           activeIcon: "/ProfileIcon.gif",
-        }
-      : {
-          label: "Login",
-          icon: "/ProfileIcon.png",
-          activeIcon: "/ProfileIcon.gif",
-          action: handleLoginClick,
-        },
+          action: getMyPage,
+      },
     // isLoggedIn이 true일 때만 로그아웃 버튼 객체를 배열에 추가
     ...(isLoggedIn
       ? [
@@ -207,7 +213,33 @@ const Navbar: React.FC = () => {
                   </span>
                 </NavLink>
               );
-            } else {
+            } 
+            else if (link.label == 'My Page' && user){
+              return (
+                <>
+                  <div
+                  key={index}
+                  onClick={link.action}
+                  className="flex items-center space-x-2 mb-8 cursor-pointer ml-2"
+                >
+                  <img
+                    src={link.icon}
+                    className="transition-all duration-300 ease-in-out"
+                    style={{
+                      width: "28px",
+                      height: "auto",
+                      filter: "brightness(0) invert(1)",
+                    }}
+                    alt={`${link.label} Icon`}
+                  />
+                  <span className={`${style.neonNormal} text-xl`}>
+                    {link.label}
+                  </span>
+                </div>
+                </>
+              )
+            }      
+            else {
               // path가 없는 경우 (예: 로그인 버튼), div와 onClick 이벤트를 사용
               return (
                 <div

@@ -114,8 +114,7 @@ const myPageStore = create<myPageDetail>((set) => ({
             set(state => {
                 const topTenTag: TagWeight[] = [];
                 state.data.result.tagWeightList.forEach((tag: TagWeight) => {
-                    topTenTag.push(tag);
-                    
+                    topTenTag.push(tag);                    
                 });
                 return { ...state, topTenTag };
             })
