@@ -22,7 +22,7 @@
     margin-bottom: 3%; /* 제목과 게임 목록 사이의 간격 설정 */
     margin-top: 3%;
 }
-
+/* 
 strong{
     font-size: 25px;
 }
@@ -35,5 +35,5 @@ img{
 
 img:first-child {
     padding: 0;
-    margin: 5% 0 0 0; /* 아래쪽에만 마진을 추가하여 이미지 간의 간격 조절 */
-}
+    margin: 5% 0 0 0; 
+} */
