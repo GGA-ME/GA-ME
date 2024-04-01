@@ -1,6 +1,6 @@
 .container {
     width: 85%;
-    height: 500px;
+    height: 350px;
     margin-top: 5%;
 
     background-color: rgb(43, 43, 44); /* 배경색 설정 */
@@ -11,22 +11,27 @@
     overflow-x: auto; /* 가로로 넘치는 내용을 스크롤 가능하도록 설정 */
 
     border-radius: 10px;
+
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+
     
 }
 
 .title {
-    width: 100%;
+    width: 90%;
     height: 10%;
-
     font-size: 35px; /* 제목의 글꼴 크기 설정 */
     font-weight: bold; /* 제목의 글꼴 두껍게 설정 */
     margin-bottom: 3%; /* 제목과 게임 목록 사이의 간격 설정 */
     margin-top: 3%;
+    text-align: left;
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
 .gameList {
-    width: 100%;
+    margin: 0 2.5%;
+    width: 95%;
     height: auto;
     display: flex;
-    gap: 10px; /* 게임 카드 간의 간격 설정 */
 }

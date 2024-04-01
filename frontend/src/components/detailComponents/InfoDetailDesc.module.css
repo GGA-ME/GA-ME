@@ -7,6 +7,7 @@
   background-position: center; /* 이미지를 중앙에 배치 */
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 /* 어두운 필터와 그라데이션 효과 적용 */
@@ -34,12 +35,12 @@
   text-align: center;
   color: white;
 
-  padding: 0% ;
+  padding: 0%;
 }
 
-.innerInfo{
+.innerInfo {
   height: 80%;
-  margin:5% 10%;
+  margin: 5% 8%;
 }
 
 .gameTitle {
@@ -47,19 +48,18 @@
   margin-left: 5%;
   font-size: 48px;
   text-align: left;
-  font-weight: bold;
-  
 }
 
 .infoBox {
   border: 2.4px solid #ccc;
   width: 90%;
   height: 50%;
-  padding: 16px;
+  padding: 16px 22px;
   display: flex;
   border-radius: 8px;
   font-size: 20px;
   margin: 0 5%;
+
 }
 
 .leftInfo {
@@ -99,7 +99,7 @@
   display: inline-block;
   margin-right: 8px;
   padding: 4px 8px;
-  background-color: #036280;
+  background-color: #87d1e6;
   border-radius: 4px;
   margin-bottom: 8px;
 }

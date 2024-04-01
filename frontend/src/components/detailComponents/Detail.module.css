@@ -17,8 +17,6 @@
   /* 디테일 본문 내의 버튼 스타일 */
   .detailContent button {
     position:relative;
-    margin-right: 24px;
-    right: 40%; /* 중앙 이미지 왼쪽으로부터의 상대적인 위치 */
     font-size: 28px;
     font-weight: bold;
   }
@@ -27,9 +25,27 @@
 .activeButton{
   color: #aeeeff;
   font-weight: bolder;
+  width: 100%;
+
 }
 
 .inActiveButton{
   color: #606060;
   font-weight: bolder;
+  width: 100%;
+
+}
+
+.dot{
+  color: #606060;
+  padding-bottom: 5%;
+  margin: 0;
+  font-size: 40px;
+}
+
+.menuTab{
+  width: 15%;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
 }

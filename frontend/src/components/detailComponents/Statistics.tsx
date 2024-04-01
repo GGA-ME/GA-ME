@@ -171,7 +171,7 @@ const Statistics: React.FC<StatisticsProps> = ({ ratioData, gameName }) => {
 
     return (
         <div className="flex justify-center"> {/* p-16을 p-60 또는 원하는 크기로 조정 */}
-            <div className={` ${style.neonBorder} w-full max-w-screen-lg bg-gray-900 rounded-xl`}> {/* 네온 효과 스타일을 적용합니다 */}
+            <div className={` ${style.neonBorder} ${style.statisticsContainer}`}> {/* 네온 효과 스타일을 적용합니다 */}
                 <ReactApexChart options={options} series={series} type="bar" height={380} />
             </div>
         </div>

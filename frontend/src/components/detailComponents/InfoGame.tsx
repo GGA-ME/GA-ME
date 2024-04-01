@@ -25,8 +25,8 @@ const InfoGame: React.FC<InfoGameProps> = ({ relatedGameList, isGame }) => {
 return (
 <>
 <div className={styles.container}>
-    <div className={styles.title}>{isGame ? '연관 게임' : '인기 게임'}</div>
-    <div className="flex justify-center"> {/* 중앙 정렬을 위한 flex 컨테이너 */}
+    <div className={`${styles.title} font-sejong` }>{isGame ? '연관 게임' : '인기 게임'}</div>
+    <div className={styles.gameList}> {/* 중앙 정렬을 위한 flex 컨테이너 */}
         <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         variants={{
             hidden: {},

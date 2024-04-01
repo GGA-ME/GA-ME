@@ -3,11 +3,13 @@
     display: flex;
     width: 85%;
     height: 400px;
-    margin-top: 5%;
+    margin-top: 0%;
     background-size: cover; /* 이미지가 화면을 꽉 채우도록 조정 */
     background-position: center; /* 이미지를 중앙에 배치 */
     border-radius: 10px;
     overflow: hidden;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+
 }
 .imageContainer {
     flex: 4;
