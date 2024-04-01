@@ -82,6 +82,7 @@ const api = axios.create({
         })) ?? []; // tagsAll이 null이나 undefined일 경우 빈 배열을 대신 사용
     
         try {
+            console.log(tags)
             const response = await api.put(`/api/tracking/dislike`, { userId, tags });
             set({ loading: false });
             console.log(response.data);

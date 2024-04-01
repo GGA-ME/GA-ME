@@ -58,8 +58,6 @@ const Banner: React.FC = () => {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        watchSlidesProgress={true}
-
         {...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {})}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
