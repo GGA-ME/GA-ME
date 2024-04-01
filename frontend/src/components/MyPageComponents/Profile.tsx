@@ -3,13 +3,13 @@ import { AxiosError } from "axios";
 import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
 import styles from "./MyPage.module.css";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
   const {user} = useUserStore();
-  const { userId }: { userId?: string } = useParams<{ userId: string }>();
+  // const { userId }: { userId?: string } = useParams<{ userId: string }>();
   const { data, loading, error, topTenTag, fetchData } = myPageStore();
 
   if (user) {
@@ -19,8 +19,8 @@ const MyProfile: React.FC = () => {
     // console.log(userIdAsNumber);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      fetchData(userIdAsNumber);
-    }, [fetchData, userIdAsNumber]);
+      fetchData(user.userId);
+    }, [fetchData]);
     console.log(data);
 
     if (loading) {
