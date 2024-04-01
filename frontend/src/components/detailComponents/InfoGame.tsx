@@ -48,7 +48,7 @@ return (
                 imageUrl={game.gameHeaderImg}
                 title={game.gameName}
                 developer={game.gameDeveloper}
-                price={`₩ ${game.gamePriceFinal}`}
+                price={`₩ ${game.gamePriceFinal/ 100}`}
                 beforPrice={`₩ ${game.gamePriceInitial / 100}`}
                 tagsAll={game.tagList}
                 tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
