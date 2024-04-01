@@ -88,13 +88,13 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
           
           {/* 왼쪽 하단 텍스트 */}
           <div className={styles.leftBottomText}>
-            <h1>{gameName}</h1>
-            <div dangerouslySetInnerHTML={{ __html: modifiedShortDescription }} />
+            <h1 className="font-taebaek">{gameName}</h1>
+            <div className="font-taebaek" dangerouslySetInnerHTML={{ __html: modifiedShortDescription }} />
           </div>
           {/* 오른쪽 하단 버튼 */}
           <div className={styles.rightBottomButtons}>
-            <button className={styles.urlButton} onClick={steamButtonClickHandler}>스팀으로 이동</button>
-            <button className={`${styles.urlButton} ${styles.addToCartBtn}`} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button>
+            <button className={`${styles.urlButton} font-taebaek`}  onClick={steamButtonClickHandler}>스팀으로 이동</button>
+            <button className={`${styles.urlButton} font-taebaek ${styles.addToCartBtn}`} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button>
           </div>
         </div>
       </div>
