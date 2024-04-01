@@ -3,7 +3,7 @@
   border-radius: 10px;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
 
-  padding: 5px;
+  padding: 3px 5px;
   margin-top: 30px;
 
   margin-left: 175px;
@@ -32,7 +32,7 @@
   /* 기본 스타일 */
   box-sizing: border-box;
   width: 150px;
-  height: 45px;
+  height: 40px;
 
   border: 3px solid #ebfbff;
   border-radius: 30px;
@@ -40,7 +40,7 @@
   box-shadow: 0px 0px 10px 2px #81bece;
 
   margin-left: 43%;
-  margin-top: 15px;
+  margin-top: 8px;
   margin-bottom: 15px;
 
   transition: font-size 0.3s, transform 0.3s; /* 글자 크기 및 변환에 대한 transition */
@@ -74,8 +74,8 @@
 
 .container {
   position: fixed;
-  top: 75%;
-  left: 52.5%;
+  top: 85%;
+  left: 60%;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
