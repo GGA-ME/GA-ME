@@ -7,7 +7,6 @@ import { AxiosError } from "axios";
 import { ConfigProvider, Steps } from "antd";
 import useUserStore from "../../stores/userStore";
 import { SubmitButton } from "./SubmitButton";
-
 const { Step } = Steps;
 
 export interface ChoiceGame {
@@ -83,7 +82,14 @@ const SurveyGame = () => {
       return null;
     }
   };
-
+  // 마지막 페이지 아니라면 다음 버튼 활성화
+  const isNextLine = (currentPage: number) => {
+    if (currentPage != 3) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   if (loading) {
     return (
       <button type="button" className="bg-indigo-500 ..." disabled>
@@ -180,6 +186,10 @@ const SurveyGame = () => {
                   </div>
                 </div>
                 {isEndLine(current)}
+                {isNextLine(current) && current !== 2 && (
+  <button onClick={() => setCurrent(current + 1)}>다음</button>
+)}
+
               </div>
             </div>
           </div>
