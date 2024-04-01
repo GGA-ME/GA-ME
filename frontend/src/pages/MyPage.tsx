@@ -1,6 +1,6 @@
 import Navbar from "../components/commonUseComponents/Navbar";
 import Poket from '../components/commonUseComponents/Poket';
-import Profile from "../components/MyPageComponents/Profile";
+// import Profile from "../components/MyPageComponents/Profile";
 import useUserStore from "../stores/userStore";
 
 function MyPage() {
@@ -14,7 +14,7 @@ function MyPage() {
         <Navbar />
         <Poket/>
         <div style={{ position: "absolute", left: "350px", top: '100px' }}>
-          <Profile />
+          {/* <Profile /> */}
         </div>
       </div>
     </>
