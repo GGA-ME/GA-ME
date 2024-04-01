@@ -4,7 +4,6 @@ import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
 import styles from './MyPage.module.css';
 import useUserStore from "../../stores/userStore";
-import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
   const { user } = useUserStore();
