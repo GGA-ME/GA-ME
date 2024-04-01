@@ -34,7 +34,7 @@ const Poket: React.FC = () => {
       >
         {showBubble && (
           <span
-            className={`absolute opacity-100 -translate-y-5 text-sm ${style.bubble}`}
+            className={`absolute opacity-100 -translate-y-5 text-sm font-pretendard text-xs ${style.bubble}`}
           >
             <img
               src={"/Cart.png"}
