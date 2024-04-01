@@ -22,7 +22,7 @@ const InfoDetailDesc: React.FC<InfoDetailDescProps> = ({ data }) => {
       <div className={styles.innerContent}>
         <div className={styles.innerInfo}>
           {/* 왼쪽 상단에 게임 제목 */}
-          <h1 className={styles.gameTitle}>{data?.gameName}</h1>
+          <h1 className={`${styles.gameTitle} font-taebaek`}>{data?.gameName}</h1>
 
           {/* 중간에 테두리가 있는 박스 */}
           <div className={styles.infoBox}>
