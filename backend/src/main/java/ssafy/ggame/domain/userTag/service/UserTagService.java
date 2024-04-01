@@ -33,7 +33,7 @@ public class UserTagService {
     // 게임에 대한 사용자 행동 패턴 기반 가중치 업데이트
     @Transactional
     public List<UserTagResDto> updateUserTagWeight(Integer userId, Long gameId, String action) {
-        List<UserTagResDto> resDto = null;
+        List<UserTagResDto> resDto = new ArrayList<>();
         short weightToAdd = determineWeightToAdd(action);
 
         // 해당 게임의 모든 태그를 조회

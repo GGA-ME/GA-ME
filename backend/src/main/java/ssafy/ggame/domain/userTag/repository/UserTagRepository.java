@@ -19,7 +19,6 @@ public interface UserTagRepository extends JpaRepository<UserTag, UserTagId> {
     // 유저의 태그 가중치 중 내림차순으로 10개를 가져옴
     List<UserTag> findFirst10ByUserTagId_UserOrderByUserTagWeightDesc(User userTagId_user);
 
-    // 유저의 태그 가중치 중 내림차순으로 20개를 가져옴
-    List<UserTag> findFirst20ByUserTagId_UserOrderByUserTagWeightDesc(User userTagId_user);
+    List<UserTag> findByUserTagId_User(User user);
 }
 

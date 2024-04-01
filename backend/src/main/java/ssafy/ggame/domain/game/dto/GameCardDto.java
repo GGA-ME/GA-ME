@@ -33,11 +33,6 @@ public class GameCardDto {
     }
     public void updateLike(Long like){this.gameLike = like;}
 
-    //한화로 적용하기 위해서 설정된 값에서 /100을 해준다.
-    public void updatePrices(){
-        this.gamePriceInitial/=100;
-        this.gamePriceFinal/=100;
-    }
     @Builder //QueryDsl에서 Constructor 사용때문에 추가
     public GameCardDto(Long gameId, String gameName, String gameHeaderImg, Integer gamePriceInitial, Integer gamePriceFinal, String gameDeveloper) {
         this.gameId = gameId;
