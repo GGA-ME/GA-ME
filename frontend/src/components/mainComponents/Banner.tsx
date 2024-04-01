@@ -30,10 +30,7 @@ const Banner: React.FC = () => {
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
   useEffect(() => {
-    async function fetchAndSetData() {
-      await mainBanner();
-    }
-    fetchAndSetData();
+    mainBanner(); // 마운트시 데이터 가져오기
   }, [mainBanner]);
 
   // 해당 게임 디테일 페이지로 이동
@@ -83,8 +80,7 @@ const Banner: React.FC = () => {
         spaceBetween={10}
         slidesPerView={6}
         slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
-        watchSlidesProgress={true}
-                pagination={{ clickable: true }}
+        // watchSlidesProgress={true}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
           <SwiperSlide key={index} className="cursor-pointer">
