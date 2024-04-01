@@ -1,7 +1,7 @@
-import { myPageStore, TagWeight } from "../../stores/myPageStore";
+import { myPageStore } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
-import LikeComponent from "./Like";
-import StatisticsComponent from "./Statistics";
+// import LikeComponent from "./Like";
+// import StatisticsComponent from "./Statistics";
 import styles from "./MyPage.module.css";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
@@ -14,8 +14,10 @@ const MyProfile: React.FC = () => {
 
   if (userId) {
     const userIdAsNumber: number = parseInt(userId);
-    console.log("Profile Component에서 출력한 USER!!")
-    console.log(user)
+    console.log("Profile Component에서 출력한 USER!!");
+    console.log(user);
+    console.log("TopTenTag!!");
+    console.log(topTenTag);
     // console.log(userIdAsNumber);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
