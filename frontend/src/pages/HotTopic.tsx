@@ -13,9 +13,6 @@ const HotTopic: React.FC = () => {
 
   useEffect(() => {
    
-   
-    
-    
   }, []); // 두 번째 매개변수로 빈 배열 전달
   
   const handleNewsButtonClick = () => {
