@@ -1,6 +1,6 @@
-import Navbar from "../components/commonUseComponents/Navbar";
+// import Navbar from "../components/commonUseComponents/Navbar";
 import Poket from "../components/commonUseComponents/Poket";
-// import Profile from "../components/MyPageComponents/Profile";
+import Profile from "../components/MyPageComponents/Profile";
 // import useUserStore from "../stores/userStore";
 
 function MyPage() {
@@ -13,18 +13,14 @@ function MyPage() {
       <div>
         <h1>아무것도 안되는 거야?</h1>
       </div>
-      <div className="flex">
-        <Navbar /> {/* 네브바를 화면의 왼쪽에 고정 */}
-        <Poket />
-      </div>
       {/* <Navbar/> */}
-      {/* <div style={{ position: "relative" }}>
-        <Navbar />
+      <div style={{ position: "relative" }}>
+        {/* <Navbar /> */}
         <Poket/>
         <div style={{ position: "absolute", left: "350px", top: '100px' }}>
           <Profile />
         </div>
-      </div> */}
+      </div>
     </>
   );
 }
