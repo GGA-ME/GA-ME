@@ -30,7 +30,10 @@ const Banner: React.FC = () => {
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
   useEffect(() => {
-    mainBanner(); // 마운트시 데이터 가져오기
+    async function fetchAndSetData() {
+      await mainBanner();
+    }
+    fetchAndSetData();
   }, [mainBanner]);
 
   // 해당 게임 디테일 페이지로 이동
