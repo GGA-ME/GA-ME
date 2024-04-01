@@ -6,6 +6,8 @@ import useUserStore from "../../stores/userStore";
 import useMixAndMatchStore from "../../stores/mixAndMatchStore";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 추가
 import { motion } from "framer-motion";
+import { FaPlusSquare } from 'react-icons/fa';
+
 
 const SearchGameList: React.FC = () => {
   const cartItems = usePoketStore((state) => state.cartItems);
@@ -55,16 +57,20 @@ const SearchGameList: React.FC = () => {
           flexDirection: "column",
         }}
       >
-        <p className="mt-[70px] mb-[30px] text-lg">게임을 담아주세요!</p>
-        <button className={style.getPocketBtn} onClick={handleGoToMain}>
+        <div className={style.getPocketBtn} onClick={handleGoToMain}>        
+          {/* <FaGamepad size={50} /> */}
+          <FaPlusSquare size={50}  className={style.neonEffect}/>
+          <p className={`mt-[10px] mb-[20px] text-lg ${style.neonEffect}`}>게임 담으러 가기😉</p>
+        </div>
+        {/* <button className={style.getPocketBtn} onClick={handleGoToMain}>
           담으러 가기
-        </button>
+        </button> */}
       </div>
     );
   }
 
   return (
-    <div className={style.box} style={{ height: "310px" }}>
+    <div className={style.box} style={{ height: "287px" }}>
       <div className={style.gameList}>
         <motion.ul
           className="grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"

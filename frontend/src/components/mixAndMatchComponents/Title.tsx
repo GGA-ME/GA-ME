@@ -11,11 +11,11 @@ const Title: React.FC = () => {
       {/* 사용자 이름을 환영 메시지에 포함 */}
       {user && (
         <p className={`${style.detail}`}>
-          {user.userName}님! 게임을 Mix해 추천 받아 보세요!
+          {user.userName}님! 게임을 조합해 추천 받아 보세요!
         </p>
       )}
       {/* 사용자 정보가 없을 경우 기본 메시지 표시 */}
-      {!user && <p className={`${style.detail}`}>게임을 Mix해 추천 받아 보세요!</p>}
+      {!user && <p className={`${style.detail}`}>게임을 조합해 추천 받아 보세요!</p>}
     </div>
   );
 };
