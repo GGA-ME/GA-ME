@@ -38,6 +38,9 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
   const [showAlert, setShowAlert] = useState(false); // 경고 메시지 상태 추가
   const { likeGame, unlikeGame, setGameId, setUserId, disLike } = useStoreLike();
   const { user, isLoggedIn } = useUserStore();
+  // 좋아요 코드 수정
+  const [isLiked, setIsLiked] = useState(isPrefer);
+  const [likeCount, setLikeCount] = useState(likes);
 
   // 카트 안에 데이터가 있는지 확인
   const isInCart = cartItems.some(item => item.gameId === gameId);
@@ -70,10 +73,15 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
     if (user && isLoggedIn) { // user가 존재하는지 확인, 로그인 되어있는지 확인
       setUserId(user.userId); // user.userId를 스토어에 설정
       setGameId(gameId); // 게임 ID를 스토어에 설정
-      if (isPrefer) {
+      if (isLiked) {
         await unlikeGame(); // 좋아요 취소 요청
+        setIsLiked(!isPrefer)
+        setLikeCount((prevCount) => (prevCount ? prevCount - 1 : 0)); // Ensure not going below 0
       } else {
         await likeGame(); // 좋아요 요청
+        setIsLiked(!isPrefer)
+        setLikeCount((prevCount) => (prevCount ? prevCount + 1 : 1)); // Initialize to 1 if null
+
       }
     } else {
       Swal.fire({
@@ -178,7 +186,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
                   // rotate: -90,
                   borderRadius: "100%"
                 }} >
-                <img src={isPrefer ? '/OnLike.png' : '/Like.png'} alt={'Like'} ></img>
+                <img src={isLiked ? '/OnLike.png' : '/Like.png'} alt={'Like'} ></img>
               </motion.button>
 
               {/* 포켓에담기 버튼 */}
@@ -217,7 +225,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
             <div className={`flex justify-center items-center mb-2`}>
 
               {/* 좋아요 수 */}
-              <span className={`${style.neonNormal}`}>{`♥ : ${likes}`}</span>
+              <span className={`${style.neonNormal}`}>{`♥ : ${likeCount}`}</span>
             </div>
           </motion.div>
         )}
