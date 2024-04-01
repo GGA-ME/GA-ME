@@ -57,7 +57,7 @@ const Banner: React.FC = () => {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        // pagination={{ clickable: true }}
+        pagination={{ clickable: true }}
         {...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {})}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
