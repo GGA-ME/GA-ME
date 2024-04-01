@@ -111,7 +111,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
 
   // 카드 호버효과를 위한 변수
   const hoverEffects = {
-    scale: [1, 1.1],
+    scale: 1.1,
     transition: { duration: 0.3 },
   };
 
