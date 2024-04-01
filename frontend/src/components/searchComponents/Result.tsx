@@ -5,6 +5,7 @@ import React from "react";
 import useSearchStore from "../../stores/searchStore";
 import GameCard from "../commonUseComponents/GameCard";
 import style from "./Search.module.css";
+import { motion } from "framer-motion";
 
 const Result: React.FC = () => {
   // useSearchStore에서 검색 결과 가져오기
@@ -20,31 +21,54 @@ const Result: React.FC = () => {
     <div className="p-4 mt-[50px]">
       <h2 className="mb-4 ml-[105px] font-sejong text-25">검색 결과</h2>
       <hr className={style.hr}></hr>
-      <div className="ml-20 mr-4 grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <motion.ul
+        className="grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.1 } },
+        }}
+        initial="hidden"
+        animate="visible"
+      >
         {/* 로딩 중일 때는 로딩 스피너 표시 */}
         {isLoading ? (
           <div className={style.loadingSpinner}></div>
         ) : results.length > 0 ? (
-          results.map((game) => (
-            <GameCard
-              key={game.gameId}
-              gameId={game.gameId}
-              imageUrl={game.gameHeaderImg}
-              title={game.gameName}
-              beforPrice={game.gamePriceInitial.toLocaleString()}
-              price={game.gamePriceFinal.toLocaleString()}
-              developer={game.gameDeveloper}
-              tagsAll={game.tagList}
-              tags={game.tagList ? game.tagList.map((tag) => tag.tagName) : []}
-              likes={game.gameLike}
-              isPrefer={false}
-              onGameClick={() => handleGameClick(game.gameId)}
-            />
+          results.map((game, index: number) => (
+            <motion.li
+              key={index}
+              className="list-none"
+              variants={{
+                hidden: { x: -60, opacity: 0 },
+                visible: {
+                  x: 0,
+                  opacity: 1,
+                  transition: { duration: 0.1 },
+                },
+              }}
+            >
+              <GameCard
+                key={game.gameId}
+                gameId={game.gameId}
+                imageUrl={game.gameHeaderImg}
+                title={game.gameName}
+                beforPrice={game.gamePriceInitial.toLocaleString()}
+                price={game.gamePriceFinal.toLocaleString()}
+                developer={game.gameDeveloper}
+                tagsAll={game.tagList}
+                tags={
+                  game.tagList ? game.tagList.map((tag) => tag.tagName) : []
+                }
+                likes={game.gameLike}
+                isPrefer={false}
+                onGameClick={() => handleGameClick(game.gameId)}
+              />
+            </motion.li>
           ))
         ) : (
           <p className="mt-[100px]">검색 결과가 없습니다.</p>
         )}
-      </div>
+      </motion.ul>
     </div>
   );
 };
