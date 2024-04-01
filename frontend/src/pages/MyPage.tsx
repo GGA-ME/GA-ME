@@ -1,5 +1,5 @@
-import Navbar from "../components/commonUseComponents/Navbar";
-import Poket from '../components/commonUseComponents/Poket';
+// import Navbar from "../components/commonUseComponents/Navbar";
+// import Poket from '../components/commonUseComponents/Poket';
 // import Profile from "../components/MyPageComponents/Profile";
 import useUserStore from "../stores/userStore";
 
@@ -10,13 +10,14 @@ function MyPage() {
 
   return (
     <>
-      <div style={{ position: "relative" }}>
+    <div><h1>아무것도 안되는 거야?</h1></div>
+      {/* <div style={{ position: "relative" }}>
         <Navbar />
         <Poket/>
         <div style={{ position: "absolute", left: "350px", top: '100px' }}>
-          {/* <Profile /> */}
+          <Profile />
         </div>
-      </div>
+      </div> */}
     </>
   );
 }
