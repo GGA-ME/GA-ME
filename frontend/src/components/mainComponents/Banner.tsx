@@ -48,7 +48,7 @@ const Banner: React.FC = () => {
       {/* 베너 메인 */}
       <Swiper
         className={`${style.swiperCustom} w-full h-full`}
-        modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
+        modules={[ Autoplay, Pagination, Navigation, Thumbs]}
         spaceBetween={0}
         slidesPerView={1}
         loop={true}
