@@ -83,6 +83,7 @@ const api = axios.create({
     
         try {
             console.log(tags)
+            console.log(userId)
             const response = await api.put(`/api/tracking/dislike`, { userId, tags });
             set({ loading: false });
             console.log(response.data);
