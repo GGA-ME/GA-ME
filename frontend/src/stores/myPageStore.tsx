@@ -114,7 +114,7 @@ const myPageStore = create<myPageDetail>((set) => ({
                 const topTenTag: TagWeight[] = [];
                 state.data.result.tagWeightList.forEach((tag: TagWeight) => {
                     topTenTag.push(tag);
-                    if (topTenTag.length > 10) return;
+                    
                 });
                 return { ...state, topTenTag };
             })
@@ -150,5 +150,6 @@ const myPageStore = create<myPageDetail>((set) => ({
 
 }))
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { myPageStore };
 export type { ApiResponse, TagWeight, UserInfo, Prefer, TagList };

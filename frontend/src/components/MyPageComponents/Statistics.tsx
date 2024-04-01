@@ -8,12 +8,13 @@ interface opts {
 const statisticsComponent: React.FC = () => {
   const { data, topTenTag } = myPageStore();
 
-  const userTagWeights: number[] = topTenTag.map((item) => item.userTagWeight);
-  const userGameName: string[] = topTenTag.map((item) => item.tagName);
+  const userTagWeights: number[] = topTenTag.slice(0, 9).map((item) => item.userTagWeight);
+  const userGameName: string[] = topTenTag.slice(0, 9).map((item) => item.tagName);
+  
   const otherWeight: number[] = data.result.tagWeightList.map((item) => item.userTagWeight);
 
   // 유저가 선호하는 태그를 제외한 나머지의 모든 합
-  if (otherWeight.length >= 10) {
+  if (otherWeight.length >= 9) {
     userTagWeights.push(0);
     userGameName.push("Others");
     for (let i = 9; i < otherWeight.length; i++) userTagWeights[userTagWeights.length - 1] += otherWeight[i];
@@ -44,7 +45,7 @@ const statisticsComponent: React.FC = () => {
         type: "gradient",
       },
       legend: {
-        fontSize: '20px',
+        fontSize: '12px',
         position: "bottom",
         formatter: function (_val: number, opts: opts) {
           return `${userGameName[opts.seriesIndex]}`;
@@ -72,8 +73,8 @@ const statisticsComponent: React.FC = () => {
     <br />
     <br />
       <span className="inline-flex">
-        <h1 className="text-2xl">#나의 취향 분석</h1>
-        <img src="/statistics.png" alt="" />
+        <h1 className="text-2xl">나의 취향 분석</h1>
+        <img className='w-8 h-8' src="/statistics.png" alt="" />
       </span>
       <div id="chart" className="flex flex-col items-center"></div>
     </>

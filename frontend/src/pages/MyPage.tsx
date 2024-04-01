@@ -1,21 +1,18 @@
 import Navbar from "../components/commonUseComponents/Navbar";
+import Poket from '../components/commonUseComponents/Poket';
 import Profile from "../components/MyPageComponents/Profile";
-import useUserStore from '../stores/userStore';
 
 function MyPage() {
-  const { user } = useUserStore();
-
-  console.log('MyPage() user: ');
-  console.log(user);
 
   return (
     <>
-      <div style={{ position: 'relative' }}>
-      <Navbar />
-      <div style={{ position: 'absolute', top: '150px', left: '300px' }}>
-        <Profile />
+      <div style={{ position: "relative" }}>
+        <Navbar />
+        <Poket/>
+        <div style={{ position: "absolute", left: "350px", top: '100px' }}>
+          <Profile />
+        </div>
       </div>
-    </div>
     </>
   );
 }
