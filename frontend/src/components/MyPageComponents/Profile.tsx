@@ -43,8 +43,8 @@ const MyProfile: React.FC = () => {
         <div className="relative " style={{ bottom: "10px", left: "30px" }}>
           <img
             className=" rounded-full"
-            src={data.result.userProfileImg}
-            alt=""
+            // src={data.result.userProfileImg}
+            alt="This Is Img"
           />
         </div>
 
