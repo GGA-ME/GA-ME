@@ -3,24 +3,20 @@ import { myPageStore, TagWeight } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
 import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
-import useUserStore from "../../stores/userStore";
+import { useParams } from "react-router-dom";
+import styles from './MyPage.module.css';
 
 const MyProfile: React.FC = () => {
   const { data, loading, error, topTenTag, fetchData } = myPageStore();
-  const {user} = useUserStore();
-  console.log(`user`);
-  console.log(user);
-  console.log(`data`);
-  console.log(data);
-  // const { userId }: { userId?: string } = useParams<{ userId?: string }>();
-    // userId가 undefined일 때의 처리
-    // const userIdAsNumber: number = parseInt(userId);
-    // console.log(userIdAsNumber); // userId를 number로 변환한 값 출력
-  if(user){
+  const { userId }: { userId?: string } = useParams<{ userId?: string }>();
+  // userId가 undefined일 때의 처리
+
+  if(userId){
+    const userIdAsNumber: number = parseInt(userId);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      fetchData(user.userId);
-    }, [fetchData, user.userId]);
+      fetchData(userIdAsNumber);
+    }, [fetchData, userIdAsNumber]);
 
     if (loading) {
       return (
@@ -36,19 +32,18 @@ const MyProfile: React.FC = () => {
       return <div>Error: {axiosError.message}</div>;
     }
   }
-  /** 이미지가 없을때 처리도 해줘야됌 */
   return (
     <>
-      <div className="relative z-1">
-        <img className="rounded-full" src={data.result.userProfileImg} alt="" />
+      <div className="relative " style={{bottom: '10px', left: '30px'}}>
+        <img className=" rounded-full" src={data.result.userProfileImg} alt="" />
       </div>
 
-      <div className="flex justify-center items-center h-screen mb-100">
-        <div className="bg-stone-900 rounded-xl items-center" style={{ marginBottom: "10%", marginTop: "10%", padding: "10px" }}>
-          <div className="rounded-2xl" style={{ padding: "20px", border: "3px solid white" }}>
-            <p>{data.result.userName}</p>
+      <div className="flex justify-center items-center h-screen">
+        <div className="bg-stone-900 rounded-xl items-center" style={{ marginBottom: "10%", marginTop: "15%", padding: "10px", maxHeight: '850px', maxWidth: '900px' }}>
+          <div className="rounded-2xl" style={{ padding: "40px", border: "3px solid white" }}>
+            <div className={`${styles.userName}`}>{data.result.userName}</div>
             {topTenTag.map((tag: TagWeight, index: number) => (
-              <span key={index} className="mr-4 mb-3 rounded " style={{ backgroundColor: "#036280", border: "#036280", color: "white" }}>
+              <span key={index}  className="bg-tag-gray inline-block px-2 py-1 rounded-[3px] ml-3" style={{backgroundColor: '#036280'}}>
                 #{tag.tagName}{" "}
               </span>
             ))}
@@ -56,10 +51,10 @@ const MyProfile: React.FC = () => {
             <br />
             <hr />
             <br />
-            <LikeComponent />
-            <div className="max-h-[700px]">
-              <StatisticsComponent />
-            </div>
+            <h1 className="text-xl font-bold" >선호 게임 🤍</h1>
+            <br />
+            <LikeComponent />            
+            <StatisticsComponent />            
           </div>
         </div>
       </div>
