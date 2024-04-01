@@ -4,17 +4,15 @@ import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
 import styles from './MyPage.module.css';
 import useUserStore from "../../stores/userStore";
+import { useEffect } from "react";
 
 const MyProfile: React.FC = () => {
   const { user } = useUserStore();
-  const { data, loading, error, topTenTag } = myPageStore();
+  const { data, loading, error, topTenTag, fetchData } = myPageStore();
  
-
   if(user){
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    // useEffect(() => {
-    //   fetchData(userIdAsNumber);
-    // }, [fetchData, userIdAsNumber]);
+    useEffect(() => fetchData(user.userId), [fetchData, user]);
 
     if (loading) {
       return (
