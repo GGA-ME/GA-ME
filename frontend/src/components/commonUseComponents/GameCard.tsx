@@ -145,13 +145,13 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
         <div className={`${style.card} w-50 h-48 rounded overflow-hidden text-white text-left`}>
           <img src={imageUrl} alt={title} className="w-full h-" />
           <div className="p-2 mt-1">
-            <h3 className={`text-lg leading-none ${style.truncateLines}`}>{title}</h3>
+            <h3 className={`text-md leading-none font-sejong ${style.truncateLines}`}>{title}</h3>
           </div>
 
           {/* 세일정보에 따른 가격표시&개발사 : 카드의 하단 */}
           {
             price !== beforPrice ? (
-              <div className="absolute bottom-0 text-xs font-thin p-2">
+              <div className="absolute bottom-0 text-xs font-thin p-2 font-Pretendard">
                 <span className="text-gray-500 line-through">
                   {formatPrice(beforPrice)}
                 </span>
@@ -160,7 +160,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
               </div>
             ) : (
               
-              <div className="absolute bottom-0 text-xs font-thin p-2">
+              <div className="absolute bottom-0 text-xs p-2 font-Pretendard">
                 {formatPrice(price)}
                 <p>{developer}</p>
                 </div>
@@ -218,7 +218,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
             <div className="flex justify-center items-center">
               <div >
                 {tags.map((tag: string, index: number) => (
-                  <span key={index} className="bg-black bg-opacity-50 rounded px-2 py-1 text-xs font-semibold mx-1 inline-block">{`#${tag}`}
+                  <span key={index} className="bg-black bg-opacity-50 rounded px-2 py-1 text-xs font-sejong mx-1 inline-block">{`#${tag}`}
                   </span>))}
               </div>
             </div>

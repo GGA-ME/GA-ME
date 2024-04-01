@@ -82,7 +82,7 @@ const Select: React.FC = () => {
 
   return (
     <>
-      <div className="flex space-x-2 p-4">
+      <div className="flex space-x-2 p-4 font-sejong">
         {categorys.map((category, index: number) => (
           <button
             key={index}
@@ -94,7 +94,7 @@ const Select: React.FC = () => {
           </button>
         ))}
       </div>
-      <div className="flex space-x-2 p-4">
+      <div className="flex space-x-2 p-4 font-sejong">
         {nowCategory === categorys[0] ? defaultTags.map((tag, index: number) => (
           <button
             key={index}
