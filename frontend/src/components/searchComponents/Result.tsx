@@ -50,8 +50,8 @@ const Result: React.FC = () => {
                 gameId={game.gameId}
                 imageUrl={game.gameHeaderImg}
                 title={game.gameName}
-                beforPrice={`₩ ${game.gamePriceInitial.toLocaleString()}`}
-                price={`₩ ${game.gamePriceFinal.toLocaleString()}`}
+                beforPrice={`₩ ${game.gamePriceInitial/100}`}
+                price={`₩ ${game.gamePriceFinal/100}`}
                 developer={game.gameDeveloper}
                 tagsAll={game.tagList}
                 tags={
