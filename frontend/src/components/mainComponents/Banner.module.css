@@ -26,12 +26,12 @@
   }
 
 /* Banner.module.css */
-/* :global(.swiper-slide-thumb-active) {
+:global(.swiper-slide-thumb-active) {
   opacity: 0.5;
   border: 3px solid rgb(255, 255, 255);
   animation: neon 2s infinite alternate;
 
-  } */
+  }
 
 .famousGame{
   font-family:'SejonghospitalBold';
