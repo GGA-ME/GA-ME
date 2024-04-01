@@ -76,11 +76,11 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
       if (isLiked) {
         await unlikeGame(); // 좋아요 취소 요청
         setIsLiked(!isPrefer)
-        setLikeCount(likes); // Ensure not going below 0
+        setLikeCount((prevCount) => (prevCount ? prevCount - 1 : 0)); // Ensure not going below 0
       } else {
         await likeGame(); // 좋아요 요청
-        setIsLiked(isPrefer)
-        setLikeCount(likes); // Initialize to 1 if null
+        setIsLiked(!isPrefer)
+        setLikeCount((prevCount) => (prevCount ? prevCount + 1 : 1)); // Initialize to 1 if null
 
       }
     } else {
