@@ -8,16 +8,19 @@ import useUserStore from "../../stores/userStore";
 const MyProfile: React.FC = () => {
   const { data, loading, error, topTenTag, fetchData } = myPageStore();
   const {user} = useUserStore();
-  console.log(`user= ${user}`);
-  console.log(`data= ${data}`);
+  console.log(`user`);
+  console.log(user);
+  console.log(`data`);
+  console.log(data);
   // const { userId }: { userId?: string } = useParams<{ userId?: string }>();
     // userId가 undefined일 때의 처리
     // const userIdAsNumber: number = parseInt(userId);
     // console.log(userIdAsNumber); // userId를 number로 변환한 값 출력
   if(user){
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       fetchData(user.userId);
-    }, [fetchData]);
+    }, [fetchData, user.userId]);
 
     if (loading) {
       return (
