@@ -65,11 +65,12 @@ const api = axios.create({
         }
     },
 
-    disLike: async () => {
+    disLike: async (codeId, tagId) => {
         const { userId } = get();
+        const tags = [{ codeId: codeId, tagId: tagId }];  // 태그 배열 정의
         set({ loading: true });
         try {
-            const response = await api.put(`/api/tracking/dislike?userId=${userId}&tagIdList`,);
+            const response = await api.put(`/api/tracking/dislike`, { userId, tags });
             set({ loading: false });
             console.log(response.data);
         } catch (error) {
