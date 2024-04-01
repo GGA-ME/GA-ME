@@ -3,7 +3,7 @@ import useStoreMain from "../../stores/mainStore";
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperClass } from 'swiper/types';
-import { Autoplay, Pagination, Navigation, Thumbs } from 'swiper/modules';
+import { Autoplay, Pagination, Navigation, Thumbs, FreeMode } from 'swiper/modules';
 import style from './Banner.module.css'
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -48,7 +48,7 @@ const Banner: React.FC = () => {
       {/* 베너 메인 */}
       <Swiper
         className={`${style.swiperCustom} w-full h-full`}
-        modules={[ Autoplay, Pagination, Navigation, Thumbs]}
+        modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
         spaceBetween={0}
         slidesPerView={1}
         loop={true}
@@ -57,7 +57,7 @@ const Banner: React.FC = () => {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        pagination={{ clickable: true }}
+        // pagination={{ clickable: true }}
         {...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {})}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
@@ -75,9 +75,9 @@ const Banner: React.FC = () => {
         onSwiper={setThumbsSwiper}
         loop={true}
         spaceBetween={10}
-        slidesPerView={6}
+        slidesPerView={10}
         watchSlidesProgress={true}
-        modules={[ Navigation, Thumbs]}
+        modules={[FreeMode, Navigation, Thumbs]}
         className="mySwiper"
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
