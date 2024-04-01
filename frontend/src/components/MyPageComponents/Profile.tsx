@@ -7,34 +7,16 @@ import { useEffect } from "react";
 import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
-  
   const {user} = useUserStore();
-  // const { userId }: { userId?: string } = useParams<{ userId: string }>();
   const { data, topTenTag, error, loading, fetchData } = myPageStore();
 
-  // const userIdAsNumber: number = parseInt(userId);
-  //  eslint-disable-next-line react-hooks/rules-of-hooks
-
-  
-  console.log("Profile Component에서 출력한 USER!!");
-  console.log(user);
-  console.log("TopTenTag!!");
-  console.log(topTenTag);
-  console.log('This is Data');
-  console.log(data);
 
 
   if (user) {
-    console.log("Profile Component에서 출력한 USER!!");
-    console.log(user);
-    console.log("TopTenTag!!");
-    console.log(topTenTag);
-    // console.log(userIdAsNumber);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       fetchData(user.userId);
     }, [fetchData]);
-    console.log(data);
 
     if (loading) {
       return (
@@ -54,14 +36,14 @@ const MyProfile: React.FC = () => {
         <div className="relative " style={{ bottom: "10px", left: "30px" }}>
           <img
             className=" rounded-full"
-            // src={data.result.userProfileImg}
-            alt="This Is Img"
+            src={data.result.userProfileImg}
+            alt=""
           />
         </div>
 
         <div className="flex justify-center items-center h-screen">
           <div
-            className="bg-stone-900 rounded-xl items-center"
+            className="rounded-xl items-center"
             style={{
               marginBottom: "10%",
               marginTop: "15%",
@@ -72,7 +54,7 @@ const MyProfile: React.FC = () => {
           >
             <div
               className="rounded-2xl"
-              style={{ padding: "40px", border: "3px solid white" }}
+              style={{ padding: "40px", border: "3px solid white", backgroundColor: 'black' }}
             >
               <div className={`${styles.userName}`}>{data.result.userName}</div>
               {topTenTag.map((tag: TagWeight, index: number) => (
