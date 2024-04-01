@@ -76,7 +76,7 @@ const Banner: React.FC = () => {
         className="mySwiper"
         modules={[FreeMode, Navigation, Thumbs]}
         onSwiper={setThumbsSwiper}
-        loop={true}
+        loop={false}
         spaceBetween={10}
         slidesPerView={6}
         slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
