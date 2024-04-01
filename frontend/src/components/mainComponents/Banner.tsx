@@ -51,7 +51,7 @@ const Banner: React.FC = () => {
         modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
         spaceBetween={0}
         slidesPerView={1}
-        loop={true}
+        loop={false}
         navigation={true}
         autoplay={{
           delay: 5000,
@@ -72,13 +72,14 @@ const Banner: React.FC = () => {
 
       {/* 베너 thumbs */}
       <Swiper
+        className="mySwiper"
+        modules={[FreeMode, Navigation, Thumbs]}
         onSwiper={setThumbsSwiper}
         loop={true}
         spaceBetween={10}
-        slidesPerView={10}
+        slidesPerView={6}
+        slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
         watchSlidesProgress={true}
-        modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper"
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
           <SwiperSlide key={index} className="cursor-pointer">
