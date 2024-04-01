@@ -62,7 +62,7 @@ const MyProfile: React.FC = () => {
               style={{ padding: "40px", border: "3px solid white" }}
             >
               <div className={`${styles.userName}`}>{data.result.userName}</div>
-              {topTenTag.map((tag: TagWeight, index: number) => (
+              {/* {topTenTag.map((tag: TagWeight, index: number) => (
                 <span
                   key={index}
                   className="bg-tag-gray inline-block px-2 py-1 rounded-[3px] ml-3"
@@ -70,7 +70,7 @@ const MyProfile: React.FC = () => {
                 >
                   #{tag.tagName}{" "}
                 </span>
-              ))}
+              ))} */}
               <br />
               <br />
               <hr />
