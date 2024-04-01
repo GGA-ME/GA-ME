@@ -7,15 +7,18 @@ import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 
 const MyProfile: React.FC = () => {
-  const { userId }: { userId?: string } = useParams<{ userId?: string }>();
+  const { userId }: { userId?: string } = useParams<{ userId: string }>();
   const { data, loading, error, topTenTag, fetchData } = myPageStore();
+  console.log(userId);
 
   if (userId) {
     const userIdAsNumber: number = parseInt(userId);
+    console.log(userIdAsNumber);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       fetchData(userIdAsNumber);
     }, [fetchData, userIdAsNumber]);
+    console.log(data);
 
     if (loading) {
       return (
