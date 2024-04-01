@@ -19,6 +19,7 @@ const Select: React.FC = () => {
 
   useEffect(() => {
     if (user) { // user가 null이 아닐 때만 fetchData 호출
+      setUserId(user.userId)
       fetchData(user.userId);
     } else {
       console.log('user 정보가 없습니다.');
