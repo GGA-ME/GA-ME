@@ -1,53 +1,54 @@
-// 장현욱
+// 작성자 : 장현욱
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { statisticsDto } from '../../stores/DetailStore';
 import ReactApexChart from 'react-apexcharts';
 import style from './Statistics.module.css'
 import ApexCharts from 'apexcharts';
 
 
-const Statistics: React.FC = () => {
+
+interface StatisticsProps {
+    ratioData: statisticsDto | undefined
+    gameName: string | null
+}
+
+const Statistics: React.FC<StatisticsProps> = ({ ratioData, gameName }) => {
+    console.log(ratioData)
+
+    const negativeCounts = ratioData?.negativeCounts ?? [];
+    const positiveCounts = ratioData?.positiveCounts ?? [];
+    const [resultData, setResultData] = useState<{ x: string; y: number; }[]>([]);
+    useEffect(() => {
+        // 먼저 비율을 계산합니다.
+        const resultRatio = positiveCounts.map((positive, index) => {
+            const total = positive + negativeCounts[index];
+            return +(positive / total * 100).toFixed(0);
+        });
+
+        // 비율을 이용해 data 배열을 생성합니다.
+        const formattedData = resultRatio?.map((ratio, index) => ({
+            x: `${ratioData?.timeValues[index]}`,
+            y: ratio
+        }));
+        console.log(formattedData)
+        setResultData(formattedData);
+    }, []); // 컴포넌트 마운트 시 한 번만 실행
+
+    console.log(resultData)
 
     const series = [{
         name: "선호도 비율",
-        data: [{
-            x: '1',
-            y: 400
-        }, {
-            x: '2',
-            y: 430
-        }, {
-            x: '3',
-            y: 448
-        }, {
-            x: '4',
-            y: 170
-        }, {
-            x: '5',
-            y: 540
-        }, {
-            x: '6',
-            y: 580
-        }, {
-            x: '7',
-            y: 690
-        }, {
-            x: '8',
-            y: 990
-        }, {
-            x: '9',
-            y: 690
-        }, {
-            x: '10',
-            y: 690
-        }]
+        data: resultData
     }];
     // 가장 낮은 값 찾기
     const minY = Math.min(...series[0].data.map(item => item.y));
     // 가장 높은 값 찾기
     const maxY = Math.max(...series[0].data.map(item => item.y));
     // 가장 높은 값을 가진 X
-    const maxYPoint = series[0].data.reduce((max, p) => p.y > max.y ? p : max, series[0].data[0]);
+    const maxYPoint = series[0].data.length > 0
+        ? series[0].data.reduce((max, p) => p.y > max.y ? p : max, series[0].data[0])
+        : { x: '0', y: 0 }; // 배열이 비어있는 경우의 기본값
 
 
     // 각 막대의 색상 결정
@@ -76,7 +77,7 @@ const Statistics: React.FC = () => {
 
         // 그래프의 부제목
         subtitle: {
-            text: `(게임제목)은 ${maxYPoint.x}시간 이상의 플레이타임을 추천합니다.`, // 부제목에 추가 텍스트를 표시
+            text: `${gameName}은 ${maxYPoint.x}시간 이상의 플레이타임을 추천합니다.`, // 부제목에 추가 텍스트를 표시
             // align: 'center',
             style: {
                 color: '#FFFFFF', // 부제목 글자색을 하얀색으로 설정
@@ -87,7 +88,7 @@ const Statistics: React.FC = () => {
         xaxis: {
             type: 'category',
             labels: {
-                formatter: function (val:string) {
+                formatter: function (val: string) {
                     return val + '시간';
                 },
                 style: {
@@ -169,7 +170,7 @@ const Statistics: React.FC = () => {
     };
 
     return (
-        <div className="flex justify-center px-40"> {/* p-16을 p-60 또는 원하는 크기로 조정 */}
+        <div className="flex justify-center"> {/* p-16을 p-60 또는 원하는 크기로 조정 */}
             <div className={` ${style.neonBorder} w-full max-w-screen-lg bg-gray-900 rounded-xl`}> {/* 네온 효과 스타일을 적용합니다 */}
                 <ReactApexChart options={options} series={series} type="bar" height={380} />
             </div>

@@ -78,22 +78,23 @@ const useStoreMain = create<StoreState>((set, get) => ({
     page: 1,
     setPage: (page: number) => set({ page }),
 
-    size: 100,
+    size: 50,
     setSize: (size: number) => set({ size }),
 
-    fetchMainData: async () => {
-        const { userId, codeId, tagId, page, size } = get();
-        set({ loading: true });
-        try {
-            const response = await api.get<ApiResponse>(`/api/recommendations/popular?userId=${userId}&codeId=${codeId}&tagId=${tagId}&page=${page}&size=${size}`,);
-            set({ data: response.data, loading: false });
-            console.log(response.data);
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                set({ error, loading: false });
-            }
+fetchMainData: async () => {
+    const { userId, codeId, tagId, page, size } = get();
+    
+    set({ loading: true });
+    try {
+        const response = await api.get<ApiResponse>(`/api/recommendations/popular?userId=${userId}&codeId=${codeId}&tagId=${tagId}&page=${page}&size=${size}`);
+        // 기존 데이터에 새로운 데이터를 추가하는 로직
+        set({ data: response.data, loading: false });
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            set({ error, loading: false });
         }
-    },
+    }
+},
 
     mainBanner: async () => {
         set({ loading: true });

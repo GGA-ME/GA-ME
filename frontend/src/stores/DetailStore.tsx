@@ -40,18 +40,40 @@ export interface GameData {
     gameIsLike: boolean;
 }
 
+export interface statisticsDto {
+  gameId: number;
+  statisticsBaseAt: string;
+  timeValues: number[];
+  positiveCounts: number[];
+  negativeCounts: number[];
+}
+
+export interface statistics {
+  isSuccess: null;
+  statisticsDto: statisticsDto;
+}
+
 interface ApiResponse {
     isSuccess: boolean;
     message: string;
     code: number;
-    result: GameData; // GameData 타입의 배열
+    result: GameData;
+}
+
+interface ApiResponsestatistics {
+  isSuccess: boolean;
+  message: string;
+  code: number;
+  result: statistics;
 }
 
 type DetailState = {
     data: ApiResponse | null;
+    statisticsResult: ApiResponsestatistics | null;
 
     fetchData: (userId: number | undefined, gameId: number | undefined) => Promise<void>;
     toggleIsLike: (gameIsLike: boolean | undefined, gameId: number | undefined, userId: number | undefined) => Promise<void>;
+    statisticsData: (gameId: number | undefined) => Promise<void>;
 };
 
 interface ApiResponse {
@@ -62,6 +84,7 @@ interface ApiResponse {
 
 export const useDetailStore = create<DetailState>((set) => ({
     data: null,
+    statisticsResult: null,
     fetchData: async (gameId, userId) => {
     // 데이터 가져오는 비동기 요청
     try {
@@ -101,5 +124,17 @@ export const useDetailStore = create<DetailState>((set) => ({
     } catch (error) {
       console.error('요청이 실패했습니다.', error);
     }
-  }
+  },
+
+  statisticsData: async (gameId) => {
+    // 데이터 가져오는 비동기 요청
+    try {
+        const response = await api.get<ApiResponsestatistics>(`/games/${gameId}/statistics`,);
+        set({ statisticsResult: response.data });
+        console.log(response.data);
+    } catch (error) {
+        console.log(error)
+    }
+  },
+
 }));

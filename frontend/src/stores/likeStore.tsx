@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import axios, { AxiosError } from 'axios';
 
-
 const api = axios.create({
+    
     baseURL: 'https://j10e105.p.ssafy.io',
     headers: {
         "Content-Type": `application/json;charset=UTF-8`,
@@ -22,6 +22,7 @@ const api = axios.create({
     setGameId: (gameId: number) => void;
     likeGame: () => Promise<void>;
     unlikeGame: () => Promise<void>;
+    disLike: () => Promise<void>;
 }
 
   const useStoreLike = create<StoreState>((set, get) => ({
@@ -52,6 +53,7 @@ const api = axios.create({
         const { userId, gameId } = get();
         set({ loading: true });
         try {
+            // 데이터를 지워서 한번 해보자..
             const response = await api.delete(`/api/game/prefer`, { data: { userId, gameId }});
             // 요청 성공 시 데이터 업데이트
             set({ loading: false });
@@ -61,7 +63,22 @@ const api = axios.create({
                 set({ error, loading: false });
             }
         }
-    }
+    },
+
+    disLike: async (codeId, tagId) => {
+        const { userId } = get();
+        const tags = [{ codeId: codeId, tagId: tagId }];  // 태그 배열 정의
+        set({ loading: true });
+        try {
+            const response = await api.put(`/api/tracking/dislike`, { userId, tags });
+            set({ loading: false });
+            console.log(response.data);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                set({ error, loading: false });
+            }
+        }
+    },
     
 }));
 

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 import GameCard from '../commonUseComponents/GameCard';
 import useStoreMain from "../../stores/mainStore";
 import { AxiosError } from 'axios';
+import style from './Game.module.css'
 
 // 사용 스토어의 구조를 기반으로 하는 구조
 interface Game {
@@ -21,12 +22,12 @@ interface Game {
 }
 
 const GameComponent: React.FC = () => {
-  const { data, loading, error, fetchMainData } = useStoreMain();
+  const { data, loading, error, fetchMainData, page, setPage } = useStoreMain();
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
   useEffect(() => {
     fetchMainData(); // 마운트시 데이터 가져오기
-  }, [fetchMainData]); // 데이터 변경시 재랜더링
+  }, [fetchMainData, page]); // page가 변경될 때마다 데이터를 불러옵니다.
 
   if (loading) {
     return <div>Loading...</div>;
@@ -46,7 +47,16 @@ const GameComponent: React.FC = () => {
     console.log('디테일페이지 이동')
   }
 
+  const handleNextPage = () => {
+    setPage(page + 1); // 다음 페이지로 이동
+  };
+
+  const handlePrevPage = () => {
+    if (page > 1) setPage(page - 1); // 이전 페이지로 이동 (1보다 클 때만)
+  };
+
   return (
+    <>
     <motion.ul className="grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
       variants={{
         hidden: {},
@@ -79,6 +89,30 @@ const GameComponent: React.FC = () => {
         </motion.li>
       ))}
     </motion.ul>
+
+    <div className={`${style.container} p-7 flex justify-center items-start`}>
+    <div className={`${style.pane}`}>
+        <button className={`${style.label}`} onClick={handlePrevPage} disabled={page <= 1}>
+            <span> 이전 </span>
+            <input id="left" className={`${style.input}`} name="radio" type="radio"/>
+        </button>
+        <label className={`${style.label}`}>
+            <span>{page}</span>
+            <input id="middle" className={`${style.input}`} checked={true} name="radio" type="radio"/>
+        </label>
+        <button className={`${style.label}`} onClick={handleNextPage}>
+            <span> 다음 </span>
+            <input id="right" className={`${style.input}`} name="radio" type="radio"/>
+        </button>
+        <span className={`${style.selection}`}></span>
+    </div>
+</div>
+          {/* <div className="pagination-buttons">
+          <button onClick={handlePrevPage} disabled={page <= 1}>Previous</button>
+          <span>{page}</span>
+          <button onClick={handleNextPage}>Next</button>
+        </div> */}
+        </>
   );
 };
 
