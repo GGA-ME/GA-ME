@@ -56,7 +56,7 @@ const MyProfile: React.FC = () => {
         </div>
       </div>
     </>
-  );
+  )}
 };
 
 export default MyProfile;
