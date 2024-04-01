@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import { log } from "../url/api";
 
 const api = axios.create({
   baseURL: "https://j10e105.p.ssafy.io",
@@ -48,7 +49,7 @@ interface SearchState {
   loading: boolean;
   setResults: (results: SearchResult) => void; // 검색 결과를 업데이트하는 액션
   setLoading: (loading: boolean) => void; // 로딩 상태를 업데이트하는 액션
-  fetchData: (postData: RequestData) => void;
+  fetchData: (userId: number | undefined, postData: RequestData) => void;
 }
 
 const useMixAndMatchStore = create<SearchState>((set) => ({
@@ -57,12 +58,17 @@ const useMixAndMatchStore = create<SearchState>((set) => ({
   setResults: (results) => set({ results }), // 검색 결과 업데이트
   setLoading: (loading) => set({ loading }), // 로딩 상태 업데이트
 
-  fetchData: async (postData: RequestData) => {
+  fetchData: async (userId: number | undefined, postData: RequestData) => {
     try {
       set({ loading: true }); // 로딩 시작
       const response = await api.post(`/api/recommendations/search`, postData);
       // Zustand 스토어에 응답 데이터를 저장합니다.
       set({results:response.data.result})
+
+      log(userId, "mix_match", "click", [
+        { clicked_item: "mix" },
+      ]);
+
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {

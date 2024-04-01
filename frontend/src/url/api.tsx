@@ -41,6 +41,21 @@ export const fetchKakaoUserInfo = async (code: string) => {
   }
 };
 
+// 얏호~! 사용자 행동패턴 로그 남기는 함수!
+export const log = async (userId: number | undefined, page: string, action: string, args: Array<object>) => {
+  try {
+    const response = await api.post(`/tracking/log`, {
+      userId: userId, // 유저 아이디
+      page: page, // 페이지
+      action: action, // 사용자 행동
+      args: args, // 파라미터
+    });
+    console.log(response);
+  } catch (error) {
+    throw new Error('Failed to log');
+  }
+}
+
 
 // 게임명 검색 API 함수
 export const searchGames = async (keyword: string, userId: number) => {
@@ -49,6 +64,11 @@ export const searchGames = async (keyword: string, userId: number) => {
       keyword,
       userId
     });
+    // 사용자 패턴 로그
+    log(userId, 'search', 'click', [
+      { 'clicked_item': 'search' },
+      { 'search_keyword': keyword},
+    ]);
     return response.data; // 검색 결과를 반환
   } catch (error) {
     throw new Error('Failed to search games');

@@ -5,6 +5,7 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import style from "./Navbar.module.css";
 import useUserStore from "../../stores/userStore";
+import { log } from "../../url/api";
 
 // 네비게이션 링크를 위한 타입 정의
 interface NavLinkItem {
@@ -19,7 +20,7 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { isLoggedIn, setIsLoggedIn } = useUserStore();  // 유저정보 스토어
+  const { user, isLoggedIn, setIsLoggedIn } = useUserStore();  // 유저정보 스토어
   const isActive = (path: string) => location.pathname === path;  // 현재 위치 확인
   const fetchAndSetUser = useUserStore((state) => state.fetchAndSetUser);
   const setUser = useUserStore((state) => state.setUser);

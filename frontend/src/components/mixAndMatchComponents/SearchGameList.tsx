@@ -30,7 +30,7 @@ const SearchGameList: React.FC = () => {
   const { fetchData } = useMixAndMatchStore();
 
   const HandleOnClick = () => {
-    fetchData(requestData);
+    fetchData(userId, requestData);
   };
 
   const navigate = useNavigate(); // useNavigate 인스턴스화

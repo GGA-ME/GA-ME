@@ -1,5 +1,5 @@
 import create from 'zustand';
-import {api} from '../url/api.tsx'
+import {api, log} from '../url/api.tsx'
 
 // 사용 스토어의 구조를 기반으로 하는 구조
 export interface Game {
@@ -77,8 +77,15 @@ export const useDetailStore = create<DetailState>((set) => ({
       let response;
       if (gameIsLike) {
         response = await api.delete<ApiResponse>(`/game/prefer`, { data : { userId, gameId }});
+        // 사용자 패턴 로그
+        log(userId, "detail", "like", [
+          { game_id: gameId },
+        ]);
       } else {
         response = await api.post<ApiResponse>(`/game/prefer`, { userId, gameId });
+        log(userId, "detail", "unlike", [
+          { game_id: gameId },
+        ]);
       }
       
       // 요청이 성공하고 응답 코드가 100인 경우에만 gameIsLike 값을 토글합니다.

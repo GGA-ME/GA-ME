@@ -54,14 +54,14 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     if (isInCart) {
-      removeItem(gameId);
+      removeItem(user?.userId, gameId);
     } else {
       if (cartItems.length >= 5) {
         setShowAlert(true);
         setTimeout(() => setShowAlert(false), 3000);
         return;
       }
-      addItem({ gameId, imageUrl, title, price, tagsAll, developer });
+      addItem(user?.userId, { gameId, imageUrl, title, price, tagsAll, developer });
     }
   };
 

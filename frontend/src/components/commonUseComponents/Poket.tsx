@@ -2,13 +2,14 @@ import usePoketStore from '../../stores/poketStore'; // 스토어를 가져옵�
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import style from './Poket.module.css';
-
+import useUserStore from '../../stores/userStore';
 
 
 const Poket: React.FC = () => {
   const cartItems = usePoketStore(state => state.cartItems);
   const { removeItem } = usePoketStore();
   const navigate = useNavigate();
+  const { user } = useUserStore();
 
   // 믹스앤매치 페이지로 이동하기 위한 함수
   const navigateToMixAndMatch = () => {
@@ -39,7 +40,7 @@ const Poket: React.FC = () => {
         <div className="w-14">
           {cartItems.map((game) => (
             <motion.div key={game.gameId} className="mb-5"
-              onClick={() => removeItem(game.gameId)}
+              onClick={() => removeItem(user?.userId, game.gameId)}
               style={{ cursor: 'pointer' }}
               transition={{ type: "spring", stiffness: 100 }}
               initial={{ scale: 0 }} // 시작 상태에서는 스케일을 0으로 설정
