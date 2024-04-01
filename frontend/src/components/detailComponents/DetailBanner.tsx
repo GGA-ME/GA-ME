@@ -65,7 +65,7 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
     const imageUrl = bannerImage
     const title = gameName
     const itemToAdd = { gameId, imageUrl, title, price, developer, tagsAll };
-    addItem(itemToAdd);
+    addItem(user?.userId, itemToAdd);
   };
   return (
     <>
