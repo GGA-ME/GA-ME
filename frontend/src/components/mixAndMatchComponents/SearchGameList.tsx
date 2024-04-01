@@ -55,8 +55,8 @@ const SearchGameList: React.FC = () => {
           flexDirection: "column",
         }}
       >
-        <p className="mt-[70px] mb-[30px]">게임을 담아주세요!</p>
-        <button className={style.topicBtn} onClick={handleGoToMain}>
+        <p className="mt-[70px] mb-[30px] text-lg">게임을 담아주세요!</p>
+        <button className={style.getPocketBtn} onClick={handleGoToMain}>
           담으러 가기
         </button>
       </div>
@@ -106,7 +106,7 @@ const SearchGameList: React.FC = () => {
           ))}
         </motion.ul>
       </div>
-      <button className={style.topicBtn} onClick={HandleOnClick}>
+      <button className={style.mixBtn} onClick={HandleOnClick}>
         {" "}
         Mix!{" "}
       </button>
