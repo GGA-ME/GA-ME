@@ -1,16 +1,16 @@
-import { myPageStore } from "../../stores/myPageStore";
+// import { myPageStore } from "../../stores/myPageStore";
 // import { AxiosError } from "axios";
 // // import LikeComponent from "./Like";
 // // import StatisticsComponent from "./Statistics";
 // import styles from "./MyPage.module.css";
 // import { useParams } from "react-router-dom";
 // import { useEffect } from "react";
-import useUserStore from "../../stores/userStore";
+// import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
-  const {user} = useUserStore();
+  // const {user} = useUserStore();
   // const { userId }: { userId?: string } = useParams<{ userId: string }>();
-  const { data, topTenTag } = myPageStore();
+  // const { data, topTenTag } = myPageStore();
 
   // const userIdAsNumber: number = parseInt(userId);
   //  eslint-disable-next-line react-hooks/rules-of-hooks
@@ -22,12 +22,12 @@ const MyProfile: React.FC = () => {
 
 
   
-  console.log("Profile Component에서 출력한 USER!!");
-  console.log(user);
-  console.log("TopTenTag!!");
-  console.log(topTenTag);
-  console.log('This is Data');
-  console.log(data);
+  // console.log("Profile Component에서 출력한 USER!!");
+  // console.log(user);
+  // console.log("TopTenTag!!");
+  // console.log(topTenTag);
+  // console.log('This is Data');
+  // console.log(data);
 
 
   return (
