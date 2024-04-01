@@ -3,8 +3,8 @@ import Navbar from "../components/commonUseComponents/Navbar";
 import Title from "../components/HotTopicComponents/Title";
 import SaleButton from "../components/HotTopicComponents/SaleButton";
 import NewsButton from "../components/HotTopicComponents/NewsButton";
-// import NewsList from '../components/HotTopicComponents/NewsList';
-// import SaleComponent from '../components/HotTopicComponents/SaleComponent';
+import NewsList from '../components/HotTopicComponents/NewsList';
+import SaleComponent from '../components/HotTopicComponents/SaleComponent';
 // import useHotTopicStore from "../stores/hotTopicStore";
 import Poket from "../components/commonUseComponents/Poket";
 const HotTopic: React.FC = () => {
@@ -37,7 +37,7 @@ const HotTopic: React.FC = () => {
           <SaleButton onClick={handleSaleButtonClick} />
           <NewsButton onClick={handleNewsButtonClick} />
         </div>
-        {/* <div style={{marginTop:'30px',display: 'flex'}}>
+        <div style={{marginTop:'30px',display: 'flex'}}>
           {!showSale && (
             <NewsList/> 
           )}
@@ -45,7 +45,7 @@ const HotTopic: React.FC = () => {
               <SaleComponent/>
             )
           }
-        </div> */}
+        </div>
         
       </div>
       
