@@ -42,7 +42,7 @@ const Banner: React.FC = () => {
   return (
     <div className="relative w-full overflow-hidden h-60vw"> {/* 베너 컨테이너 */}
       <div className="absolute top-0 left-0 p-4 z-10 text-2xl"> {/* 베너 타이틀 컨테이너 */}
-        {/* <h1 className={`${style.famousGame}`}>인기게임</h1> */}
+        <h1 className={`${style.famousGame}`}>인기게임</h1>
       </div>
 
       {/* 베너 메인 */}
@@ -77,7 +77,7 @@ const Banner: React.FC = () => {
         spaceBetween={10}
         slidesPerView={6}
         watchSlidesProgress={true}
-        modules={[FreeMode, Navigation, Thumbs]}
+        modules={[ Navigation, Thumbs]}
         className="mySwiper"
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
