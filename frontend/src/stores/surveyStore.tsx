@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import axios, { AxiosError } from 'axios';
 import { ChoiceGame } from '../components/SurveyComponents/SurveyGame';
+import { api } from '../url/api';
 
 // API 응답 데이터의 타입을 정의합니다.
 interface ApiResponse {
@@ -22,8 +23,6 @@ interface SurveyStoreState{
     removeCheckChoiceGame: (gameId: number, current: number) => void;
     fetchData: () => Promise<void>;
 }
-
-const api = axios.create({baseURL: 'https://j10e105.p.ssafy.io'});
 
 export const surveyStore = create<SurveyStoreState>((set) => ({
     data: null,
@@ -57,7 +56,7 @@ export const surveyStore = create<SurveyStoreState>((set) => ({
     fetchData: async() => {
         set({ loading: true });
         try {
-            const response = await api.get<ApiResponse>(`/api/users/choice-game`);
+            const response = await api.get<ApiResponse>(`/users/choice-game`);
             set({ data: response.data, loading: false });          
         } catch (error) {
             if (axios.isAxiosError(error)) {

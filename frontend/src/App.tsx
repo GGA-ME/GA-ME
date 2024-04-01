@@ -8,6 +8,8 @@ import Topic from './pages/HotTopic';
 import MixAndMatch from './pages/MixAndMatch'
 import Survey from './pages/Survey';
 import { useEffect } from 'react';
+import useHotTopicStore from "./stores/hotTopicStore";
+import useUserStore from "./stores/userStore";
 
 const KAKAO_CLIENT_ID = import.meta.env.VITE_KAKAO_CLIENT_ID as string;
 
@@ -22,7 +24,7 @@ const router = createBrowserRouter([
   // 게임 디테일 페이지
   { path: 'detail/:gameId', element: <Detail/> },
   // 마이페이지
-  { path: 'myPage',element: <MyPage/>},
+  { path: 'myPage/',element: <MyPage/>},
   // 토픽 페이지
   { path: 'topic', element: <Topic/>},
   // 선호도 조사 페이지
@@ -66,10 +68,19 @@ declare global {
 }
 
 const App: React.FC = () => {
+  const { newsData,fetchNewsData } = useHotTopicStore();
+  const {isLoggedIn} = useUserStore();
   useEffect(() => {
     // 카카오 SDK 초기화
     if (window.Kakao && !window.Kakao.isInitialized()) {
       window.Kakao.init(KAKAO_CLIENT_ID);
+    }
+    //뉴스 데이터 미리 받기
+    const fetchData = async () => {
+      await fetchNewsData();
+    };
+    if(newsData==null&&isLoggedIn){
+      fetchData(); // 함수 호출
     }
   }, []);
 

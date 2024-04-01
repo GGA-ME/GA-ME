@@ -7,13 +7,13 @@
     margin-top: 30px;
 
     margin-left: 175px;
-    width: 1000px;
+    width: 1350px;
 }
 
 .hr{
     background-color: #6a6a6a;
     border-color: #6a6a6a;
-    width: 970px;
+    width: 98%;
 
     margin-left: 10px;
     margin-bottom: 15px;
@@ -31,30 +31,35 @@
 .topicBtn {
     /* 기본 스타일 */
     box-sizing: border-box;
-    width: 140px;
-    height: 45px;
+    width: 200px;
+    height: 50px;
     
     border: 3px solid #EBFBFF;
     border-radius: 30px;
-    box-shadow: 0px 0px 10px 2px #B181FF;
 
-    margin-left: 800px;
+    box-shadow: 0px 0px 10px 2px #81bece;
+
+    margin-left: 43%;
+    margin-top: 15px;
     margin-bottom: 15px;
     
-    transition: font-size 0.3s; /* 글자 크기 변화에 대한 transition */
 
-  /* 호버 시 스타일 */
-  cursor: pointer;
+    transition: font-size 0.3s, transform 0.3s; /* 글자 크기 및 변환에 대한 transition */
+
+    /* 호버 시 스타일 */
+    cursor: pointer;
 }
 
 .topicBtn:hover {
-  font-size: 1.1em; /* 호버 시 폰트 크기를 1.1em으로 키움 */
+  /* font-size: 1.1em; 호버 시 폰트 크기를 1.1em으로 키움 */
+  transform: scale(1.1); /* 호버 시 크기를 1.1배로 키움 */
+
 }
 
 .container {
   position: fixed;
   top: 75%;
-  left: 52%;
+  left: 52.5%;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
@@ -88,4 +93,15 @@
   filter:brightness(0) invert(1);
   transition: 300ms;
   
+}
+
+.tagTitle {
+  display: flex; /* Flexbox 설정 */
+  align-items: center; /* 세로 중앙 정렬 */
+}
+
+.icon {
+  height: 26px;
+  width: 26px;
+  margin-left: 10px;
 }

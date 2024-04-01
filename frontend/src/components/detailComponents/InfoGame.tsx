@@ -35,7 +35,7 @@ return (
         initial="hidden"
         animate="visible"
         >        {/* relatedGameList가 존재하고, isGame이 true일 때만 게임 카드를 렌더링 */}
-        {(relatedGameList ? relatedGameList : gamesToShow)?.map((game, index) => (
+        {(relatedGameList ? relatedGameList.slice(0,4) : gamesToShow)?.map((game, index) => (
             <motion.li key={index} className="list-none"
             variants={{
                 hidden: { x: -60, opacity: 0 },
@@ -47,11 +47,13 @@ return (
                 gameId={game.gameId}
                 imageUrl={game.gameHeaderImg}
                 title={game.gameName}
+                developer={game.gameDeveloper}
                 price={`₩ ${game.gamePriceFinal}`}
+                beforPrice={`₩ ${game.gamePriceInitial / 100}`}
                 tagsAll={game.tagList}
                 tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
                 likes={game.gameLike}
-                // isPrefer={game.isPrefer}
+                isPrefer={game.isPrefer}
                 onGameClick={(gameId) => navigate(`/detail/${gameId}`)} // 클릭 이벤트 처리
             />
             </motion.li>

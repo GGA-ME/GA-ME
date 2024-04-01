@@ -21,7 +21,7 @@ interface UserInfo {
     tagWeightList: TagWeight[];
 }
 // 선호하는 게임에 대한 정보가 존재
-export interface Prefer {
+interface Prefer {
     gameId: number;
     gameName: string;
     gameHeaderImg: string;
@@ -33,13 +33,14 @@ export interface Prefer {
     tagList: TagList[];
 }
 // 선호하는 게임에 대한 태그 정보들이 존재
+
 interface TagList {
     codeId: string;
     tagId: number;
     tagName: string;
 }
 // 유저의 태그에 대한 정보가 존재
-export interface TagWeight {
+interface TagWeight {
     userId: number;
     tagId: number;
     codeId: string;
@@ -88,7 +89,7 @@ const initialData: ApiResponse = {
     result: initialUser
 }
 
-interface detailState {
+interface myPageDetail {
     data: ApiResponse;
     loading: boolean;
     error: AxiosError | null;
@@ -98,7 +99,7 @@ interface detailState {
     addLikeWeight: (userId: number, gameList: number[][]) => void;
 }
 
-const detailStore = create<detailState>((set) => ({
+const myPageStore = create<myPageDetail>((set) => ({
     data: initialData,
     loading: false,
     error: null,
@@ -149,4 +150,5 @@ const detailStore = create<detailState>((set) => ({
 
 }))
 
-export default detailStore;
+export { myPageStore };
+export type { ApiResponse, TagWeight, UserInfo, Prefer, TagList };

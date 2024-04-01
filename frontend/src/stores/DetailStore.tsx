@@ -10,7 +10,9 @@ export interface Game {
     // 각 태그를 기준으로 각 태그 및 이름을 가진 경우 선언방법
     tagList: Array<{ codeId: string; tagId:number; tagName: string }>;
     gameLike: number;
-    isPrefer: Boolean;
+    isPrefer: boolean;
+    gameDeveloper: string;
+    gamePriceInitial: number;
   }
 
 export interface Screenshot {
@@ -29,7 +31,7 @@ export interface GameData {
     gameDeveloper: string;
     gamePublisher: string;
     gamePriceInitial: number; 
-    gamePriceFinal: string; // gameCard에 맞춰서 string
+    gamePriceFinal: number | 0; // gameCard에 맞춰서 string
     gameDiscountPercent: number;
     gameReleaseDate: string;
     screenshotList: Screenshot[];

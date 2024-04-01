@@ -8,17 +8,18 @@ interface BannerProps {
   gameShortDescription: string | undefined;
   gameIsLike: boolean | undefined;
   price: string;
+  developer: string;
   tagsAll: Array<{ codeId: string; tagId:number; tagName: string }> | undefined;
 }
 
-import LikeImage from '/Like.png';
+
 import { useDetailStore } from '../../stores/DetailStore';
 // import OnLikeImage from '/OnLike.png';
 
-const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, tagsAll }) => {
+const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, developer, tagsAll }) => {
 
   // 줄넘김이 적용된 텍스트
-  const MAX_LENGTH = 51; // 최대 길이 지정
+  const MAX_LENGTH = 40; // 최대 길이 지정
   const { toggleIsLike } = useDetailStore()
   // 텍스트 길이가 이 값 이상이면 공백을 찾아서 줄넘김을 추가하는 함수
   // 문장이 끝날 때까지 단어 단위로 자르고, 각 줄의 길이를 체크하여 줄넘김을 추가하는 함수
@@ -44,8 +45,8 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
     return result;
   };
   const modifiedShortDescription = addLineBreaks(gameShortDescription || '', MAX_LENGTH);
-  // const likeButtonImageSrc = gameIsLike ? 'OnLikeImage' : LikeImage;
-  const likeButtonImageSrc = gameIsLike ? '❤️' : '🤍';
+  const likeButtonImageSrc = gameIsLike ? '/OnLike.png' : '/Like.png';
+  // const likeButtonImageSrc = gameIsLike ? '❤️' : '🤍';
 
   const likeClickHandler = () => {
     toggleIsLike(gameIsLike, gameId, 1)
@@ -57,13 +58,13 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
   }
   const { addItem } = usePoketStore();
 
-  // const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   event.stopPropagation(); // 이벤트 버블링 중지
-  //   const imageUrl = bannerImage
-  //   const title = gameName
-  //   const itemToAdd = { gameId, imageUrl, title, price, tagsAll };
-  //   addItem(itemToAdd);
-  // };
+  const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation(); // 이벤트 버블링 중지
+    const imageUrl = bannerImage
+    const title = gameName
+    const itemToAdd = { gameId, imageUrl, title, price, developer, tagsAll };
+    addItem(itemToAdd);
+  };
   return (
     <>
     <div className={styles.bannerContainer}>
@@ -80,8 +81,7 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
           
           {/* 좋아요 버튼 */}
           <button className={styles.likeButton} onClick={likeClickHandler}>
-            {/* <img src={likeButtonImageSrc} alt="Like" /> */}
-            {likeButtonImageSrc}
+            <img src={likeButtonImageSrc} alt="Like" />
           </button>
           
           {/* 왼쪽 하단 텍스트 */}
@@ -92,7 +92,7 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
           {/* 오른쪽 하단 버튼 */}
           <div className={styles.rightBottomButtons}>
             <button className={styles.urlButton} onClick={steamButtonClickHandler}>스팀으로 이동</button>
-            {/* <button className={styles.urlButton} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button> */}
+            <button className={`${styles.urlButton} ${styles.addToCartBtn}`} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button>
           </div>
         </div>
       </div>

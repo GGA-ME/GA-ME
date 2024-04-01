@@ -33,7 +33,7 @@ const SurveyGame = () => {
   const [current, setCurrent] = useState(0);
   useEffect(() => {
     fetchData(); // 마운트시 데이터 가져오기
-  }, [fetchData, user, backGroundImg]); // 데이터 변경시 재랜더링
+  }, [fetchData, user]); // 데이터 변경시 재랜더링
   // 이 시점에 data에 정보가 들어와있음
 
   const oneList: ChoiceGame[] = [];
