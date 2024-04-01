@@ -80,11 +80,11 @@ const Banner: React.FC = () => {
         spaceBetween={10}
         slidesPerView={6}
         slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
-        // watchSlidesProgress={true}
+        watchSlidesProgress={true}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
           <SwiperSlide key={index} className="cursor-pointer">
-            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
+            <img key = {index} src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
           </SwiperSlide>
         ))}
       </Swiper>
