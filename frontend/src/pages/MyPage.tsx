@@ -1,4 +1,4 @@
-// import Navbar from "../components/commonUseComponents/Navbar";
+import Navbar from "../components/commonUseComponents/Navbar";
 // import Poket from '../components/commonUseComponents/Poket';
 // import Profile from "../components/MyPageComponents/Profile";
 import useUserStore from "../stores/userStore";
@@ -11,6 +11,7 @@ function MyPage() {
   return (
     <>
     <div><h1>아무것도 안되는 거야?</h1></div>
+      <Navbar/>
       {/* <div style={{ position: "relative" }}>
         <Navbar />
         <Poket/>
