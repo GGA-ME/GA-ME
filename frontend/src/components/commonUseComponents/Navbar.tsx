@@ -212,32 +212,7 @@ const Navbar: React.FC = () => {
                   </span>
                 </NavLink>
               );
-            } 
-            else if (link.label == 'My Page' && user){
-              return (
-                <>
-                  <div
-                  key={index}
-                  onClick={link.action}
-                  className="flex items-center space-x-2 mb-8 cursor-pointer ml-2"
-                >
-                  <img
-                    src={link.icon}
-                    className="transition-all duration-300 ease-in-out"
-                    style={{
-                      width: "28px",
-                      height: "auto",
-                      filter: "brightness(0) invert(1)",
-                    }}
-                    alt={`${link.label} Icon`}
-                  />
-                  <span className={`${style.neonNormal} text-xl`}>
-                    {link.label}
-                  </span>
-                </div>
-                </>
-              )
-            }      
+            }       
             else {
               // path가 없는 경우 (예: 로그인 버튼), div와 onClick 이벤트를 사용
               return (
