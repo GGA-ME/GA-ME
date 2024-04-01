@@ -142,19 +142,19 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
           {/* 세일정보에 따른 가격표시&개발사 : 카드의 하단 */}
           {
             price !== beforPrice ? (
-              <p className="absolute bottom-0 text-xs font-thin p-2">
+              <div className="absolute bottom-0 text-xs font-thin p-2">
                 <span className="text-gray-500 line-through">
                   {formatPrice(beforPrice)}
                 </span>
                 {' => '}{formatPrice(price)}
                 <p>{developer}</p>
-              </p>
+              </div>
             ) : (
               
-              <p className="absolute bottom-0 text-xs font-thin p-2">
+              <div className="absolute bottom-0 text-xs font-thin p-2">
                 {formatPrice(price)}
                 <p>{developer}</p>
-                </p>
+                </div>
             )
           }
         </div>

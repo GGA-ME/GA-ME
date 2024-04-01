@@ -98,7 +98,7 @@ const GameComponent: React.FC = () => {
         </button>
         <label className={`${style.label}`}>
             <span>{page}</span>
-            <input id="middle" className={`${style.input}`} checked={true} name="radio" type="radio"/>
+            <input id="middle" className={`${style.input}`} defaultChecked={true} name="radio" type="radio"/>
         </label>
         <button className={`${style.label}`} onClick={handleNextPage}>
             <span> 다음 </span>
