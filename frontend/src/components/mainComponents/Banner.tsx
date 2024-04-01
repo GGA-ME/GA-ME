@@ -38,7 +38,8 @@ const Banner: React.FC = () => {
     navigate(`/detail/${gameId}`)
     console.log('디테일페이지 이동')
   }
-
+  // 파일이 없는경우를 정확히 검사
+  if (bannerData && bannerData.result && bannerData.result.length > 0) {
   return (
     <div className="relative w-full overflow-hidden h-60vw"> {/* 베너 컨테이너 */}
       <div className="absolute top-0 left-0 p-4 z-10 text-2xl"> {/* 베너 타이틀 컨테이너 */}
@@ -51,7 +52,7 @@ const Banner: React.FC = () => {
         modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
         spaceBetween={0}
         slidesPerView={1}
-        loop={false}
+        loop={true}
         navigation={true}
         autoplay={{
           delay: 5000,
@@ -79,6 +80,7 @@ const Banner: React.FC = () => {
         spaceBetween={10}
         slidesPerView={6}
         slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
+
         watchSlidesProgress={true}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
@@ -89,6 +91,11 @@ const Banner: React.FC = () => {
       </Swiper>
     </div>
   );
+} 
+// else {
+//   // 로딩 상태나 다른 대체 컨텐츠를 표시할 수 있습니다.
+//   return <div>Loading...</div>;
+// }
 };
 
 export default Banner;
