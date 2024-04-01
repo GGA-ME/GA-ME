@@ -88,7 +88,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
     const handleDisLikeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       event.stopPropagation();
       if (user && isLoggedIn) { // user가 존재하는지 확인, 로그인 되어있는지 확인
-        disLike()
+        disLike(tagsAll)
         Swal.fire({
           icon: 'success',
           title: '가중치를 감소시켰습니다.',

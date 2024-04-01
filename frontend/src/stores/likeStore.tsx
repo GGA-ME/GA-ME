@@ -13,6 +13,12 @@ const api = axios.create({
     }
   });
 
+  interface TagDto {
+    codeId: string;
+    tagId: number;
+    tagName: string;
+  }
+
   interface StoreState {
     loading: boolean;
     error: AxiosError | null;
@@ -22,7 +28,7 @@ const api = axios.create({
     setGameId: (gameId: number) => void;
     likeGame: () => Promise<void>;
     unlikeGame: () => Promise<void>;
-    disLike: () => Promise<void>;
+    disLike: (tagsAll: TagDto[] | null | undefined) => Promise<void>;
 }
 
   const useStoreLike = create<StoreState>((set, get) => ({
@@ -65,10 +71,16 @@ const api = axios.create({
         }
     },
 
-    disLike: async (codeId, tagId) => {
+    disLike: async (tagsAll) => {
         const { userId } = get();
-        const tags = [{ codeId: codeId, tagId: tagId }];  // 태그 배열 정의
         set({ loading: true });
+    
+        // tagsAll에서 필요한 정보만 추출하여 새 배열 생성
+        const tags = tagsAll?.map(tag => ({
+            codeId: tag.codeId,
+            tagId: tag.tagId
+        })) ?? []; // tagsAll이 null이나 undefined일 경우 빈 배열을 대신 사용
+    
         try {
             const response = await api.put(`/api/tracking/dislike`, { userId, tags });
             set({ loading: false });

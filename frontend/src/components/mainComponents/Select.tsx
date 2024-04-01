@@ -13,15 +13,9 @@ interface Tag {
 
 const Select: React.FC = () => {
 
-<<<<<<< c307b7f1de9ee1ef2792ef51e94a60ba621d0598
-  const { data, fetchData } = useMyPageStore()  // 유저기반 태그 가져오는 스토어
+  const { data, fetchData } = myPageStore()  // 유저기반 태그 가져오는 스토어
   const { user, isLoggedIn } = useUserStore();  // 유저의 유저ID가져오는 스토어
   const { setUserId, setTagId, setCodeId, fetchMainData, setPage } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
-=======
-  const { data, fetchData } = myPageStore()  // 유저기반 태그 가져오는 스토어
-  const { user } = useUserStore();  // 유저의 유저ID가져오는 스토어
-  const { setUserId, setTagId, setCodeId, fetchMainData } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
->>>>>>> 210cde9f0c9804ecde842c283896de6538b80c38
 
   useEffect(() => {
     if (user) { // user가 null이 아닐 때만 fetchData 호출
