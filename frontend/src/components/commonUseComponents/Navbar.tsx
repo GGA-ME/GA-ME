@@ -13,7 +13,6 @@ interface NavLinkItem {
   icon: string;
   activeIcon: string;
   action?: () => void; // 클릭 시 실행할 액션(함수) 추가
-  getMyPage?: (userId: number) => void;
 }
 
 const Navbar: React.FC = () => {
@@ -82,8 +81,8 @@ const Navbar: React.FC = () => {
     }
   };
 
-  const getMyPage = (userId: number) => {
-    navigate(`/myPage/${userId}`)
+  const getMyPage = () => {
+    if(user) navigate(`/myPage/${user.userId}`)
   } 
 
   // 각 네비게이션 정의
@@ -126,7 +125,7 @@ const Navbar: React.FC = () => {
           label: "My Page",
           icon: "/ProfileIcon.png",
           activeIcon: "/ProfileIcon.gif",
-          getMyPage: () => getMyPage(user.userId)
+          action: getMyPage,
       },
     // isLoggedIn이 true일 때만 로그아웃 버튼 객체를 배열에 추가
     ...(isLoggedIn
@@ -220,7 +219,7 @@ const Navbar: React.FC = () => {
                 <>
                   <div
                   key={index}
-                  onClick={() => link.getMyPage(user.userId)}
+                  onClick={link.action}
                   className="flex items-center space-x-2 mb-8 cursor-pointer ml-2"
                 >
                   <img
