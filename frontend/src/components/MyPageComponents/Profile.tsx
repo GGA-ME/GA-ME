@@ -3,20 +3,22 @@ import { myPageStore, TagWeight } from "../../stores/myPageStore";
 import { AxiosError } from "axios";
 import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
-import { useParams } from "react-router-dom";
 import styles from './MyPage.module.css';
+import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
+  const {user} = useUserStore();
   const { data, loading, error, topTenTag, fetchData } = myPageStore();
-  const { userId }: { userId?: string } = useParams<{ userId?: string }>();
+  
+  // const { userId }: { userId?: string } = useParams<{ userId?: string }>();
   // userId가 undefined일 때의 처리
-
-  if(userId){
-    const userIdAsNumber: number = parseInt(userId);
+    // const userIdAsNumber: number = parseInt(userId);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      fetchData(userIdAsNumber);
-    }, [fetchData, userIdAsNumber]);
+      if(!user) {
+        fetchData;
+      }
+    }, [fetchData, user]);
 
     if (loading) {
       return (
@@ -31,7 +33,6 @@ const MyProfile: React.FC = () => {
       const axiosError = error as AxiosError;
       return <div>Error: {axiosError.message}</div>;
     }
-  }
   return (
     <>
       <div className="relative " style={{bottom: '10px', left: '30px'}}>
