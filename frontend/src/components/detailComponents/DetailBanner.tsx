@@ -48,14 +48,13 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
   };
   const modifiedShortDescription = addLineBreaks(gameShortDescription || '', MAX_LENGTH);
   const likeButtonImageSrc = gameIsLike ? '/OnLike.png' : '/Like.png';
-  // const likeButtonImageSrc = gameIsLike ? '❤️' : '🤍';
 
   const likeClickHandler = () => {
     toggleIsLike(gameIsLike, gameId, user?.userId)
   }
     // 버튼 클릭 핸들러 - 스팀으로 이동
   const steamButtonClickHandler = () => {
-    const steamUrl = `https://store.steampowered.com/app/${gameId}/PUBG_BATTLEGROUNDS/?l=koreana`;
+    const steamUrl = `https://store.steampowered.com/app/${gameId}/?l=koreana`;
     window.open(steamUrl, '_blank');
   }
   const { addItem } = usePoketStore();
