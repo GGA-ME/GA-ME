@@ -3,7 +3,7 @@ import useStoreMain from "../../stores/mainStore";
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperClass } from 'swiper/types';
-import { Autoplay, Pagination, Navigation, Thumbs, FreeMode } from 'swiper/modules';
+import { Autoplay, Pagination, Navigation, Thumbs } from 'swiper/modules';
 import style from './Banner.module.css'
 import 'swiper/css';
 import 'swiper/css/navigation';
