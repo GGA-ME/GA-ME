@@ -29,14 +29,15 @@ import json
 # 문자열을 datetime으로 바꾸기 위해 임포트
 from datetime import datetime, timedelta
 from pytz import timezone
+from airflow.hooks.mysql_hook import MySqlHook
 
 
-# MySQL 연결 정보를 설정합니다.
-MYSQL_HOST = 'j10e105.p.ssafy.io'
-MYSQL_PORT = '3306'
-MYSQL_USER = 'root'
-MYSQL_PASSWORD = 'GGAME!buk105'
-MYSQL_DATABASE = 'ggame'
+# # MySQL 연결 정보를 설정합니다.
+# MYSQL_HOST = 'j10e105.p.ssafy.io'
+# MYSQL_PORT = '3306'
+# MYSQL_USER = 'root'
+# MYSQL_PASSWORD = 'GGAME!buk105'
+# MYSQL_DATABASE = 'ggame'
 
 default_args = {
     'owner': 'airflow',
@@ -49,20 +50,24 @@ default_args = {
 }
 
 
-# 커넥션 생성
-conn = mysql.connector.connect(
-    host=MYSQL_HOST,
-    port=MYSQL_PORT,
-    user=MYSQL_USER,
-    password=MYSQL_PASSWORD,
-    database=MYSQL_DATABASE
-)
+# # 커넥션 생성
+# conn = mysql.connector.connect(
+#     host=MYSQL_HOST,
+#     port=MYSQL_PORT,
+#     user=MYSQL_USER,
+#     password=MYSQL_PASSWORD,
+#     database=MYSQL_DATABASE
+# )
 
-# 커서 생성
+# # 커서 생성
+# cursor = conn.cursor()
+MYSQL_CONN_ID = 'mysql_default'
+
+mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
+conn = mysql_hook.get_conn()
 cursor = conn.cursor()
 
-
-MAX_RETRIES = 5
+MAX_RETRIES = 8
 
 def load_game_detail_retry(app, game_datail_url):
     retry_count = 0
@@ -206,6 +211,7 @@ def get_tag_category(game_id, detail_json):
             
 def get_game_id_list(**kwargs):
 
+
     # 게임 목록 API 요청
     game_list_url = "https://api.steampowered.com/ISteamApps/GetAppList/v2"
     res = requests.get(game_list_url)
@@ -238,7 +244,6 @@ def get_game_final_score(index, num_batches, **kwargs):
 
     try:
         for game_id in game_id_batch:
-
            #print("################### CALCULATE GAME SCORE!!!#######################")
 
             # 가장 최근 갱신된 점수 정보 가져오기
@@ -429,6 +434,8 @@ def get_game_data(index, num_batches, **kwargs):
     else:
        #print('applist 존재')
        pass
+   
+    applist = applist[::-1]
 
     game_id_batch = applist[index::num_batches]
    #print("game_id_batch::", game_id_batch)
@@ -446,6 +453,21 @@ def get_game_data(index, num_batches, **kwargs):
             if check_game_existence(appid):
                 continue
             
+            time.sleep(0.01)
+            # https://store.steampowered.com/app/2368027/ 이게 302를 반환하면 continue로
+            check_url = f'https://store.steampowered.com/app/{appid}/'
+            check_res = requests.get(check_url)
+            print(f"{appid}번 코드 {check_res.status_code}", check_res.url)
+            if check_res.status_code == 302:
+                log.info(f"{appid}번 302 코드 반환 리다이렉트")
+                continue
+            elif check_res.status_code == 403 or check_res.status_code == 401:
+                log.info(f"{appid}번 403에러 401에러")
+                pass
+            elif check_res.url == "https://store.steampowered.com/":
+                continue
+
+
             # 게임 상세 정보 API 요청
             game_detail_url = f'https://store.steampowered.com/api/appdetails?appids={app.get("appid")}&l=koreana'
             detail_res = requests.get(game_detail_url)
@@ -478,7 +500,7 @@ def check_game_existence(appid):
 with DAG(
     dag_id="dags_get_game_data_parallel",
     default_args=default_args, 
-    schedule="@weekly",
+    schedule=None,
     catchup=False,
     tags=["please","mysql","test"],
 ) as dag:
