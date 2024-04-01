@@ -1,12 +1,12 @@
 import Navbar from "../components/commonUseComponents/Navbar";
 // import Poket from '../components/commonUseComponents/Poket';
 // import Profile from "../components/MyPageComponents/Profile";
-import useUserStore from "../stores/userStore";
+// import useUserStore from "../stores/userStore";
 
 function MyPage() {
-  const {user} = useUserStore();
-  console.log('MyPage에서 출력한 User ')
-  console.log(user);
+  // const {user} = useUserStore();
+  // console.log('MyPage에서 출력한 User ')
+  // console.log(user);
 
   return (
     <>
