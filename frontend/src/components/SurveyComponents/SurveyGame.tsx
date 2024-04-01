@@ -6,7 +6,6 @@ import SimpleGameCard from "../commonUseComponents/SimpleGameCard";
 import { AxiosError } from "axios";
 import { ConfigProvider, Steps } from "antd";
 import useUserStore from "../../stores/userStore";
-import { SubmitButton } from "./SubmitButton";
 import { useNavigate } from "react-router-dom";
 import { myPageStore } from "../../stores/myPageStore";
 
@@ -29,7 +28,6 @@ const SurveyGame: React.FC = () => {
     fetchData(); // 마운트시 데이터 가져오기
   }, [fetchData, user]); // 데이터 변경시 재랜더링
   // 이 시점에 data에 정보가 들어와있음
-  console.log(current);
   const oneList: ChoiceGame[] = [];
   const twoList: ChoiceGame[] = [];
   const threeList: ChoiceGame[] = [];
