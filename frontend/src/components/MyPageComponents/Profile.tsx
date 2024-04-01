@@ -77,8 +77,8 @@ const MyProfile: React.FC = () => {
               <br />
               <h1 className="text-xl font-bold">선호 게임 🤍</h1>
               <br />
-              <LikeComponent />
-              <StatisticsComponent />
+              {/* <LikeComponent />
+              <StatisticsComponent /> */}
             </div>
           </div>
         </div>
