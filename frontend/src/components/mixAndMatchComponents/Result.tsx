@@ -20,8 +20,8 @@ const Result: React.FC = () => {
       {/* 데이터가 로딩되지 않은 경우에만 문구를 표시합니다. */}
       {!loading && !gameCardDtoList && (
         <div>
-          <p className="ml-[185px] mt-[30px] text-[30px] font-sejong">
-            게임을 조합해서 추천을 받아 보세요😉
+          <p className={style.beforeMixText}>
+            어떤 게임을 조합해 볼까요?
           </p>
         </div>
       )}
