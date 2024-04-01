@@ -8,6 +8,7 @@
 // import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
+  console.log("도대체 이게 뭔데...?");
   // const {user} = useUserStore();
   // const { userId }: { userId?: string } = useParams<{ userId: string }>();
   // const { data, topTenTag } = myPageStore();
