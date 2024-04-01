@@ -30,7 +30,7 @@ def load_reviews_with_retry(game_id, max_reviews):
             print(f"SSLError 발생: {e}")
             print("재시도 중...")
             retry_count += 1
-            sleep(5)  # 재시도 전에 잠시 대기
+            sleep(300)  # 재시도 전에 잠시 대기
     print(f"최대 재시도 횟수({MAX_RETRIES})를 초과하여 리뷰를 가져오지 못했습니다.")
     return None
 
@@ -54,26 +54,24 @@ def analyze_reviews(**kwargs):
     
     ti = kwargs['ti']
     game_ids = ti.xcom_pull(task_ids='get_game_ids', key='game_ids')
-    font_path = '/opt/airflow/wordcloud/NanumGothicBold.ttf'
+    font_path = '/opt/airflow/wordcloud/bamin_doheon.ttf'
 
     for game_id in game_ids:
+        sllep(0.01)
         max_reviews = 1000
         reviews_kr = load_reviews_with_retry(game_id, max_reviews)
 
         if reviews_kr is not None:
-            print("리뷰를 성공적으로 불러왔습니다.")
-            print(reviews_kr.data['reviews'])
+            pass
         else:
             print("리뷰를 불러오지 못했습니다.")
             continue
 
             
         if not reviews_kr.data['reviews'] or len(reviews_kr.data['reviews']) < 10:
-            print(reviews_kr.data['reviews'])
-            print(f"No reviews found for game ID: {game_id}")
+            print(f"No reviews found for game ID: {game_id} {len(reviews_kr.data['reviews'])}")
             continue
-        else:
-            print(len(reviews_kr.data['reviews']))
+
         
         reviews = [review['review'] for review in reviews_kr.data['reviews']]
                 
@@ -104,15 +102,14 @@ def analyze_reviews(**kwargs):
             cursor.execute(f'''update game set game_word_cloud_url = '{image_file_path}' where game_id = {game_id}''')
             conn.commit()
             cursor.close()
-            print("clear save wc")
         except Exception as e:
-            print("fail db ", e)
+            print("fail db line 106", e)
     conn.close()
 
 
 with DAG('dags_get_review_wordcloud', 
          default_args=default_args, 
-         schedule_interval='@daily', 
+         schedule_interval=None, 
          catchup=False) as dag:
 
 
