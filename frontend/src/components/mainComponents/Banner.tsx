@@ -58,7 +58,8 @@ const Banner: React.FC = () => {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        // pagination={{ clickable: true }}
+        watchSlidesProgress={true}
+
         {...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {})}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
@@ -81,7 +82,6 @@ const Banner: React.FC = () => {
         slidesPerView={6}
         slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
         watchSlidesProgress={true}
-                pagination={{ clickable: true }}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
           <SwiperSlide key={index} className="cursor-pointer">

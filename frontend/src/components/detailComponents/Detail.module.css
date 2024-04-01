@@ -10,16 +10,16 @@
     transform: translate(-50%, -20%); /* 수직, 수평 가운데 정렬 */
     text-align: center;
     color: white;
-    margin-top: 5%; /* 상위 요소의 높이에 상대적으로 위치 조정 */
+    margin-top: 4.5%; /* 상위 요소의 높이에 상대적으로 위치 조정 */
 }
 
   
   /* 디테일 본문 내의 버튼 스타일 */
   .detailContent button {
     position:relative;
-    margin-right: 30px;
+    margin-right: 24px;
     right: 40%; /* 중앙 이미지 왼쪽으로부터의 상대적인 위치 */
-    font-size: 35px;
+    font-size: 28px;
     font-weight: bold;
   }
   

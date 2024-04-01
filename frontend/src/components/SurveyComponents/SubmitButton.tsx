@@ -18,6 +18,7 @@ const SubmitButton: React.FC = () => {
         }
         if(checkGameList[2].length === 0) return alert('게임을 최소 하나 이상 선택해주세요.');
         addLikeWeight(user.userId, checkGameList);
+        // 라엘아 여기에 좋아요 로그 남겨줘
         navigate("/");
     }
 

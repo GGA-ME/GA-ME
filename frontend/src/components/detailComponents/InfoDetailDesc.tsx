@@ -35,13 +35,22 @@ const InfoDetailDesc: React.FC<InfoDetailDescProps> = ({ data }) => {
 
             {/* 오른쪽에 3개의 정보 */}
             <div className={styles.rightInfo}>
+              <div>
               {data?.gameDiscountPercent != 0 ? (
-                <div>
-                  <div>{formatPrice(((data?.gamePriceInitial ??0) / 100).toString() ?? '')}</div>
-                  <div>{data?.gameDiscountPercent}</div>
+                <div className={styles.beforePrice}>
+                  <div style={{
+                    textDecoration: 'line-through',
+                    color: '#888', // 회색 음영
+                    textShadow: '1px 1px 45px #ccc', // 회색 음영 효과
+                    marginRight: '10px',
+                  }}>{formatPrice(`₩ ${((data?.gamePriceInitial ?? 0) / 100).toString() ?? ''}`)}</div>
+                  <div style={{color: '#AEEEFF',  fontWeight: 'bold'}}>
+                    -{data?.gameDiscountPercent}%
+                    </div>
                 </div>
-              ) : null}
-              <div>{formatPrice(((data?.gamePriceFinal ?? 0) / 100).toString() ?? '')}</div>
+                ) : <div> <div></div><div> </div></div>}
+              </div>
+              <div style={{fontWeight: 'bold'}}>{formatPrice(`₩ ${((data?.gamePriceFinal ?? 0) / 100).toString() ?? ''}`)}</div>
             </div>
           </div>
 

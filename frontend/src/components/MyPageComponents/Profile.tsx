@@ -4,6 +4,7 @@ import LikeComponent from "./Like";
 import StatisticsComponent from "./Statistics";
 import styles from './MyPage.module.css';
 import useUserStore from "../../stores/userStore";
+import useUserStore from "../../stores/userStore";
 
 const MyProfile: React.FC = () => {
   const { user } = useUserStore();
@@ -29,7 +30,6 @@ const MyProfile: React.FC = () => {
       const axiosError = error as AxiosError;
       return <div>Error: {axiosError.message}</div>;
     }
-  }
   return (
     <>
       <div className="relative " style={{bottom: '10px', left: '30px'}}>
