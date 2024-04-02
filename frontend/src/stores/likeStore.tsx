@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios";
 import { log } from "../url/api";
 
 const api = axios.create({
-  baseURL: "https://j10e105.p.ssafy.io",
+  baseURL: "https://j10e105.p.ssafy.io/api",
   headers: {
     "Content-Type": `application/json;charset=UTF-8`,
     Accept: "application/json",
@@ -44,11 +44,12 @@ const useStoreLike = create<StoreState>((set, get) => ({
     console.log(userId, gameId);
     set({ loading: true });
     try {
-      const response = await api.post(`/api/game/prefer`, { userId, gameId });
+      const response = await api.post(`/game/prefer`, { userId, gameId });
       // 요청 성공 시 데이터 업데이트
       set({ loading: false });
       console.log("Like successful", response.data);
-
+      // 가중치 증가  
+      api.put('/tracking?userId='+userId+'&gameId='+gameId+'&action=like');
       // 사용자 패턴 로그
       log(userId, "like", "like", [{ game_id: gameId }]);
     } catch (error) {
@@ -63,7 +64,7 @@ const useStoreLike = create<StoreState>((set, get) => ({
     set({ loading: true });
     try {
       // 데이터를 지워서 한번 해보자..
-      const response = await api.delete(`/api/game/prefer`, {
+      const response = await api.delete(`/game/prefer`, {
         data: { userId, gameId },
       });
       // 요청 성공 시 데이터 업데이트
@@ -95,7 +96,7 @@ const useStoreLike = create<StoreState>((set, get) => ({
     try {
       console.log(tags);
       console.log(userId);
-      const response = await api.put(`/api/tracking/dislike`, { userId, tags });
+      const response = await api.put(`/tracking/dislike`, { userId, tags });
       set({ loading: false });
       console.log(response.data);
 
