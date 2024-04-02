@@ -145,6 +145,9 @@ public class UserTagService {
             case "like":
                 weightToAdd = 10;
                 break;
+            case "unlike":
+                weightToAdd = -10;
+                break;
             case "relational":
                 weightToAdd = 2;
                 break;
