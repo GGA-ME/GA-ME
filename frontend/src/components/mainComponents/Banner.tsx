@@ -72,7 +72,6 @@ const Banner: React.FC = () => {
 
       {/* 베너 thumbs */}
       <Swiper
-        className="mySwiper"
         onSwiper={setThumbsSwiper}
         loop={false}
         spaceBetween={10}
@@ -80,8 +79,8 @@ const Banner: React.FC = () => {
         slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
         watchSlidesProgress={true}
       >
-        {bannerData?.result.map((banner: Banner, index: number) => (
-          <SwiperSlide key={index} className="cursor-pointer">
+        {bannerData?.result.map((banner: Banner) => (
+          <SwiperSlide key={banner.gameId} className="cursor-pointer">
             <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
           </SwiperSlide>
         ))}
