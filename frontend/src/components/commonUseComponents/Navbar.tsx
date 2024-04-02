@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
   const setUser = useUserStore((state) => state.setUser);
   const { user } = useUserStore();
 
-  const navLinkYPositions: number[] = [0, 58, 118, 183, 250]; // 각 네비게이션 항목에 대한 Y 위치
+  const navLinkYPositions: number[] = [0, 58, 118, 183, 248]; // 각 네비게이션 항목에 대한 Y 위치
 
   // 로컬 스토리지에서 indicatorY 상태를 읽어오기
   const initialY: number = localStorage.getItem("indicatorY")
