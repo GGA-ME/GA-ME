@@ -77,7 +77,7 @@ const LikeComponent: React.FC = () => {
         }}
           spaceBetween={0}
           slidesPerView={4}
-          loop={false}
+          loop={true}
           navigation={true}
         >
           {data.result.preferList.map((prefer: Prefer, index: number) => (
@@ -92,7 +92,7 @@ const LikeComponent: React.FC = () => {
                     beforPrice={`₩ ${prefer.gamePriceInitial / 100}`}
                     price={`₩ ${prefer.gamePriceFinal / 100}`} 
                     tagsAll={prefer.tagList}
-                    tags={prefer.tagList.filter(tag => tag.codeId === "GEN" && tag.tagName.length < 7).map(tag => tag.tagName)}
+                    tags={prefer.tagList ? prefer.tagList.map((tag) => tag.tagName) : []}
                     isPrefer={prefer.isPrefer}
                     likes={prefer.gameLike}
                     onGameClick={getDetailPage}

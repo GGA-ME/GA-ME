@@ -58,7 +58,7 @@ const MyProfile: React.FC = () => {
                 <span
                   key={index}
                   className="bg-tag-gray inline-block px-2 py-1 rounded-[3px] ml-3"
-                  style={{ backgroundColor: "#036280" }}
+                  style={{ backgroundColor: "#036280", margin: '4px'}}
                 >
                   #{tag.tagName}{" "}
                 </span>

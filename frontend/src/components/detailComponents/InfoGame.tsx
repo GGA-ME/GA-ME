@@ -26,8 +26,8 @@ return (
 <>
 <div className={styles.container}>
     <div className={`${styles.title} font-sejong` }>{isGame ? '연관 게임' : '인기 게임'}</div>
-    <div className={styles.gameList}> {/* 중앙 정렬을 위한 flex 컨테이너 */}
-        <motion.ul className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+    <div className={styles.gameList} style={{ marginLeft:'17px',width:'97%'}}> {/* 중앙 정렬을 위한 flex 컨테이너 */}
+        <motion.ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         variants={{
             hidden: {},
             visible: { transition: { staggerChildren: 0.1 } }
@@ -36,7 +36,7 @@ return (
         animate="visible"
         >        {/* relatedGameList가 존재하고, isGame이 true일 때만 게임 카드를 렌더링 */}
         {(relatedGameList ? relatedGameList.slice(0,4) : gamesToShow)?.map((game, index) => (
-            <motion.li key={index} className="list-none"
+            <motion.li key={index} className="list-none" 
             variants={{
                 hidden: { x: -60, opacity: 0 },
                 visible: { x: 0, opacity: 1, transition: { duration: 0.1 } }

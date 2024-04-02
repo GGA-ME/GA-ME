@@ -78,12 +78,13 @@ function Detail(): JSX.Element {
             통계
           </button>
         </div>
-        <div>
+        <div style={{marginTop:'15px'}}>
           {activeComponent === "info" && <DetailInfo data={data?.result} />}
           {activeComponent === "statistics" && (
             <Statistics
               ratioData={statisticsResult?.result.statisticsDto}
               gameName={data?.result?.gameName ?? ""}
+              gameWordCloudUrl={statisticsResult?.result.gameWordCloudUrl ?? null}
             />
           )}
         </div>
