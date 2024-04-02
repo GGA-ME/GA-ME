@@ -70,7 +70,8 @@ const useStoreLike = create<StoreState>((set, get) => ({
       // 요청 성공 시 데이터 업데이트
       set({ loading: false });
       console.log("Unlike successful", response.data);
-
+      // 가중치 감소  
+      api.put('/tracking?userId='+userId+'&gameId='+gameId+'&action=unlike');
       // 사용자 패턴 로그
       log(userId, "like", "unlike", [
         { game_id: gameId },
