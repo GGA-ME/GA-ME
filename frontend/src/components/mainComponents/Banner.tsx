@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import useStoreMain from "../../stores/mainStore";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Swiper as SwiperClass } from 'swiper/types';
-import { Autoplay, Pagination, Navigation, Thumbs, FreeMode } from 'swiper/modules';
+import { Autoplay, Pagination, Navigation, FreeMode, EffectCoverflow } from 'swiper/modules';
+import { motion } from "framer-motion";
 import style from './Banner.module.css'
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -24,7 +24,6 @@ interface Banner {
 
 
 const Banner: React.FC = () => {
-  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const { bannerData, mainBanner } = useStoreMain();
 
   useEffect(() => {
@@ -42,7 +41,18 @@ const Banner: React.FC = () => {
       {/* 베너 메인 */}
       <Swiper
         className={`${style.swiperCustom} w-full h-full`}
-        modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
+        modules={[FreeMode, Autoplay, Pagination, Navigation, EffectCoverflow]}
+        effect={'coverflow'}
+        grabCursor={true}
+        centeredSlides={true}
+        coverflowEffect={{
+          rotate: 50,
+          stretch: 0,
+          depth: 50,
+          modifier: 1,
+          slideShadows: true,
+        }}
+        slidesPerView={2}
         spaceBetween={0}
         slidesPerView={1}
         loop={true}
@@ -51,35 +61,27 @@ const Banner: React.FC = () => {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        {...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {})}
+        slideToClickedSlide={true} // 클릭한 슬라이드로 이동
       >
-        {bannerData?.result.map((banner: Banner, index: number) => (
-          <SwiperSlide key={index} className="relative h-full">
-            <div className="absolute w-full h-full bg-cover bg-center filter blur-md z-[-1] before:content-[''] before:absolute before:inset-0 before:bg-black before:bg-opacity-50" style={{ backgroundImage: `url(${banner.gameHeaderImg})` }}></div>
-            <div className="relative w-full h-3/4 flex justify-center items-start mt-16" >
-              <img src={banner.gameHeaderImg} alt={banner.gameName} className="mb-8 w-9/10 h-80 object-fill rounded-xl cursor-pointer"/>
-            </div>
-          </SwiperSlide>
+{bannerData?.result.map((banner: Banner, index: number) => (
+  <SwiperSlide key={index} className="relative h-full">
+    <div className="absolute w-full h-full bg-cover bg-center filter blur-md z-[-1] before:content-[''] before:absolute before:inset-0 before:bg-black before:bg-opacity-50" style={{ backgroundImage: `url(${banner.gameHeaderImg})` }}></div>
+    <div className="relative w-full h-5/6 flex justify-center items-start mt-16">
+      <img src={banner.gameHeaderImg} alt={banner.gameName} className="mb-8 w-9/10 h-80 object-fill rounded-xl" />
+      <motion.div
+  className={`${style.detailButton} absolute bottom-10 right-10 transform bg-transparent backdrop-blur-md text-white font-bold py-2 px-4 rounded cursor-pointer`}
+  initial={{ opacity: 0.5 }} // 초기 opacity 값을 0.5로 설정
+  whileHover={{ scale: 1.2, opacity: 1 }} // 호버 시 scale을 1.2로, opacity를 1로 변경
+  transition={{ duration: 0.3 }} // 애니메이션 지속 시간을 0.3초로 설정
+  onClick={() => handleClickBanner(banner.gameId)}
+>
+  자세히 보기
+</motion.div>
+    </div>
+  </SwiperSlide>
         ))}
       </Swiper>
 
-      {/* 베너 thumbs */}
-      <Swiper
-        className="mySwiper"
-        modules={[FreeMode, Navigation, Thumbs]}
-        onSwiper={setThumbsSwiper}
-        loop={false}
-        spaceBetween={10}
-        slidesPerView={6}
-        slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
-        watchSlidesProgress={true}
-      >
-        {bannerData?.result.map((banner: Banner, index: number) => (
-          <SwiperSlide key={index} className="cursor-pointer">
-            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
-          </SwiperSlide>
-        ))}
-      </Swiper>
     </div>
   );
 } 
