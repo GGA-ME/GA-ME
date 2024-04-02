@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 import GameCard from '../commonUseComponents/GameCard';
 import useStoreMain from "../../stores/mainStore";
 import { AxiosError } from 'axios';
-import style from './Game.module.css'
+import LoadingComponent from '../commonUseComponents/Loading';import style from './Game.module.css'
 
 // 사용 스토어의 구조를 기반으로 하는 구조
 interface Game {
@@ -30,7 +30,7 @@ const GameComponent: React.FC = () => {
   }, [fetchMainData, page]); // page가 변경될 때마다 데이터를 불러옵니다.
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingComponent />;
   }
 
   if (error) {
