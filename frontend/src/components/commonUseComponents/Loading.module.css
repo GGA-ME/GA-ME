@@ -24,10 +24,10 @@
     }
   }
   
-  .box-of-star1,
-  .box-of-star2,
-  .box-of-star3,
-  .box-of-star4 {
+  .boxOfStar1,
+.boxOfStar2,
+.boxOfStar3,
+.boxOfStar4 {
     width: 100%;
     position: absolute;
     z-index: 10;
@@ -37,19 +37,19 @@
     height: 700px;
   }
   
-  .box-of-star1 {
+  .boxOfStar1 {
     animation: snow 5s linear infinite;
   }
   
-  .box-of-star2 {
+  .boxOfStar2 {
     animation: snow 5s -1.64s linear infinite;
   }
   
-  .box-of-star3 {
+  .boxOfStar3 {
     animation: snow 5s -2.30s linear infinite;
   }
   
-  .box-of-star4 {
+  .boxOfStar4 {
     animation: snow 5s -3.30s linear infinite;
   }
   
@@ -89,37 +89,37 @@
     opacity: .9;
   }
   
-  .star-position1 {
+  .starPosition1 {
     top: 30px;
     left: 20px;
   }
   
-  .star-position2 {
+  .starPosition2 {
     top: 110px;
     left: 250px;
   }
   
-  .star-position3 {
+  .starPosition3 {
     top: 60px;
     left: 570px;
   }
   
-  .star-position4 {
+  .starPosition4 {
     top: 120px;
     left: 900px;
   }
   
-  .star-position5 {
+  .starPosition5 {
     top: 20px;
     left: 1120px;
   }
   
-  .star-position6 {
+  .starPosition6 {
     top: 90px;
     left: 1280px;
   }
   
-  .star-position7 {
+  .starPosition7 {
     top: 30px;
     left: 1480px;
   }
@@ -231,20 +231,20 @@
     z-index: 2;
   }
   
-  .arm-left {
+  .armLeft  {
     left: 30px;
     background-color: #e3e8eb;
     border-radius: 0 0 0 39px;
   }
   
-  .arm-right {
+  .armRight {
     right: 30px;
     background-color: #fbfdfa;
     border-radius: 0 0 39px 0;
   }
   
-  .arm-left:before,
-  .arm-right:before {
+  .armLeft:before,
+  .armRight:before {
     content: "";
     width: 30px;
     height: 70px;
@@ -252,20 +252,20 @@
     top: -40px;
   }
   
-  .arm-left:before {
+  .armLeft:before {
     border-radius: 50px 50px 0px 120px / 50px 50px 0 110px;
     left: 0;
     background-color: #e3e8eb;
   }
   
-  .arm-right:before {
+  .armRight:before {
     border-radius: 50px 50px 120px 0 / 50px 50px 110px 0;
     right: 0;
     background-color: #fbfdfa;
   }
   
-  .arm-left:after,
-  .arm-right:after {
+  .armLeft:after,
+  .armRight:after {
     content: "";
     width: 30px;
     height: 10px;
@@ -273,12 +273,12 @@
     top: -24px;
   }
   
-  .arm-left:after {
+  .armLeft:after {
     background-color: #6e91a4;
     left: 0;
   }
   
-  .arm-right:after {
+  .armRight:after {
     right: 0;
     background-color: #b6d2e0;
   }
@@ -291,20 +291,20 @@
     bottom: 70px;
   }
   
-  .leg-left {
+  .legLeft {
     left: 76px;
     background-color: #e3e8eb;
     transform: rotate(20deg);
   }
   
-  .leg-right {
+  .legRight {
     right: 73px;
     background-color: #fbfdfa;
     transform: rotate(-20deg);
   }
   
-  .leg-left:before,
-  .leg-right:before {
+  .legLeft:before,
+  .legRight:before {
     content: "";
     width: 50px;
     height: 25px;
@@ -312,14 +312,14 @@
     bottom: -26px;
   }
   
-  .leg-left:before {
+  .legLeft:before {
     left: -20px;
     background-color: #e3e8eb;
     border-radius: 30px 0 0 0;
     border-bottom: 10px solid #6d96ac;
   }
   
-  .leg-right:before {
+  .legRight:before {
     right: -20px;
     background-color: #fbfdfa;
     border-radius: 0 30px 0 0;
