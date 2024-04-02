@@ -1,8 +1,9 @@
 import { myPageStore, Prefer } from "../../stores/myPageStore";
 import { motion } from "framer-motion";
-import GameCard from "../commonUseComponents/SimpleGameCard";
+import GameCard from "../commonUseComponents/GameCard";
 import { useNavigate } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
+import style from "../mixAndMatchComponents/MixandMatch.module.css";
 import {
   Autoplay,
   Pagination,
@@ -14,23 +15,45 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "swiper/css/pagination";
+import { FaPlusSquare } from "react-icons/fa";
 
 const LikeComponent: React.FC = () => {
   const { data } = myPageStore();
   const navigate = useNavigate();
 
-  console.log(data);
+  const handleGoToMain = () => {
+    navigate("/");
+  };
+
+
   const getDetailPage = (gameId: number) => {
     // 라엘아 여기서 로그 남겨줘
     navigate(`/detail/${gameId}`);
   };
+
   if (data.result.preferList.length === 0) {
     return (
       <>
-        <div style={{ height: "200px" }}>
-          <h1 className="font-bold">
-            좋아요를 누른 게임이 없습니다. 좋아요를 눌러주세요!
-          </h1>
+        <div
+          style={{
+            borderRadius: "10px",
+            boxShadow: "5px 5px 15px rgba(0, 0, 0, 0.5)",
+            backgroundColor: "#343434",
+            height: "200px",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div className={style.getPocketBtn} onClick={handleGoToMain}>
+            {/* <FaGamepad size={50} /> */}
+            <FaPlusSquare size={50} className={style.neonEffect} />
+            <p className={`mt-[10px] mb-[20px] text-lg ${style.neonEffect}`}>
+              게임 담으러 가기😉
+            </p>
+          </div>
+          {/* <button className={style.getPocketBtn} onClick={handleGoToMain}>
+          담으러 가기
+        </button> */}
         </div>
       </>
     );
@@ -38,44 +61,35 @@ const LikeComponent: React.FC = () => {
 
   return (
     <>
-    <div style={{ width: "800px", height: "200px" }}>
-      <Swiper
-        modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
-        spaceBetween={0}
-        slidesPerView={4}
-        loop={true}
-        navigation={true}
-        
-        // pagination={{ clickable: true }}
-      >
-        {data.result.preferList.map((prefer: Prefer, index: number) => (
-          <SwiperSlide key={index} style={{ position: "relative" }}>
-            <motion.div>
-              <div>
-                <GameCard
-                  gameId={prefer.gameId}
-                  imageUrl={prefer.gameHeaderImg}
-                  title={
-                    <>
-                      <span
-                        className="text-gray-400"
-                        onClick={() => getDetailPage(prefer.gameId)}
-                      >
-                        {prefer.gameName}
-                      </span>
-                      <br />
-                      <br />
-                      <span className="text-slate-50">
-                        {prefer.gameDeveloper}
-                      </span>
-                    </>
-                  }
-                ></GameCard>
-              </div>
-            </motion.div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <div style={{ width: "900px", height: "200px" }}>
+        <Swiper
+          modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
+          spaceBetween={0}
+          slidesPerView={4}
+          loop={true}
+          navigation={true}
+        >
+          {data.result.preferList.map((prefer: Prefer, index: number) => (
+            <SwiperSlide key={index} style={{ position: "relative" }}>
+                <motion.div>
+                  <GameCard
+                    key={prefer.gameId}
+                    gameId={prefer.gameId}
+                    imageUrl={prefer.gameHeaderImg}
+                    title={prefer.gameName}
+                    developer={prefer.gameDeveloper}
+                    beforPrice={`₩ ${prefer.gamePriceInitial / 100}`}
+                    price={`₩ ${prefer.gamePriceFinal / 100}`} 
+                    tagsAll={prefer.tagList}
+                    tags={prefer.tagList.filter(tag => tag.codeId === "GEN" && tag.tagName.length < 7).map(tag => tag.tagName)}
+                    isPrefer={prefer.isPrefer}
+                    likes={prefer.gameLike}
+                    onGameClick={getDetailPage}
+                  ></GameCard>
+                </motion.div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </>
   );

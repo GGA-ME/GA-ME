@@ -10,12 +10,10 @@ const MyProfile: React.FC = () => {
   const {user} = useUserStore();
   const { data, topTenTag, error, loading, fetchData } = myPageStore();
 
-
-
   if (user) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      fetchData(user.userId);
+      fetchData(17);
     }, [fetchData]);
 
     if (loading) {
@@ -33,7 +31,7 @@ const MyProfile: React.FC = () => {
     }
     return (
       <>
-        <div className="relative " style={{ bottom: "10px", left: "30px" }}>
+        <div className="relative " style={{ bottom: "80px", left: "30px" }}>
           <img
             className=" rounded-full"
             src={data.result.userProfileImg}
@@ -41,15 +39,14 @@ const MyProfile: React.FC = () => {
           />
         </div>
 
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex items-center h-screen">
           <div
             className="rounded-xl items-center"
             style={{
               marginBottom: "10%",
-              marginTop: "15%",
-              padding: "10px",
               maxHeight: "850px",
-              maxWidth: "900px",
+              // maxWidth: "900px",
+              width: '1000px'
             }}
           >
             <div
