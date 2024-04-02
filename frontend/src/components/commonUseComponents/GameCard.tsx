@@ -156,13 +156,13 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
                   {formatPrice(beforPrice)}
                 </span>
                 {' => '}{formatPrice(price)}
-                <p>{developer}</p>
+                <p>{developer.length > 20 ? `${developer.substring(0, 20)}...` : developer}</p>
               </div>
             ) : (
               
               <div className="absolute bottom-0 text-xs p-2 font-Pretendard">
                 {formatPrice(price)}
-                <p>{developer}</p>
+                <p>{developer.length > 20 ? `${developer.substring(0, 20)}...` : developer}</p>
                 </div>
             )
           }
@@ -171,7 +171,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
         {/* 카드 내부 기능 아이콘 정의 */}
         {isHovered && (
           <motion.div
-            className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-between p-2"
+            className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-between p-8"
             variants={overlayVariants}
             initial="hidden"
             animate="visible"
@@ -186,7 +186,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
                   // rotate: -90,
                   borderRadius: "100%"
                 }} >
-                <img src={isLiked ? '/OnLike.png' : '/Like.png'} alt={'Like'} ></img>
+                <img src={isLiked ? '/OnLike.png' : '/Like.png'} alt={'Like'} className='w-6 h-6' />
               </motion.button>
 
               {/* 포켓에담기 버튼 */}
@@ -199,7 +199,7 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
                   borderRadius: "100%",
                 }}
               >
-                <img src={isInCart ? '/OnCart.png' : '/Cart.png'} alt="Cart" />
+                <img src={isInCart ? '/OnCart.png' : '/Cart.png'} alt="Cart" className='w-6 h-6' />
               </motion.button>
 
               {/* 관심없음 버튼 */}
@@ -210,16 +210,18 @@ const GameCard: React.FC<GameCardProps> = ({ gameId, imageUrl, title, developer,
                   // rotate: -90,
                   borderRadius: "100%"
                 }} >
-                <img src={'/NotLike.png'} alt={'NotLike'}></img>
+                <img src={'/NotLike.png'} alt={'NotLike'} className='w-6 h-6' />
               </motion.button>
 
             </div>
             {/* Tag 리스트 컨테이너 */}
             <div className="flex justify-center items-center">
               <div >
-                {tags.map((tag: string, index: number) => (
-                  <span key={index} className="bg-black bg-opacity-50 rounded px-2 py-1 text-xs font-sejong mx-1 inline-block">{`#${tag}`}
-                  </span>))}
+              {
+  tags.filter((tag: string) => tag.length <= 4).map((tag: string, index: number) => (
+    <span key={index} className="bg-black bg-opacity-50 rounded px-2 py-1 text-xs font-sejong mx-1 inline-block">{`#${tag}`}</span>
+  ))
+}
               </div>
             </div>
             <div className={`flex justify-center items-center mb-2`}>

@@ -53,7 +53,7 @@ const Statistics: React.FC<StatisticsProps> = ({ ratioData, gameName }) => {
 
     // 각 막대의 색상 결정
     const barColors = series[0].data.map(item => {
-        if (item.y === maxY) return '#6366F1'; // Y가 가장 큰 값 색
+        if (item.y === maxY) return '#adedff'; // Y가 가장 큰 값 색
         if (item.y === minY) return '#DC2626'; // Y가 가장 작은 값 색
         return '#6B7280'; // 나머지 값은 파란색
     });

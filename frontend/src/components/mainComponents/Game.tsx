@@ -81,7 +81,7 @@ const GameComponent: React.FC = () => {
             beforPrice={`₩ ${game.gamePriceInitial / 100}`}
             price={`₩ ${game.gamePriceFinal / 100}`}
             tagsAll={game.tagList}
-            tags={game.tagList.filter(tag => tag.codeId === "GEN").map(tag => tag.tagName)}
+            tags={game.tagList.filter(tag => tag.codeId === "GEN" && tag.tagName.length < 7).map(tag => tag.tagName)}
             isPrefer={game.isPrefer}
             likes={game.gameLike}
             onGameClick={handleClickGame} // 디테일 페이지 이동
