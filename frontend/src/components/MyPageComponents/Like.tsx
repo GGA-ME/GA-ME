@@ -10,6 +10,7 @@ import {
   Navigation,
   Thumbs,
   FreeMode,
+  EffectCoverflow
 } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -63,10 +64,20 @@ const LikeComponent: React.FC = () => {
     <>
       <div style={{ width: "900px", height: "200px" }}>
         <Swiper
-          modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
+          modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs, EffectCoverflow]}
+          effect={'coverflow'}
+        grabCursor={true}
+        centeredSlides={true}
+        coverflowEffect={{
+          rotate: 50,
+          stretch: 0,
+          depth: 50,
+          modifier: 1,
+          slideShadows: true,
+        }}
           spaceBetween={0}
           slidesPerView={4}
-          loop={true}
+          loop={false}
           navigation={true}
         >
           {data.result.preferList.map((prefer: Prefer, index: number) => (
