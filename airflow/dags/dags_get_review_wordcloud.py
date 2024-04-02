@@ -18,7 +18,7 @@ default_args = {
     'start_date': datetime(2024, 3, 14),
 }
 
-MAX_RETRIES = 3
+MAX_RETRIES = 10
 
 def load_reviews_with_retry(game_id, max_reviews):
     retry_count = 0
@@ -27,11 +27,11 @@ def load_reviews_with_retry(game_id, max_reviews):
             review_loader = ReviewLoader().set_language('koreana')
             reviews_kr = review_loader.load_from_api(game_id, max_reviews)
             return reviews_kr
-        except requests.exceptions.SSLError as e:
+        except Exception as e:
             print(f"SSLError 발생: {e}")
             print("재시도 중...")
             retry_count += 1
-            sleep(300)  # 재시도 전에 잠시 대기
+            sleep(120)  # 재시도 전에 잠시 대기
     print(f"최대 재시도 횟수({MAX_RETRIES})를 초과하여 리뷰를 가져오지 못했습니다.")
     return None
 
@@ -62,7 +62,6 @@ def analyze_reviews(num_batches, index, **kwargs):
     font_path = '/opt/airflow/wordcloud/bamin_doheon.ttf'
 
     for game_id in game_id_batch:
-        sleep(0.001)
         max_reviews = 1000
         reviews_kr = load_reviews_with_retry(game_id, max_reviews)
         current_date = datetime.now().strftime('%Y%m%d')
@@ -74,7 +73,7 @@ def analyze_reviews(num_batches, index, **kwargs):
             continue
 
             
-        if not reviews_kr.data['reviews'] or len(reviews_kr.data['reviews']) < 10:
+        if not reviews_kr.data['reviews'] or len(reviews_kr.data['reviews']) < 30:
             print(f"No reviews found for game ID: {game_id} {len(reviews_kr.data['reviews'])}")
             continue
 
@@ -88,7 +87,8 @@ def analyze_reviews(num_batches, index, **kwargs):
                          '입니다', '하지만', '그래도', '하면', '이렇게', '있는', '수', '것', 'ㅅㅂ', '시발', '씨발', 'td', '플레이', 'play', '플레이를', '플레이하고',
                          '새끼', 'ㅈ', '다', 'h1', '그', '좀', '더','게임','정말','너무','다만','game', '그냥' ,'걸', '있습니다', '1과', '등등',
                          '그리고', '썅', 'https', 'h2', 'div', 'br', 'p', '같습니다', '애미', '같다', '게임', '게임을', '게임이', '게임의',
-                         '게임에', '병신', '두', '할', '개씨발', '개시발',
+                         '게임에', '병신', '두', '할', '개씨발', '개시발', '섹스', 'th', 'civ', 'tr', 'Yetu', 'code', 'EC', 'EB', 'x86','h3','h4','h5','url','Fatal','Error', '게',
+                         '안', '것인지', '맞은', '이런', '모든', '한', '잘', '있다', '근데', '이거', '같은', '어떤', '것을', '것이','사실', '등', '좀', '약간', 'B', 
                          ])  # 불용어 목록
         stopwords.update(english_stopwords)
 

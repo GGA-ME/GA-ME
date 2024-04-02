@@ -35,6 +35,13 @@ default_args = {
 }
 MAX_RETRIES = 5
 
+
+# 24, 5 일 경우 taskSize = 2 partitionSize = 125000 partition = (5 or 4)//2 => 2 / 0,1 2,3 4,5
+dbPartitionSize = 250000
+num_batches = 12  # 등분할 개수
+taskSize = num_batches // 12
+partitionSize = dbPartitionSize // taskSize
+
 def load_reviews_with_retry(game_id, max_reviews):
     retry_count = 0
     while retry_count < MAX_RETRIES:
@@ -79,10 +86,10 @@ def process_reviews(num_batches, index, **kwargs):
     updated_dt = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='started_dt')
     game_ids = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='game_ids')
     
-    partitionSize = 250000 # TODO 유기적으로 적용가능하게 하기. ex) 24개의 태스크 12개의 파티션 -> 파티션당 25만개  TASK / Partition 값으로 partition = index//TP / partitionSize*index로 하면될듯?
-    partition = index % 12
-    
-    game_id_batch = [game_id for game_id in game_ids if partition * partitionSize <= int(game_id) < (partition + 1) * partitionSize]
+    # TODO 유기적으로 적용가능하게 하기. ex) 24개의 태스크 12개의 파티션 -> 파티션당 25만개  TASK / Partition 값으로 partition = index//TP / partitionSize*index로 하면될듯? 
+    partition = (index//taskSize) % 12 # 사실 12가 의미 없어야함.
+    game_id_batch = [game_id for game_id in game_ids if index * partitionSize <= int(game_id) < (index + 1) * partitionSize]
+    print(f'batch partition{partition} index{index} 게임아이디 범위{index * partitionSize} 부터 {(index + 1) * partitionSize}')
 
     mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
     conn = mysql_hook.get_conn()
@@ -275,11 +282,9 @@ def process_statistics(num_batches, index, **kwargs):
     statistics_base_dt = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='started_dt')
     game_ids = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='game_ids')
 
-
-    partitionSize = 250000
-    partition = index % 12
-    
-    game_id_batch = [game_id for game_id in game_ids if partition * partitionSize <= game_id < (partition + 1) * partitionSize]
+    partition = (index//taskSize) % 12 # 사실 12가 의미 없어야함.
+    game_id_batch = [game_id for game_id in game_ids if index * partitionSize <= int(game_id) < (index + 1) * partitionSize]
+    print(f'batch partition{partition} index{index} 게임아이디 범위{index * partitionSize} 부터 {(index + 1) * partitionSize}')
 
     # MySQL 연결 설정
     mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
@@ -455,11 +460,9 @@ def get_game_final_score(index, num_batches, **kwargs):
         #print('applist 존재')
         pass
     
-    partitionSize = 250000
-    partition = index % 12
-    
-    game_id_batch = [game_id for game_id in game_ids if partition * partitionSize <= game_id < (partition + 1) * partitionSize]
-
+    partition = (index//taskSize) % 12 # 사실 12가 의미 없어야함.
+    game_id_batch = [game_id for game_id in game_ids if index * partitionSize <= int(game_id) < (index + 1) * partitionSize]
+    print(f'batch partition{partition} index{index} 게임아이디 범위{index * partitionSize} 부터 {(index + 1) * partitionSize}')
     try:
         # MySQL 연결 설정
         mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
@@ -532,7 +535,6 @@ with DAG('dags_get_save_data_statis',
         tags=["please","mysql","test"],
         catchup=False) as dag:
     
-    num_batches = 12  # 등분할 개수
     game_ids_task = PythonOperator(
         task_id='game_ids_task',
         python_callable=get_game_ids,
@@ -541,29 +543,30 @@ with DAG('dags_get_save_data_statis',
     )
 
     for i in range(num_batches):
-        # process_reviews_task = PythonOperator(
-        #     task_id=f'process_reviews_batch_{i+1}',
-        #     python_callable=process_reviews,
+        process_reviews_task = PythonOperator(
+            task_id=f'process_reviews_batch_{i+1}',
+            python_callable=process_reviews,
+            op_kwargs={'index': i, 'num_batches':num_batches},
+            provide_context=True,
+            dag=dag
+        )
+        # process_statistics_task = PythonOperator(
+        #     task_id=f'process_statistics_batch_{i+1}',
+        #     python_callable=process_statistics,
         #     op_kwargs={'index': i, 'num_batches':num_batches},
         #     provide_context=True,
         #     dag=dag
         # )
-        process_statistics_task = PythonOperator(
-            task_id=f'process_statistics_batch_{i+1}',
-            python_callable=process_statistics,
-            op_kwargs={'index': i, 'num_batches':num_batches},
-            provide_context=True,
-            dag=dag
-        )
 
-        get_game_final_score_task = PythonOperator(
-            task_id=f'get_game_final_score_batch_{i+1}',
-            python_callable=get_game_final_score,
-            op_kwargs={'index': i, 'num_batches':num_batches},
-            provide_context=True,
-            dag=dag
-        )
+        # get_game_final_score_task = PythonOperator(
+        #     task_id=f'get_game_final_score_batch_{i+1}',
+        #     python_callable=get_game_final_score,
+        #     op_kwargs={'index': i, 'num_batches':num_batches},
+        #     provide_context=True,
+        #     dag=dag
+        # )
 
+        game_ids_task >> process_reviews_task
         # game_ids_task >> process_reviews_task >> process_statistics_task >> get_game_final_score_task
         # game_ids_task >> process_reviews_task >> process_statistics_task 
-        game_ids_task >> process_statistics_task >> get_game_final_score_task 
+        # game_ids_task >> process_statistics_task >> get_game_final_score_task 
