@@ -56,7 +56,7 @@ const InfoDetailDesc: React.FC<InfoDetailDescProps> = ({ data }) => {
 
           {/* 태그 정보 반복문으로 출력 */}
           <div className={styles.tags}>
-            {data?.gameTagList?.map((tag, index) => (
+            {data?.gameTagList?.slice(0, 11).map((tag, index) => (
               <span key={index} className={`${styles.tag} font-sejong`}>
                 # {tag.tagName}
               </span>
