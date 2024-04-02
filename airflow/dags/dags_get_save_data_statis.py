@@ -37,6 +37,7 @@ MAX_RETRIES = 5
 
 
 # 24, 5 일 경우 taskSize = 2 partitionSize = 125000 partition = (5 or 4)//2 => 2 / 0,1 2,3 4,5
+# 리뷰가 무거운 게임이 비슷한 번호에 몰려있는듯, 미리 파티셔닝 하지말고 gameId if로 파티션 정해서 저장할걸 그랬나
 dbPartitionSize = 250000
 num_batches = 12  # 등분할 개수
 taskSize = num_batches // 12
@@ -543,30 +544,30 @@ with DAG('dags_get_save_data_statis',
     )
 
     for i in range(num_batches):
-        process_reviews_task = PythonOperator(
-            task_id=f'process_reviews_batch_{i+1}',
-            python_callable=process_reviews,
+        # process_reviews_task = PythonOperator(
+        #     task_id=f'process_reviews_batch_{i+1}',
+        #     python_callable=process_reviews,
+        #     op_kwargs={'index': i, 'num_batches':num_batches},
+        #     provide_context=True,
+        #     dag=dag
+        # )
+        process_statistics_task = PythonOperator(
+            task_id=f'process_statistics_batch_{i+1}',
+            python_callable=process_statistics,
             op_kwargs={'index': i, 'num_batches':num_batches},
             provide_context=True,
             dag=dag
         )
-        # process_statistics_task = PythonOperator(
-        #     task_id=f'process_statistics_batch_{i+1}',
-        #     python_callable=process_statistics,
-        #     op_kwargs={'index': i, 'num_batches':num_batches},
-        #     provide_context=True,
-        #     dag=dag
-        # )
 
-        # get_game_final_score_task = PythonOperator(
-        #     task_id=f'get_game_final_score_batch_{i+1}',
-        #     python_callable=get_game_final_score,
-        #     op_kwargs={'index': i, 'num_batches':num_batches},
-        #     provide_context=True,
-        #     dag=dag
-        # )
+        get_game_final_score_task = PythonOperator(
+            task_id=f'get_game_final_score_batch_{i+1}',
+            python_callable=get_game_final_score,
+            op_kwargs={'index': i, 'num_batches':num_batches},
+            provide_context=True,
+            dag=dag
+        )
 
-        game_ids_task >> process_reviews_task
+        # game_ids_task >> process_reviews_task
         # game_ids_task >> process_reviews_task >> process_statistics_task >> get_game_final_score_task
         # game_ids_task >> process_reviews_task >> process_statistics_task 
-        # game_ids_task >> process_statistics_task >> get_game_final_score_task 
+        game_ids_task >> process_statistics_task >> get_game_final_score_task 
