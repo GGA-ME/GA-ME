@@ -60,8 +60,8 @@ const Banner: React.FC = () => {
         }}
         {...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {})}
       >
-        {bannerData?.result.map((banner: Banner, index: number) => (
-          <SwiperSlide key={index} className="relative h-full">
+        {bannerData?.result.map((banner: Banner) => (
+          <SwiperSlide key={banner.gameId} className="relative h-full">
             <div className="absolute w-full h-full bg-cover bg-center filter blur-md z-[-1] before:content-[''] before:absolute before:inset-0 before:bg-black before:bg-opacity-50" style={{ backgroundImage: `url(${banner.gameHeaderImg})` }}></div>
             <div className="relative w-full h-3/4 flex justify-center items-start mt-16" >
               <img src={banner.gameHeaderImg} alt={banner.gameName} className="mb-8 w-9/10 h-80 object-fill rounded-xl cursor-pointer" onClick={() => handleClickBanner(banner.gameId)} />
@@ -81,9 +81,9 @@ const Banner: React.FC = () => {
         slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
         watchSlidesProgress={true}
       >
-        {bannerData?.result.map((banner: Banner, index: number) => (
-          <SwiperSlide key={index} className="cursor-pointer">
-            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" onClick={() => console.log('ddd')} />
+        {bannerData?.result.map((banner: Banner) => (
+          <SwiperSlide key={banner.gameId} className="cursor-pointer">
+            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" onClick={() => console.log(banner.gameId)} />
           </SwiperSlide>
         ))}
       </Swiper>
