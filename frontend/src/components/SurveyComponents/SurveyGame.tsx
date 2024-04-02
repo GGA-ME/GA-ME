@@ -8,6 +8,7 @@ import { ConfigProvider, Steps } from "antd";
 import useUserStore from "../../stores/userStore";
 import { useNavigate } from "react-router-dom";
 import { myPageStore } from "../../stores/myPageStore";
+import Swal from "sweetalert2";
 
 const { Step } = Steps;
 
@@ -20,7 +21,17 @@ export interface ChoiceGame {
 const SurveyGame: React.FC = () => {
   const navigate = useNavigate();
   // checkGameList 내부에 survey 페이지에서 선택한 게임 정보가 들어있다.
-  const { data, loading, error, checkGameList, backGroundImg, setBackgroundImg, fetchData, addCheckChoiceGame, removeCheckChoiceGame } = surveyStore();
+  const {
+    data,
+    loading,
+    error,
+    checkGameList,
+    backGroundImg,
+    setBackgroundImg,
+    fetchData,
+    addCheckChoiceGame,
+    removeCheckChoiceGame,
+  } = surveyStore();
   const { user } = useUserStore();
   const [current, setCurrent] = useState(0);
   const { addLikeWeight } = myPageStore();
@@ -37,7 +48,9 @@ const SurveyGame: React.FC = () => {
   groups.push(oneList);
   groups.push(twoList);
   groups.push(threeList);
-  if (data) for (let i = 0; i < 3; i++) for (let j = i * 12; j < i * 12 + 12; j++) groups[i].push(data.result[j]);
+  if (data)
+    for (let i = 0; i < 3; i++)
+      for (let j = i * 12; j < i * 12 + 12; j++) groups[i].push(data.result[j]);
 
   const changeBackgroundImg = (image: string) => {
     setBackgroundImg(image);
@@ -63,28 +76,40 @@ const SurveyGame: React.FC = () => {
 
   const clickSubmit = () => {
     if (!user) {
-      alert("유저 정보가 존재하지 않습니다.");
+      Swal.fire({
+        icon: "error",
+        title: "오류",
+        text: "유저 정보가 존재하지 않습니다.",
+      });
       navigate("/");
       throw new Error("유저 정보가 존재하지 않습니다.");
     }
 
-    if(stepValidation()) {
+    if (stepValidation()) {
       addLikeWeight(user.userId, checkGameList);
-      // 라엘아 여기에 좋아요 로그 남겨줘
       navigate("/");
-    }
-    else alert("게임을 최소 하나를 선택해주세요!");
+    } else
+      Swal.fire({
+        icon: "warning",
+        title: "알림",
+        text: "게임을 최소 하나를 선택해주세요!",
+      });
   };
 
   const nextClick = () => {
-    if(stepValidation()) setCurrent(current + 1);
-    else alert("게임을 최소 하나를 선택해주세요!");
-    
+    if (stepValidation()) setCurrent(current + 1);
+    else
+      Swal.fire({
+        icon: "success",
+        title: "환영합니다!",
+        text: `${user?.userName}님! GA:ME에게 게임을 추천받아 보세요!`,
+      }).then(() => {
+        navigate("/");
+      });
   };
 
   const prevClick = () => {
     setCurrent(current - 1);
-    
   };
 
   // 마지막 페이지라면 Submit 버튼 활성화
@@ -121,70 +146,106 @@ const SurveyGame: React.FC = () => {
       >
         <div className={styles.container}>
           {/* 배경 이미지와 필터를 적용하는 div */}
-          <div className={styles.backgroundImage} style={{ backgroundImage: `url(${backGroundImg})` }} />
+          <div
+            className={styles.backgroundImage}
+            style={{ backgroundImage: `url(${backGroundImg})` }}
+          />
           <div className={styles.contentWrapper}></div>
           <div className={styles.contentWrapper}>
             <div className="flex justify-center items-center h-full">
               <div className="relative w-900px h-700px bg-box-gray rounded-lg p-4 pl-8 pr-8">
                 {/* 내용 */}
                 <div className="bg-white-500">
-                  <Steps type="navigation" onChange={stepValidation} current={current} style={{ color: "#D9D9D9" }}>
+                  <Steps
+                    type="navigation"
+                    onChange={stepValidation}
+                    current={current}
+                    style={{ color: "#D9D9D9" }}
+                  >
                     <Step status={current >= 0 ? "process" : "wait"} />
                     <Step status="process" />
                     <Step status="process" />
                   </Steps>
                 </div>
-                <p className="text-white mt-[20px] mb-[20px]">맞춤 추천을 위해 당신의 게임 취향을 알려주세요!</p>
+                <p className="text-white mt-[20px] mb-[20px]">
+                  맞춤 추천을 위해 당신의 게임 취향을 알려주세요!
+                </p>
                 <div className="bg-stone-900 ">
                   <div className="grid grid-cols-4 gap-3">
-                    {groups[current].map((choiceGame: ChoiceGame, index: number) => (
-                      <motion.li
-                        key={index}
-                        className={"list-none "}
-                        variants={{
-                          hidden: { x: -60, opacity: 0 },
-                          visible: {
-                            x: 0,
-                            opacity: 1,
-                            transition: { duration: 0.3 },
-                          },
-                        }}
-                        onClick={() => changeGameList(choiceGame.gameId, current, choiceGame.gameHeaderImg)}
-                      >
-                        <SimpleGameCard
+                    {groups[current].map(
+                      (choiceGame: ChoiceGame, index: number) => (
+                        <motion.li
                           key={index}
-                          gameId={choiceGame.gameId}
-                          imageUrl={choiceGame.gameHeaderImg}
-                          title={choiceGame.gameChoiceName}
-                          isSelected={isInGameList(choiceGame.gameId, current)} // 선택 상태 전달
-                        />
-                      </motion.li>
-                    ))}
+                          className={"list-none "}
+                          variants={{
+                            hidden: { x: -60, opacity: 0 },
+                            visible: {
+                              x: 0,
+                              opacity: 1,
+                              transition: { duration: 0.3 },
+                            },
+                          }}
+                          onClick={() =>
+                            changeGameList(
+                              choiceGame.gameId,
+                              current,
+                              choiceGame.gameHeaderImg
+                            )
+                          }
+                        >
+                          <SimpleGameCard
+                            key={index}
+                            gameId={choiceGame.gameId}
+                            imageUrl={choiceGame.gameHeaderImg}
+                            title={choiceGame.gameChoiceName}
+                            isSelected={isInGameList(
+                              choiceGame.gameId,
+                              current
+                            )} // 선택 상태 전달
+                          />
+                        </motion.li>
+                      )
+                    )}
                   </div>
                 </div>
                 {current === 2 && (
                   <>
-                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={prevClick}>
+                    <button
+                      className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full"
+                      onClick={prevClick}
+                    >
                       Prev
                     </button>
-                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 ml-4 rounded-full" onClick={clickSubmit}>
+                    <button
+                      className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 ml-4 rounded-full"
+                      onClick={clickSubmit}
+                    >
                       Submit
                     </button>
                   </>
                 )}
                 {current === 1 && (
                   <>
-                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={prevClick}>
+                    <button
+                      className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full"
+                      onClick={prevClick}
+                    >
                       Prev
                     </button>
-                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 ml-4 rounded-full" onClick={nextClick}>
+                    <button
+                      className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 ml-4 rounded-full"
+                      onClick={nextClick}
+                    >
                       Next
                     </button>
                   </>
                 )}
                 {current === 0 && (
                   <>
-                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={nextClick}>
+                    <button
+                      className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full"
+                      onClick={nextClick}
+                    >
                       Next
                     </button>
                   </>
