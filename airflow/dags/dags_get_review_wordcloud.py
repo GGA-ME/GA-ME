@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import requests
 from time import sleep
 import os
+
 # MySQL 연결 설정
 MYSQL_CONN_ID = 'mysql_default'
 
@@ -41,30 +42,35 @@ def get_game_ids(**kwargs):
     cursor = conn.cursor()
     cursor.execute(f"SELECT game_id FROM game")
     game_ids = [row[0] for row in cursor.fetchall()]
-    print(game_ids)
+    print(f'아이디 길이 {len(game_ids)}')
     cursor.close()
     conn.close()
     
     kwargs['ti'].xcom_push(key='game_ids', value=game_ids)
     return game_ids
 
-def analyze_reviews(**kwargs):
+def analyze_reviews(num_batches, index, **kwargs):
+    ## TODO 얘는 partition은 상관 없나
     mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
     conn = mysql_hook.get_conn()
+    cursor = conn.cursor()
+
     
-    ti = kwargs['ti']
-    game_ids = ti.xcom_pull(task_ids='get_game_ids', key='game_ids')
+    game_ids = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='game_ids')
+    game_id_batch = game_ids[index::num_batches]
+    
     font_path = '/opt/airflow/wordcloud/bamin_doheon.ttf'
 
-    for game_id in game_ids:
-        sllep(0.01)
+    for game_id in game_id_batch:
+        sleep(0.001)
         max_reviews = 1000
         reviews_kr = load_reviews_with_retry(game_id, max_reviews)
+        current_date = datetime.now().strftime('%Y%m%d')
 
         if reviews_kr is not None:
             pass
         else:
-            print("리뷰를 불러오지 못했습니다.")
+            print("리뷰를 불러오지 못했습   니다.")
             continue
 
             
@@ -78,12 +84,17 @@ def analyze_reviews(**kwargs):
         # 불용어 목록 설정
         english_stopwords = set(STOPWORDS)
         # 사용하지 않을 단어들을 정의합니다.
-        stopwords = set(['이', '있는', '수', '것', '다', 'h1', '그', '좀', '더','게임','정말','너무','다만','game', '그냥' ])  # 불용어 목록
+        stopwords = set(['이', 'ㅈㄴ', 'b', '하고', '합니다', '하지', '것이다', '내', '제대로', '때', '하며', '하는', '그럼', '통해',
+                         '입니다', '하지만', '그래도', '하면', '이렇게', '있는', '수', '것', 'ㅅㅂ', '시발', '씨발', 'td', '플레이', 'play', '플레이를', '플레이하고',
+                         '새끼', 'ㅈ', '다', 'h1', '그', '좀', '더','게임','정말','너무','다만','game', '그냥' ,'걸', '있습니다', '1과', '등등',
+                         '그리고', '썅', 'https', 'h2', 'div', 'br', 'p', '같습니다', '애미', '같다', '게임', '게임을', '게임이', '게임의',
+                         '게임에', '병신', '두', '할', '개씨발', '개시발',
+                         ])  # 불용어 목록
         stopwords.update(english_stopwords)
 
-        wordcloud = WordCloud(stopwords=stopwords, font_path=font_path, max_words=50, width=800, height=400, background_color='white').generate(' '.join(reviews))
+        wordcloud = WordCloud(stopwords=stopwords, font_path=font_path, max_words=50, width=845, height=425, 
+                              background_color='white').generate(' '.join(reviews))
 
-        current_date = datetime.now().strftime('%Y%m%d')
 
 
         # 이미지 저장
@@ -97,13 +108,12 @@ def analyze_reviews(**kwargs):
         
         # 데이터베이스에 이미지 경로 저장
         try:
-            cursor = conn.cursor()
-            
             cursor.execute(f'''update game set game_word_cloud_url = '{image_file_path}' where game_id = {game_id}''')
             conn.commit()
-            cursor.close()
         except Exception as e:
             print("fail db line 106", e)
+    
+    cursor.close()
     conn.close()
 
 
@@ -113,18 +123,21 @@ with DAG('dags_get_review_wordcloud',
          catchup=False) as dag:
 
 
-    get_game_ids_task = PythonOperator(
-        task_id='get_game_ids',
+    game_ids_task = PythonOperator(
+        task_id='game_ids_task',
         python_callable=get_game_ids,
         provide_context=True,
         dag=dag
     )
+    num_batches = 12  # 등분할 개수
 
-    analyze_reviews_task = PythonOperator(
-        task_id='analyze_reviews',
-        python_callable=analyze_reviews,
-        provide_context=True,
-        dag=dag
-    )
+    for i in range(num_batches):
+        analyze_reviews_task = PythonOperator(
+            task_id=f'analyze_reviews_batch_{i+1}',
+            python_callable=analyze_reviews,
+            op_kwargs={'index': i, 'num_batches':num_batches},
+            provide_context=True,
+            dag=dag
+        )
 
-    get_game_ids_task >> analyze_reviews_task
+        game_ids_task >> analyze_reviews_task
