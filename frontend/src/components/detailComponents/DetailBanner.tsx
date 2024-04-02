@@ -20,7 +20,7 @@ import useUserStore from '../../stores/userStore';
 // import OnLikeImage from '/OnLike.png';
 
 const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, developer, tagsAll }) => {
-  const [isLike, setIsLike] = useState<boolean>(false);
+  const [isLike, setIsLike] = useState<boolean>(gameIsLike?? false);
 
   // 줄넘김이 적용된 텍스트
   const MAX_LENGTH = 40; // 최대 길이 지정
