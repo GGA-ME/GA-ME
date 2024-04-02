@@ -164,27 +164,27 @@ const SurveyGame: React.FC = () => {
                 </div>
                 {current === 2 && (
                   <>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={prevClick}>
+                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={prevClick}>
                       Prev
                     </button>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={clickSubmit}>
+                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={clickSubmit}>
                       Submit
                     </button>
                   </>
                 )}
                 {current === 1 && (
                   <>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={prevClick}>
+                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={prevClick}>
                       Prev
                     </button>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={nextClick}>
+                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={nextClick}>
                       Next
                     </button>
                   </>
                 )}
                 {current === 0 && (
                   <>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={nextClick}>
+                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={nextClick}>
                       Next
                     </button>
                   </>
