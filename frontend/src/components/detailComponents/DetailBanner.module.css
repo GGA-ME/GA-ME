@@ -136,3 +136,8 @@
   color: #aeeeff;
   border: solid #aeeeff;
 }
+
+/* 게임 이름 길이 조정 */
+.gameName{
+  width: 80%;
+}
