@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import useStoreMain from "../../stores/mainStore";
-import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation, FreeMode, EffectCoverflow } from 'swiper/modules';
 import { motion } from "framer-motion";
@@ -26,17 +25,11 @@ interface Banner {
 
 const Banner: React.FC = () => {
   const { bannerData, mainBanner } = useStoreMain();
-  const navigate = useNavigate(); // useNavigate 인스턴스화
 
   useEffect(() => {
     mainBanner(); // 마운트시 데이터 가져오기
   }, [mainBanner]);
 
-  // 해당 게임 디테일 페이지로 이동
-  const handleClickBanner = (gameId: number) => {
-    navigate(`/detail/${gameId}`)
-    console.log('디테일페이지 이동')
-  }
   // 파일이 없는경우를 정확히 검사
   if (bannerData && bannerData.result && bannerData.result.length > 0) {
   return (
@@ -61,6 +54,7 @@ const Banner: React.FC = () => {
         }}
         slidesPerView={2}
         spaceBetween={0}
+        slidesPerView={1}
         loop={true}
         navigation={true}
         autoplay={{

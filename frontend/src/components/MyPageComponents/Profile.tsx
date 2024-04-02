@@ -13,8 +13,8 @@ const MyProfile: React.FC = () => {
   if (user) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      fetchData(17);
-    }, [fetchData]);
+      fetchData(user.userId);
+    }, [fetchData, user]);
 
     if (loading) {
       return (
