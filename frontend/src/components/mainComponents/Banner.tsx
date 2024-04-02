@@ -73,7 +73,6 @@ const Banner: React.FC = () => {
       {/* 베너 thumbs */}
       <Swiper
         className="mySwiper"
-        modules={[FreeMode, Navigation]}
         onSwiper={setThumbsSwiper}
         loop={false}
         spaceBetween={10}
