@@ -7,12 +7,15 @@ import DetailBanner from "../components/detailComponents/DetailBanner";
 import styles from "../components/detailComponents/Detail.module.css";
 import { useDetailStore } from "../stores/DetailStore";
 import { useParams } from "react-router-dom";
+import useUserStore from "../stores/userStore";
+
 
 type ActiveComponentType = "info" | "statistics";
 
 function Detail(): JSX.Element {
   const { gameId } = useParams<{ gameId: string }>();
   const parsedGameId = gameId ? parseInt(gameId, 10) : undefined;
+  const { user } = useUserStore()
 
   const [activeComponent, setActiveComponent] =
     useState<ActiveComponentType>("info");
@@ -29,7 +32,7 @@ function Detail(): JSX.Element {
 
   useEffect(() => {
     // userId와 gameId를 설정하고 fetchData 함수를 호출하여 데이터를 가져옴
-    fetchData(parsedGameId, 0);
+    fetchData(parsedGameId, user.userId);
     statisticsData(parsedGameId);
     window.scrollTo({
       top: 0,
