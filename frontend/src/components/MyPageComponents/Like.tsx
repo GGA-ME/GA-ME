@@ -92,7 +92,7 @@ const LikeComponent: React.FC = () => {
                     beforPrice={`₩ ${prefer.gamePriceInitial / 100}`}
                     price={`₩ ${prefer.gamePriceFinal / 100}`} 
                     tagsAll={prefer.tagList}
-                    tags={[]}
+                    tags={prefer.tagList ? prefer.tagList.map((tag) => tag.tagName) : []}
                     isPrefer={prefer.isPrefer}
                     likes={prefer.gameLike}
                     onGameClick={getDetailPage}
