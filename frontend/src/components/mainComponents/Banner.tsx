@@ -83,7 +83,7 @@ const Banner: React.FC = () => {
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
           <SwiperSlide key={index} className="cursor-pointer">
-            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
+            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" onClick={() => console.log('ddd')} />
           </SwiperSlide>
         ))}
       </Swiper>
