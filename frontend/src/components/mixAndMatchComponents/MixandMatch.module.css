@@ -26,6 +26,8 @@
   justify-content: center; /* 카드들을 중앙 정렬 */
   align-items: flex-start; /* 카드들의 시작 지점을 기준으로 정렬 */
   margin-top: 15px;
+
+  position: relative; /* infoText가 가득차도록 하기 위해 */
 }
 
 .mixBtn {
@@ -142,4 +144,22 @@
 
 .neonEffect {
   filter: drop-shadow(0 0 3px #81bece); /* 그림자 효과 */
+}
+
+.infoText {
+  margin-top: 10%;
+  margin-left: 35%;
+  width: 35%;
+  position: absolute; /* infoText가 가득차도록 하기 위해 */
+  font-size: large;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+
+}
+
+.infoText:hover {
+  /* font-size: 1.1em; 호버 시 폰트 크기를 1.1em으로 키움 */
+  transform: scale(1.05); /* 호버 시 크기를 1.1배로 키움 */
 }
