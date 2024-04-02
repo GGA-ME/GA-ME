@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import useStoreMain from "../../stores/mainStore";
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation, FreeMode, EffectCoverflow } from 'swiper/modules';
+import { Swiper as SwiperClass } from 'swiper/types';
+import { Autoplay, Pagination, Navigation, Thumbs, FreeMode } from 'swiper/modules';
 import style from './Banner.module.css'
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -24,6 +25,7 @@ interface Banner {
 
 
 const Banner: React.FC = () => {
+  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const { bannerData, mainBanner } = useStoreMain();
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
@@ -47,25 +49,16 @@ const Banner: React.FC = () => {
       {/* 베너 메인 */}
       <Swiper
         className={`${style.swiperCustom} w-full h-full`}
-        modules={[FreeMode, Autoplay, Pagination, Navigation, EffectCoverflow]}
-        effect={'coverflow'}
-        grabCursor={true}
-        centeredSlides={true}
-        coverflowEffect={{
-          rotate: 50,
-          stretch: 0,
-          depth: 50,
-          modifier: 1,
-          slideShadows: true,
-        }}
-        slidesPerView={2}
+        modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
         spaceBetween={0}
+        slidesPerView={1}
         loop={true}
         navigation={true}
         autoplay={{
           delay: 5000,
           disableOnInteraction: false,
         }}
+        {...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {})}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
           <SwiperSlide key={index} className="relative h-full">
@@ -77,6 +70,23 @@ const Banner: React.FC = () => {
         ))}
       </Swiper>
 
+      {/* 베너 thumbs */}
+      <Swiper
+        className="mySwiper"
+        modules={[FreeMode, Navigation, Thumbs]}
+        onSwiper={setThumbsSwiper}
+        loop={false}
+        spaceBetween={10}
+        slidesPerView={6}
+        slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
+        watchSlidesProgress={true}
+      >
+        {bannerData?.result.map((banner: Banner, index: number) => (
+          <SwiperSlide key={index} className="cursor-pointer">
+            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 } 
