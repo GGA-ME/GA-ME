@@ -26,7 +26,6 @@ interface Banner {
 const Banner: React.FC = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperClass | null>(null);
   const { bannerData, mainBanner } = useStoreMain();
-  const navigate = useNavigate(); // useNavigate 인스턴스화
 
   useEffect(() => {
     mainBanner(); // 마운트시 데이터 가져오기
