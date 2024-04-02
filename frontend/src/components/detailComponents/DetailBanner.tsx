@@ -1,5 +1,8 @@
 import styles from './DetailBanner.module.css'; // CSS 모듈 import
 import usePoketStore from '../../stores/poketStore';
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+
 // Define an interface for the props
 interface BannerProps {
   bannerImage: string;
@@ -12,12 +15,12 @@ interface BannerProps {
   tagsAll: Array<{ codeId: string; tagId:number; tagName: string }> | undefined;
 }
 
-
 import { useDetailStore } from '../../stores/DetailStore';
 import useUserStore from '../../stores/userStore';
 // import OnLikeImage from '/OnLike.png';
 
 const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, developer, tagsAll }) => {
+  const [isLike, setIsLike] = useState<boolean>(false);
 
   // 줄넘김이 적용된 텍스트
   const MAX_LENGTH = 40; // 최대 길이 지정
@@ -47,10 +50,17 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
     return result;
   };
   const modifiedShortDescription = addLineBreaks(gameShortDescription || '', MAX_LENGTH);
-  const likeButtonImageSrc = gameIsLike ? '/OnLike.png' : '/Like.png';
 
   const likeClickHandler = () => {
-    toggleIsLike(gameIsLike, gameId, user?.userId)
+    if (user?.userId) { // user가 존재하는지 확인, 로그인 되어있는지 확인
+      toggleIsLike(gameIsLike, gameId, user?.userId)
+    } else {
+    Swal.fire({
+      icon: 'error',
+      title: '로그인 후 이용 가능합니다!',
+      text: '왼쪽 아래 Login 버튼을 통해 로그인해주세요.',
+    });
+  }
   }
     // 버튼 클릭 핸들러 - 스팀으로 이동
   const steamButtonClickHandler = () => {
@@ -58,6 +68,11 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
     window.open(steamUrl, '_blank');
   }
   const { addItem } = usePoketStore();
+
+  useEffect(() => {
+    setIsLike(gameIsLike || false);
+  }, [gameIsLike]);
+
 
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 버블링 중지
@@ -82,18 +97,18 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
           
           {/* 좋아요 버튼 */}
           <button className={styles.likeButton} onClick={likeClickHandler}>
-            <img src={likeButtonImageSrc} alt="Like" />
+            <img className={styles.likeImg} src={isLike ? '/OnLike.png' : '/Like.png'} alt="Like" />
           </button>
           
           {/* 왼쪽 하단 텍스트 */}
           <div className={styles.leftBottomText}>
-            <h1 className={`${styles.gameName} font-taebaek`}>{gameName}</h1>
-            <div className="font-taebaek" dangerouslySetInnerHTML={{ __html: modifiedShortDescription }} />
+            <h1>{gameName}</h1>
+            <div dangerouslySetInnerHTML={{ __html: modifiedShortDescription }} />
           </div>
           {/* 오른쪽 하단 버튼 */}
           <div className={styles.rightBottomButtons}>
-            <button className={`${styles.urlButton} font-taebaek`}  onClick={steamButtonClickHandler}>스팀으로 이동</button>
-            <button className={`${styles.urlButton} font-taebaek ${styles.addToCartBtn}`} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button>
+            <button className={styles.urlButton} onClick={steamButtonClickHandler}>스팀으로 이동</button>
+            <button className={`${styles.urlButton} ${styles.addToCartBtn}`} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button>
           </div>
         </div>
       </div>
