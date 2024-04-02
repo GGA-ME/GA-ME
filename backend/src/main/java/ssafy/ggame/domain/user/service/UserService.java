@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ssafy.ggame.domain.game.dto.GameCardDto;
 import ssafy.ggame.domain.game.entity.Game;
+import ssafy.ggame.domain.game.repository.GameCustomRepository;
 import ssafy.ggame.domain.gameTag.entity.GameTag;
 import ssafy.ggame.domain.prefer.entity.Prefer;
 import ssafy.ggame.domain.tag.dto.TagDto;
@@ -30,6 +31,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserTagRepository userTagRepository;
+    private final GameCustomRepository gameCustomRepository;
 
     // 사용자 ID로 사용자 찾기
     public Optional<User> findById(Integer id) {
@@ -46,7 +48,7 @@ public class UserService {
         User user = userRepository.findById(userId).orElseThrow(()->new BaseException(StatusCode.USER_NOT_FOUND));
         // 해당 유저의 좋아요 리스트
         List<Prefer> prefers = user.getPrefers();
-        List<GameCardDto> gameCardDtoList = new ArrayList<>();
+        List<GameCardDto> gameCardDtoList = gameCustomRepository.getPreferList(userId);
         // 지금 년도
         int year = LocalDate.now().getYear();
 
@@ -67,19 +69,6 @@ public class UserService {
                 // entity를 dto로 변환 후 리스트에 넣어줌
                 tagDtoList.add(tagDto);
             }
-            // 게임 Entity를 GameCardDto로 변환하는 과정
-            GameCardDto gameCardDto = GameCardDto.builder()
-                    .gameId(game.getGameId())
-                    .gameName(game.getGameName())
-                    .gameHeaderImg(game.getGameHeaderImg())
-                    .gamePriceInitial(game.getGamePriceInitial())
-                    .gamePriceFinal(game.getGamePriceFinal())
-                    .gameDeveloper(game.getGameDeveloper())
-                    .isPrefer(true)
-                    .tagList(tagDtoList)
-                    .build();
-            // 변환한 dto를 리스트에 넣어줌
-            gameCardDtoList.add(gameCardDto);
         }
 
         // 해당 유저의 태그 중 가중치 10를 내림차순으로 가져옴
