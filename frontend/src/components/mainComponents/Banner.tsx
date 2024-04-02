@@ -29,22 +29,6 @@ const Banner: React.FC = () => {
   const { bannerData, mainBanner } = useStoreMain();
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
-    const swiperRef = useRef(null);
-
-  // 클릭 이벤트 핸들러
-  const handleSlideClick = (index) => {
-    // 현재 Swiper 인스턴스에 접근
-    const swiper = swiperRef.current.swiper;
-    
-    // 모든 슬라이드에서 `swiper-slide-thumb-active` 클래스 제거
-    swiper.slides.forEach(slide => {
-      slide.classList.remove('swiper-slide-thumb-active');
-    });
-    
-    // 클릭된 슬라이드에 `swiper-slide-thumb-active` 클래스 추가
-    swiper.slides[index].classList.add('swiper-slide-thumb-active');
-  };
-
   useEffect(() => {
     mainBanner(); // 마운트시 데이터 가져오기
   }, [mainBanner]);
@@ -90,7 +74,7 @@ const Banner: React.FC = () => {
       <Swiper
         className="mySwiper"
         modules={[FreeMode, Navigation, Thumbs]}
-        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        onSwiper={setThumbsSwiper}
         loop={false}
         spaceBetween={10}
         slidesPerView={6}
@@ -98,9 +82,9 @@ const Banner: React.FC = () => {
         watchSlidesProgress={true}
       >
         {bannerData?.result.map((banner: Banner, index: number) => (
-          <SwiperSlide key={banner.gameId} className="cursor-pointer" onClick={() => handleSlideClick(index)}>
-          <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
-        </SwiperSlide>
+          <SwiperSlide key={index} className="cursor-pointer">
+            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
+          </SwiperSlide>
         ))}
       </Swiper>
     </div>
