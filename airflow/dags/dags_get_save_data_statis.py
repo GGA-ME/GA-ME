@@ -55,7 +55,7 @@ def load_reviews_with_retry(game_id, max_reviews):
             #print("재시도 중...")
             retry_count += 1
             sleep(180)  # 재시도 전에 잠시 대기
-    #print(f"최대 재시도 횟수({MAX_RETRIES})를 초과하여 리뷰를 가져오지 못했습니다.")
+    print(f"최대 재시도 횟수({MAX_RETRIES})를 초과하여 리뷰를 가져오지 못했습니다.")
     return None
 
 
@@ -123,7 +123,7 @@ def process_reviews(num_batches, index, **kwargs):
                 if latest_review_date is None or (review_date is not None and review_date > latest_review_date):
                     latest_review_date = review_date
                 
-        # 2차 댓글 받기할 때 사용하기
+        # 2차 댓글 받기할 때 사용하기 이거 말고 game_review_cnt로 하자
         # if 0 < total_review_count < 6000:
         #     continue
 

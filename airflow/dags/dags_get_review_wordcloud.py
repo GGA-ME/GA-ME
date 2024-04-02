@@ -28,8 +28,7 @@ def load_reviews_with_retry(game_id, max_reviews):
             reviews_kr = review_loader.load_from_api(game_id, max_reviews)
             return reviews_kr
         except Exception as e:
-            print(f"SSLError 발생: {e}")
-            print("재시도 중...")
+            print(f"재시도 중 Error 발생: {e}")
             retry_count += 1
             sleep(120)  # 재시도 전에 잠시 대기
     print(f"최대 재시도 횟수({MAX_RETRIES})를 초과하여 리뷰를 가져오지 못했습니다.")
@@ -74,7 +73,6 @@ def analyze_reviews(num_batches, index, **kwargs):
 
             
         if not reviews_kr.data['reviews'] or len(reviews_kr.data['reviews']) < 30:
-            print(f"No reviews found for game ID: {game_id} {len(reviews_kr.data['reviews'])}")
             continue
 
         
@@ -129,7 +127,7 @@ with DAG('dags_get_review_wordcloud',
         provide_context=True,
         dag=dag
     )
-    num_batches = 12  # 등분할 개수
+    num_batches = 15  # 등분할 개수
 
     for i in range(num_batches):
         analyze_reviews_task = PythonOperator(
