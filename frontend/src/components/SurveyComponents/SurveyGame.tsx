@@ -167,7 +167,7 @@ const SurveyGame: React.FC = () => {
                     <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={prevClick}>
                       Prev
                     </button>
-                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={clickSubmit}>
+                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 ml-4 rounded-full" onClick={clickSubmit}>
                       Submit
                     </button>
                   </>
@@ -177,7 +177,7 @@ const SurveyGame: React.FC = () => {
                     <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={prevClick}>
                       Prev
                     </button>
-                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 rounded-full" onClick={nextClick}>
+                    <button className="bg-secondary hover:bg-primary text-white font-bold py-2 px-4 mt-8 ml-4 rounded-full" onClick={nextClick}>
                       Next
                     </button>
                   </>
