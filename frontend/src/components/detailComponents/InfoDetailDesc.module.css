@@ -46,7 +46,7 @@
 .gameTitle {
   margin-bottom: 16px;
   margin-left: 5%;
-  font-size: 48px;
+  font-size: 38px;
   text-align: left;
 }
 
@@ -65,7 +65,7 @@
 .leftInfo {
   text-align: left;
   margin-left: 3%;
-  flex: 1;
+  flex: 2;
   display: flex; /* Flexbox 사용 */
   flex-direction: column; /* 열 방향으로 요소들을 정렬 */
   justify-content: center; /* 아이템을 세로축 중앙으로 정렬 */
