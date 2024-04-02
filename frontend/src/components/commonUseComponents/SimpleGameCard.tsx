@@ -22,7 +22,7 @@ const SimpleGameCard: React.FC<SimpleGameCardProps> = ({ imageUrl, title, isSele
         </div>
       )}
       <div className={`w-48 h-26 rounded overflow-hidden bg-gray-600 text-white text-center`}>
-          <img src={imageUrl} className='object-cover w-50 h-50'  style={{width: '192px', height: '190px' , objectFit :'cover'  }}/>
+          <img src={imageUrl} className='object-cover w-50 h-50'  style={{width: '192px', height: '110px' , objectFit :'cover'  }}/>
         <div className="p-1">
           <h3 className="text-sm">{title}</h3>
         </div>
