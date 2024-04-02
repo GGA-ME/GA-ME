@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import DetailInfo from "../components/detailComponents/DetailInfo";
 import Statistics from "../components/detailComponents/Statistics";
 import BackButton from "../components/detailComponents/BackButton";
+import Poket from "../components/commonUseComponents/Poket";
 import DetailBanner from "../components/detailComponents/DetailBanner";
 import styles from "../components/detailComponents/Detail.module.css";
 import { useDetailStore } from "../stores/DetailStore";
@@ -38,6 +39,7 @@ function Detail(): JSX.Element {
 
   return (
     <>
+    <Poket/>
       <BackButton />
       <DetailBanner
         bannerImage={data?.result?.gameHeaderImg ?? ""}

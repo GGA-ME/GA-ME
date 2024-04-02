@@ -6,8 +6,7 @@ import useUserStore from "../../stores/userStore";
 import useMixAndMatchStore from "../../stores/mixAndMatchStore";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 추가
 import { motion } from "framer-motion";
-import { FaPlusSquare } from 'react-icons/fa';
-
+import { FaPlusSquare, FaArrowRight } from "react-icons/fa";
 
 const SearchGameList: React.FC = () => {
   const cartItems = usePoketStore((state) => state.cartItems);
@@ -57,14 +56,71 @@ const SearchGameList: React.FC = () => {
           flexDirection: "column",
         }}
       >
-        <div className={style.getPocketBtn} onClick={handleGoToMain}>        
+        <div className={style.getPocketBtn} onClick={handleGoToMain}>
           {/* <FaGamepad size={50} /> */}
-          <FaPlusSquare size={50}  className={style.neonEffect}/>
-          <p className={`mt-[10px] mb-[20px] text-lg ${style.neonEffect}`}>게임 담으러 가기😉</p>
+          <FaPlusSquare size={50} className={style.neonEffect} />
+          <p className={`mt-[10px] mb-[20px] text-lg ${style.neonEffect}`}>
+            게임 담으러 가기😉
+          </p>
         </div>
         {/* <button className={style.getPocketBtn} onClick={handleGoToMain}>
           담으러 가기
         </button> */}
+      </div>
+    );
+  } else if (cartItems.length < 2) {
+    return (
+      <div className={style.box} style={{ height: "287px" }}>
+        <div className={style.gameList}>
+          <motion.ul
+            className="grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.1 } },
+            }}
+            initial="hidden"
+            animate="visible"
+          >
+            {cartItems.map((item, index: number) => (
+              <motion.li
+                key={index}
+                className="list-none"
+                variants={{
+                  hidden: { x: -60, opacity: 0 },
+                  visible: { x: 0, opacity: 1, transition: { duration: 0.1 } },
+                }}
+              >
+                <GameCard
+                  key={index}
+                  gameId={item.gameId}
+                  imageUrl={item.imageUrl}
+                  title={item.title}
+                  price={`₩ ${item.price}`}
+                  tags={
+                    item.tagsAll
+                      ?.filter((tag) => tag.codeId === "GEN")
+                      .map((tag) => tag.tagName) ?? []
+                  }
+                  tagsAll={item.tagsAll}
+                  likes={0}
+                  onGameClick={handleClickGame}
+                  isPrefer={false}
+                  developer={item.developer}
+                  beforPrice={`₩ ${item.price}`}
+                />
+              </motion.li>
+            ))}
+
+            <p
+              className={`${style.infoText} ${style.neonEffect}`} onClick={handleGoToMain} 
+            >
+              게임을 2개 이상 담아 주세요😉
+              <br/>
+              게임 담으러 가기
+              <FaArrowRight size={18} style={{display:'inline-block', marginLeft:'5px'}}/>
+            </p>
+          </motion.ul>
+        </div>
       </div>
     );
   }
