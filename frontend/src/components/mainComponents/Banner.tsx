@@ -71,7 +71,10 @@ const Banner: React.FC = () => {
 
       {/* 베너 thumbs */}
       <Swiper
-        onSwiper={setThumbsSwiper}
+        onSwiper={(swiper) => {
+          console.log(swiper);
+          setThumbsSwiper(swiper);
+        }}
         loop={false}
         spaceBetween={10}
         slidesPerView={6}
