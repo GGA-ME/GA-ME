@@ -11,7 +11,9 @@ const statisticsComponent: React.FC = () => {
   const userTagWeights: number[] = topTenTag.slice(0, 9).map((item) => item.userTagWeight);
   const userGameName: string[] = topTenTag.slice(0, 9).map((item) => item.tagName);
   
-  const otherWeight: number[] = data.result.tagWeightList.map((item) => item.userTagWeight);
+  const otherWeight: number[] = data.result.tagWeightList
+  .map((item) => item.userTagWeight)
+  .filter(weight => weight >= 0);
 
   // 유저가 선호하는 태그를 제외한 나머지의 모든 합
   if (otherWeight.length >= 9) {
