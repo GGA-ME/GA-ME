@@ -29,6 +29,22 @@ const Banner: React.FC = () => {
   const { bannerData, mainBanner } = useStoreMain();
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
+    const swiperRef = useRef(null);
+
+  // 클릭 이벤트 핸들러
+  const handleSlideClick = (index) => {
+    // 현재 Swiper 인스턴스에 접근
+    const swiper = swiperRef.current.swiper;
+    
+    // 모든 슬라이드에서 `swiper-slide-thumb-active` 클래스 제거
+    swiper.slides.forEach(slide => {
+      slide.classList.remove('swiper-slide-thumb-active');
+    });
+    
+    // 클릭된 슬라이드에 `swiper-slide-thumb-active` 클래스 추가
+    swiper.slides[index].classList.add('swiper-slide-thumb-active');
+  };
+
   useEffect(() => {
     mainBanner(); // 마운트시 데이터 가져오기
   }, [mainBanner]);
@@ -60,8 +76,8 @@ const Banner: React.FC = () => {
         }}
         {...(thumbsSwiper ? { thumbs: { swiper: thumbsSwiper } } : {})}
       >
-        {bannerData?.result.map((banner: Banner) => (
-          <SwiperSlide key={banner.gameId} className="relative h-full">
+        {bannerData?.result.map((banner: Banner, index: number) => (
+          <SwiperSlide key={index} className="relative h-full">
             <div className="absolute w-full h-full bg-cover bg-center filter blur-md z-[-1] before:content-[''] before:absolute before:inset-0 before:bg-black before:bg-opacity-50" style={{ backgroundImage: `url(${banner.gameHeaderImg})` }}></div>
             <div className="relative w-full h-3/4 flex justify-center items-start mt-16" >
               <img src={banner.gameHeaderImg} alt={banner.gameName} className="mb-8 w-9/10 h-80 object-fill rounded-xl cursor-pointer" onClick={() => handleClickBanner(banner.gameId)} />
@@ -74,17 +90,17 @@ const Banner: React.FC = () => {
       <Swiper
         className="mySwiper"
         modules={[FreeMode, Navigation, Thumbs]}
-        onSwiper={setThumbsSwiper}
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
         loop={false}
         spaceBetween={10}
         slidesPerView={6}
         slidesPerGroup={1} // 한 번에 넘길 슬라이드 수를 줄임
         watchSlidesProgress={true}
       >
-        {bannerData?.result.map((banner: Banner) => (
-          <SwiperSlide key={banner.gameId} className="cursor-pointer">
-            <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" onClick={() => console.log(banner.gameId)} />
-          </SwiperSlide>
+        {bannerData?.result.map((banner: Banner, index: number) => (
+          <SwiperSlide key={banner.gameId} className="cursor-pointer" onClick={() => handleSlideClick(index)}>
+          <img src={banner.gameHeaderImg} alt={banner.gameName} className="w-full h-auto mx-0 object-cover" />
+        </SwiperSlide>
         ))}
       </Swiper>
     </div>
