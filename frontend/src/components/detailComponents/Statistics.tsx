@@ -77,8 +77,8 @@ const Statistics: React.FC<StatisticsProps> = ({
     // 그래프의 제목
     title: {
       text: "시간대별 만족도",
-      offsetX: 10,
-      offsetY: 10,
+      offsetX: 30,
+      offsetY: 20,
       style: {
         color: "#FFFFFF", // 제목 글자색을 하얀색으로 설정
         fontFamily: "SejonghospitalBold",
@@ -91,8 +91,8 @@ const Statistics: React.FC<StatisticsProps> = ({
       text: `${gameName}은 ${(parseFloat(maxYPoint.x) / 60).toFixed(
         1
       )}시간 이상의 플레이타임을 추천합니다.`, // 부제목에 추가 텍스트를 표시
-      offsetX: 10,
-      offsetY: 50,
+      offsetX: 30,
+      offsetY: 60,
       style: {
         color: "#FFFFFF", // 부제목 글자색을 하얀색으로 설정
         fontFamily: "Pretendard-Regular",
@@ -146,7 +146,7 @@ const Statistics: React.FC<StatisticsProps> = ({
         formatter: function (val: number) {
           // 타입스크립트 정의
           if (val === maxY) {
-            return `${val}% - 대유쾌마운틴`; // 가장 높은 값을 가진 데이터 포인트에 "Best" 추가
+            return `${val}% - 대유쾌 마운틴`; // 가장 높은 값을 가진 데이터 포인트에 "Best" 추가
           } else if (val === minY) {
             return `${val}% - 노잼사 구간`; // 가장 높은 값을 가진 데이터 포인트에 "Best" 추가
           }
@@ -191,6 +191,7 @@ const Statistics: React.FC<StatisticsProps> = ({
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
+        height: "auto"
       }}
     >
       <div className={`${style.neonBorder} ${style.statisticsContainer}`}>
