@@ -3,7 +3,7 @@ import useStoreMain from "../../stores/mainStore";
 import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperClass } from 'swiper/types';
-import { Autoplay, Pagination, Navigation, Thumbs, FreeMode } from 'swiper/modules';
+import { Autoplay, Pagination, Thumbs, FreeMode } from 'swiper/modules';
 import style from './Banner.module.css'
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -49,11 +49,10 @@ const Banner: React.FC = () => {
       {/* 베너 메인 */}
       <Swiper
         className={`${style.swiperCustom} w-full h-full`}
-        modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs]}
+        modules={[FreeMode, Autoplay, Pagination, Thumbs]}
         spaceBetween={0}
         slidesPerView={1}
-        loop={true}
-        navigation={true}
+        loop={false}
         autoplay={{
           delay: 5000,
           disableOnInteraction: false,
