@@ -33,11 +33,6 @@ const Banner: React.FC = () => {
     mainBanner(); // 마운트시 데이터 가져오기
   }, [mainBanner]);
 
-  // 해당 게임 디테일 페이지로 이동
-  const handleClickBanner = (gameId: number) => {
-    navigate(`/detail/${gameId}`)
-    console.log('디테일페이지 이동')
-  }
   // 파일이 없는경우를 정확히 검사
   if (bannerData && bannerData.result && bannerData.result.length > 0) {
   return (
@@ -64,7 +59,7 @@ const Banner: React.FC = () => {
           <SwiperSlide key={index} className="relative h-full">
             <div className="absolute w-full h-full bg-cover bg-center filter blur-md z-[-1] before:content-[''] before:absolute before:inset-0 before:bg-black before:bg-opacity-50" style={{ backgroundImage: `url(${banner.gameHeaderImg})` }}></div>
             <div className="relative w-full h-3/4 flex justify-center items-start mt-16" >
-              <img src={banner.gameHeaderImg} alt={banner.gameName} className="mb-8 w-9/10 h-80 object-fill rounded-xl cursor-pointer" onClick={() => handleClickBanner(banner.gameId)} />
+              <img src={banner.gameHeaderImg} alt={banner.gameName} className="mb-8 w-9/10 h-80 object-fill rounded-xl cursor-pointer"/>
             </div>
           </SwiperSlide>
         ))}
