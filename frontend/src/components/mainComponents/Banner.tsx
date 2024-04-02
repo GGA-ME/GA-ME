@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import useStoreMain from "../../stores/mainStore";
-import { useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperClass } from 'swiper/types';
 import { Autoplay, Pagination, Navigation, Thumbs, FreeMode } from 'swiper/modules';
