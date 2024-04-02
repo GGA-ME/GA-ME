@@ -2,7 +2,7 @@ import styles from './Loading.module.css';
 
 const Loading = () => {
     return (
-        <div>
+        <div className="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 backdrop-blur-sm flex justify-center items-center">
             <div className={styles.boxOfStar1}>
                 <div className={`${styles.star} ${styles.starPosition1}`}></div>
                 <div className={`${styles.star} ${styles.starPosition2}`}></div>

@@ -92,7 +92,7 @@ const GameComponent: React.FC = () => {
 
     <div className={`${style.container} p-7 flex justify-center items-start`}>
     <div className={`${style.pane}`}>
-        <button className={`${style.label}`} onClick={handlePrevPage} disabled={page <= 1}>
+        <button className={`${style.label} pb-2`} onClick={handlePrevPage} disabled={page <= 1}>
             <span> 이전 </span>
             <input id="left" className={`${style.input}`} name="radio" type="radio"/>
         </button>
@@ -100,7 +100,7 @@ const GameComponent: React.FC = () => {
             <span>{page}</span>
             <input id="middle" className={`${style.input}`} defaultChecked={true} name="radio" type="radio"/>
         </label>
-        <button className={`${style.label}`} onClick={handleNextPage}>
+        <button className={`${style.label} pb-2`} onClick={handleNextPage}>
             <span> 다음 </span>
             <input id="right" className={`${style.input}`} name="radio" type="radio"/>
         </button>

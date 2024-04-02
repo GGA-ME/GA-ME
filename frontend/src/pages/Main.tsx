@@ -3,6 +3,7 @@ import Poket from "../components/commonUseComponents/Poket";
 import Banner from "../components/mainComponents/Banner";
 import Game from "../components/mainComponents/Game"
 import Select from "../components/mainComponents/Select"
+
 function Main() {
 
   return (

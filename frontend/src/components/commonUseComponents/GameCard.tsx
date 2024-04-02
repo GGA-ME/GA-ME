@@ -7,6 +7,8 @@ import useStoreLike from "../../stores/likeStore";
 import useUserStore from "../../stores/userStore";
 import Swal from "sweetalert2";
 import style from "./GameCard.module.css";
+import { useDrag } from 'react-dnd';
+
 
 interface TagDto {
   codeId: string;
@@ -46,12 +48,12 @@ const GameCard: React.FC<GameCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const { cartItems, addItem, removeItem } = usePoketStore();
   const [showAlert, setShowAlert] = useState(false); // 경고 메시지 상태 추가
-  const { likeGame, unlikeGame, setGameId, setUserId, disLike } =
-    useStoreLike();
+  const { likeGame, unlikeGame, setGameId, setUserId, disLike } = useStoreLike();
   const { user, isLoggedIn } = useUserStore();
   // 좋아요 코드 수정
   const [isLiked, setIsLiked] = useState(isPrefer);
   const [likeCount, setLikeCount] = useState(likes);
+
 
   // 카트 안에 데이터가 있는지 확인
   const isInCart = cartItems.some((item) => item.gameId === gameId);
@@ -61,6 +63,14 @@ const GameCard: React.FC<GameCardProps> = ({
     // 정보가 있으면 유저ID 없으면 0 으로 세팅
     setUserId(user?.userId ?? 0);
   }, [user]);
+
+  const [{ isDragging }, dragRef] = useDrag(() => ({
+    type: 'GAME_CARD', // 드래그 아이템 타입을 지정합니다.
+    item: { gameId, imageUrl, title, price, tagsAll, developer }, // 드래그하는 항목의 데이터를 지정합니다.
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(), // 현재 드래그 상태를 반영합니다.
+    }),
+  }));
 
   // 포켓에 넣는 핸들러
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -153,11 +163,13 @@ const GameCard: React.FC<GameCardProps> = ({
     <>
       {/* 게임카드 컨테이너 */}
       <motion.div
+        ref={dragRef} // 드래그 참조를 컴포넌트에 연결합니다.
         className={`${style.card} w-50 m-2 rounded overflow-hidden text-white text-center relative cursor-pointer`}
         whileHover={hoverEffects}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={() => onGameClick(gameId)}
+        style={{ opacity: isDragging ? 0.5 : 1 }} // 드래그 중일 때 투명도를 변경합니다.
       >
         {/* 게임카드 내부 컨테이너 */}
         <div

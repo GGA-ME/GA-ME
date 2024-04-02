@@ -50,16 +50,14 @@ const Result: React.FC = () => {
                 gameId={game.gameId}
                 imageUrl={game.gameHeaderImg}
                 title={game.gameName}
+                developer={game.gameDeveloper}
                 beforPrice={`₩ ${game.gamePriceInitial/100}`}
                 price={`₩ ${game.gamePriceFinal/100}`}
-                developer={game.gameDeveloper}
                 tagsAll={game.tagList}
-                tags={
-                  game.tagList ? game.tagList.map((tag) => tag.tagName) : []
-                }
+                tags={game.tagList?.filter(tag => tag.codeId === "GEN" && tag.tagName.length < 7).map(tag => tag.tagName)}
+                isPrefer={game.isPrefer}
                 likes={game.gameLike}
-                isPrefer={false}
-                onGameClick={() => handleGameClick(game.gameId)}
+                onGameClick={handleGameClick}
               />
             </motion.li>
           ))}

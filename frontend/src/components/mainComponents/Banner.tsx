@@ -75,7 +75,7 @@ const Banner: React.FC = () => {
     <div className="relative w-full h-5/6 flex justify-center items-start mt-16">
       <img src={banner.gameHeaderImg} alt={banner.gameName} className="mb-8 w-9/10 h-80 object-fill rounded-xl" />
       <motion.div
-  className={`${style.detailButton} absolute bottom-10 right-10 transform bg-transparent backdrop-blur-md text-white font-bold py-2 px-4 rounded cursor-pointer`}
+  className={`${style.detailButton} absolute bottom-10 right-10 transform bg-transparent backdrop-blur-md text-white font-sejong py-2 px-4 rounded cursor-pointer`}
   initial={{ opacity: 0.5 }} // 초기 opacity 값을 0.5로 설정
   whileHover={{ scale: 1.2, opacity: 1 }} // 호버 시 scale을 1.2로, opacity를 1로 변경
   transition={{ duration: 0.3 }} // 애니메이션 지속 시간을 0.3초로 설정

@@ -1,4 +1,6 @@
 import './App.css';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { RouterProvider, createBrowserRouter,} from 'react-router-dom';
 import Main from './pages/Main';
 import Search from './pages/Search';
@@ -85,7 +87,9 @@ const App: React.FC = () => {
   }, []);
 
   return (
+    <DndProvider backend={HTML5Backend}>
     <RouterProvider router={router} />
+    </DndProvider>
   );
 };
 
