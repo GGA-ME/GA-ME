@@ -277,10 +277,17 @@ public class RecommendationService {
             // 게임카드디티오를 만들기위해 필요한 정보를 게임 아이디를 통해 가져오기(게임 가치점수로 정렬됨)
             Page<TempDto> gameTempDtoList = gameCustomRepository.findAllGameAndTagList(gameIdList, pageable);
 
+            // 받은 게임 별 총 좋아요 수 맵
+            List<Long> ids = new ArrayList<>();
+            gameTempDtoList.forEach((g) -> ids.add(g.getGameId()));
+            Map<Long, Long> likesMap = gameCustomRepository.getLikes(ids);
+
             gameCardDtoList = new ArrayList<>();
             //tempDto -> convertToGameCard
             for(TempDto tempDto : gameTempDtoList){
-                gameCardDtoList.add(tempDto.converToGameCardDto());
+                GameCardDto gameCardDto = tempDto.converToGameCardDto();
+                gameCardDto.updateLike(likesMap.getOrDefault(tempDto.getGameId(), 0L));
+                gameCardDtoList.add(gameCardDto);
             }
 
         }
