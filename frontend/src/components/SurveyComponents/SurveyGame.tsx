@@ -87,7 +87,13 @@ const SurveyGame: React.FC = () => {
 
     if (stepValidation()) {
       addLikeWeight(user.userId, checkGameList);
-      navigate("/");
+      Swal.fire({
+        icon: "success",
+        title: "환영합니다!",
+        text: `${user?.userName}님! GA:ME에게 게임을 추천받아 보세요!`,
+      }).then(() => {
+        navigate("/");
+      });
     } else
       Swal.fire({
         icon: "warning",
@@ -100,11 +106,9 @@ const SurveyGame: React.FC = () => {
     if (stepValidation()) setCurrent(current + 1);
     else
       Swal.fire({
-        icon: "success",
-        title: "환영합니다!",
-        text: `${user?.userName}님! GA:ME에게 게임을 추천받아 보세요!`,
-      }).then(() => {
-        navigate("/");
+        icon: "warning",
+        title: "알림",
+        text: "게임을 최소 하나를 선택해주세요!",
       });
   };
 
