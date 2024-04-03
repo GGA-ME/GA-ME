@@ -15,8 +15,7 @@ const HotTopic: React.FC = () => {
 
   useEffect(() => {
     if (user && !newsFetched && !nLoading&& newsData==null) {
-      console.log(user.userId);
-      fetchNewsData();
+      fetchNewsData(user.userId);
     }
   }, []); // 두 번째 매개변수로 빈 배열 전달
 
