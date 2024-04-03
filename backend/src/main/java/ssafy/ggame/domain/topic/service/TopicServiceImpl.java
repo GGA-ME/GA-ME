@@ -41,23 +41,43 @@ public class TopicServiceImpl implements TopicService {
         List<String> preferGameNames = preferRepository.findPreferGameNames(userId);
         List<TopicNewsResDto> hotTopicDtoList = new ArrayList<>();
         if (preferGameNames.isEmpty()) {//선호 게임이 없으면
-            //인기게임 5개 조회해서 가져옴
-            List<GameCardDto> recentGame = recommendationService.getRecentPopularGameList();
-            List<GameCardDto> gameCardDtos = recentGame.subList(0, 5);
-            for(GameCardDto game:gameCardDtos){
-                getCrawlingData(game.getGameName(), 5, hotTopicDtoList);
-            }
+            getFamous(hotTopicDtoList);
         } else {//있으면
             int size = preferGameNames.size();
             int newsSize = size > 10 ? 5 : 10;
-            for (String gameName : preferGameNames) { //데이터 추가
-                getCrawlingData(gameName, newsSize, hotTopicDtoList);
+            for(int i=0;i<5;i++){
+                if(i>=preferGameNames.size()) break;
+                String gameName = filterGameName(preferGameNames.get(i));
+                getCrawlingData(gameName,newsSize,hotTopicDtoList);
+            }
+            if(hotTopicDtoList.size()<5){
+                getFamous(hotTopicDtoList);
             }
         }
         //날짜기준 내림차순 정렬
         hotTopicDtoList.sort(Comparator.comparing(TopicNewsResDto::getHotTopicDate).reversed());
 
         return hotTopicDtoList;
+    }
+
+    private static String filterGameName(String gameName) {
+        if(gameName.contains(" / ")){
+            gameName = gameName.split(" / ")[0];
+        }
+        if(gameName.contains(": ")){
+            gameName = gameName.split(": ")[0];
+        }
+        return gameName.replaceAll("[^a-zA-Z0-9\\s가-힣]", "");
+    }
+
+    private void getFamous(List<TopicNewsResDto> hotTopicDtoList) {
+        //인기게임 5개 조회해서 가져옴
+        List<GameCardDto> recentGame = recommendationService.getRecentPopularGameList();
+        List<GameCardDto> gameCardDtos = recentGame.subList(0, 3);
+        for(GameCardDto game:gameCardDtos){
+            String gameName = filterGameName(game.getGameName());
+            getCrawlingData(gameName, 5, hotTopicDtoList);
+        }
     }
 
     @Override
