@@ -52,6 +52,7 @@ public class RecommendationService {
 
     /**
      * 전체 인기 게임 추천
+     *
      * @param userId
      * @param codeId
      * @param tagId
@@ -95,6 +96,7 @@ public class RecommendationService {
 
     /**
      * 사용자 맞춤 게임 추천
+     *
      * @param userId
      * @return
      */
@@ -144,26 +146,36 @@ public class RecommendationService {
         // 100개만 잘라서 가져오기
         List<Map.Entry<TempDto, Double>> subList = sortedGameScoreList.subList(0, 100);
 
+        System.out.println("subList.size() = " + subList.size());
+
 
         List<GameCardDto> gameCardDtoList = new ArrayList<>();
         // TODO: tagId, codeId 둘다 0이면
         if (codeId.equals("0") && tagId == 0) {
             // 반환형식인 gameCardDto로 변환하기
             gameCardDtoList = sortedGameCardDtoList(userId, subList);
+
+            System.out.println("gameCardDtoList.size() = " + gameCardDtoList.size());
         }
 
         // TODO: 둘다 0이 아니면
         else if (!codeId.equals("0") && tagId != 0) {
             List<Map.Entry<TempDto, Double>> filteredList = new ArrayList<>();
             // 걸러진 맟춤 100개의 게임 중에
+            System.out.println(" testestestestestes");
             for (Map.Entry<TempDto, Double> entry : subList) {
                 TempDto game = entry.getKey();
-                // 요청으로 온 codeId, tagId가 포함된 게임이라면 필터링 리스트에 추가
-                if (game.getCodeId().equals(codeId) && game.getTagId() == tagId) {
-                    filteredList.add(entry);
+                System.out.println("game = " + game);
+                for (TagDto tagDto : game.getTagList()) {
+                    // 요청으로 온 codeId, tagId가 포함된 게임이라면 필터링 리스트에 추가
+                    if (tagDto.getCodeId().equals(codeId) && tagDto.getTagId() == tagId) {
+                        filteredList.add(entry);
+                    }
                 }
+                System.out.println("filteredList = " + filteredList.size());
             }
             gameCardDtoList = sortedGameCardDtoList(userId, filteredList);
+            System.out.println("gameCardDtoList = " + gameCardDtoList.size());
         }
 
         return RecommendationResponseDto.builder()
@@ -174,6 +186,7 @@ public class RecommendationService {
 
     /**
      * 게임 검색 추천
+     *
      * @param searchGameRequestDto
      * @return
      */
@@ -228,6 +241,7 @@ public class RecommendationService {
 
     /**
      * 최신 인기 게임 추천 for banner
+     *
      * @return
      */
     public List<GameCardDto> getRecentPopularGameList() {
@@ -250,6 +264,7 @@ public class RecommendationService {
 
     /**
      * codeId, gameId를 가진 게임을 게임 카드 디티오로 전환하여 반환하는 함수
+     *
      * @param codeId
      * @param tagId
      * @param page
@@ -295,7 +310,7 @@ public class RecommendationService {
 
             gameCardDtoList = new ArrayList<>();
             //tempDto -> convertToGameCard
-            for(TempDto tempDto : gameTempDtoList){
+            for (TempDto tempDto : gameTempDtoList) {
                 GameCardDto gameCardDto = tempDto.converToGameCardDto();
                 gameCardDto.updateLike(likesMap.getOrDefault(tempDto.getGameId(), 0L));
                 gameCardDtoList.add(gameCardDto);
@@ -309,6 +324,7 @@ public class RecommendationService {
 
     /**
      * game리스트로 gameCardDto리스트 만들기
+     *
      * @param gameList
      * @return
      */
@@ -346,8 +362,8 @@ public class RecommendationService {
 
 
     /**
-     *
      * 추천을 위한 게임 점수 계산 함수
+     *
      * @param tagDtoList
      * @param tagWeightMap
      * @return
@@ -377,7 +393,7 @@ public class RecommendationService {
 
         // 점수계산
         for (TempDto game : containGameList) {
-            Double score1 = (Math.log(gameScoreMap.get(game) + 1))/(5 + Math.log(gameScoreMap.get(game) + 1)) * 0.7;
+            Double score1 = (Math.log(gameScoreMap.get(game) + 1)) / (5 + Math.log(gameScoreMap.get(game) + 1)) * 0.7;
             Double score2 = game.getGameFinalScore() * 0.3;
             gameScoreMap.put(game, score1 + score2);
         }
@@ -389,6 +405,7 @@ public class RecommendationService {
     /**
      * (태그-가중치/빈도수) 맵을 value로 내림차순 정렬하고,
      * 정렬된 태그만 리스트로 반환하는 함수
+     *
      * @param tagWeightMap
      * @return
      */
@@ -413,6 +430,7 @@ public class RecommendationService {
 
     /**
      * 게임 정보로 정렬된 gameCardDto리스트 반환하는 함수
+     *
      * @param userId
      * @param list
      * @return
