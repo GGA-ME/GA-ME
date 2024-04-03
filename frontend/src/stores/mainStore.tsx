@@ -100,8 +100,6 @@ const useStoreMain = create<StoreState>((set, get) => ({
 
         set({ loading: true });
         try {
-            console.log(userId)
-            console.log(codeId, tagId, page)
             const response = await api.get<ApiResponse>(`/api/recommendations/popular?userId=${userId}&codeId=${codeId}&tagId=${tagId}&page=${page}&size=${size}`);
             // 기존 데이터에 새로운 데이터를 추가하는 로직
             set({ data: response.data, loading: false });
@@ -117,7 +115,6 @@ const useStoreMain = create<StoreState>((set, get) => ({
 
     set({ loading: true });
     try {
-        console.log(userId)
         const response = await api.get<userApiResponse>(`/api/recommendations/personal/${userId}?codeId=${codeId}&tagId=${tagId}`);
         // 해당 유저의 추천 게임을 요청
         set({ userGameData: response.data, loading: false });

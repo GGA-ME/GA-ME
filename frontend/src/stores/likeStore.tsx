@@ -41,7 +41,6 @@ const useStoreLike = create<StoreState>((set, get) => ({
 
   likeGame: async () => {
     const { userId, gameId } = get();
-    console.log(userId, gameId);
     set({ loading: true });
     try {
       const response = await api.post(`/game/prefer`, { userId, gameId });
@@ -95,8 +94,6 @@ const useStoreLike = create<StoreState>((set, get) => ({
       })) ?? []; // tagsAll이 null이나 undefined일 경우 빈 배열을 대신 사용
 
     try {
-      console.log(tags);
-      console.log(userId);
       const response = await api.put(`/tracking/dislike`, { userId, tags });
       set({ loading: false });
       console.log(response.data);

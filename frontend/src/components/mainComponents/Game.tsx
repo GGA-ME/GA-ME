@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
-import GameCard from '../commonUseComponents/GameCard';
-import useStoreMain from "../../stores/mainStore";
-import useStoreCurrentPage from '../../stores/currentPage';
+import GameCard from '../commonUseComponents/GameCard'; // 게임카드 컴포넌트
+import useStoreMain from "../../stores/mainStore"; // 메인데이터(게임) 불러오는 스토어
+import useStoreCurrentPage from '../../stores/currentPage'; // 현재 페이지 확인할 스토어
+import LoadingComponent from '../commonUseComponents/Loading'; // 로딩페이지 컴포넌트
+import style from './Game.module.css'
 import { AxiosError } from 'axios';
-import LoadingComponent from '../commonUseComponents/Loading'; import style from './Game.module.css'
 
 
 // 사용 스토어의 구조를 기반으로 하는 구조
@@ -30,6 +31,7 @@ const GameComponent: React.FC = () => {
   const { nowCategory } = useStoreCurrentPage();
   const [nowGameList, setNowGameList] = useState<Game[]>([]); // nowGameList 상태 추가
 
+  // 현재 선택되어진 카테고리 확인
   useEffect(() => {
     if (nowCategory === '전체 인기') {
       fetchMainData();

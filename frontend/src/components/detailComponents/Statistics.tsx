@@ -1,4 +1,4 @@
-// 작성자 : 장현욱
+// 담당자 : 장현욱
 
 import React, { useEffect, useState } from "react";
 import { statisticsDto } from "../../stores/DetailStore";
@@ -33,11 +33,8 @@ const Statistics: React.FC<StatisticsProps> = ({
       x: `${ratioData?.timeValues[index]}`,
       y: ratio,
     }));
-    console.log(formattedData);
     setResultData(formattedData);
   }, []); // 컴포넌트 마운트 시 한 번만 실행
-
-  console.log(resultData);
 
   const series = [
     {

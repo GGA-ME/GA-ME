@@ -28,10 +28,13 @@ const Select: React.FC = () => {
     fetchMainData()
   }, [user, fetchMainData, fetchUserGameData]);
 
-  // const userTags: TagWeight[] = userGameData?.result.tagDtoList.filter((tag) => tag.codeId !== 'CAT'); // 유저기반 태그
+  // 유저 기반 태그 리스트
   const userTags = userGameData?.result.tagDtoList.filter((tag) => tag.codeId !== 'CAT');
 
-  
+  // 게임 카테고리
+  const categorys = ['전체 인기', '취향 저격']
+
+  // 기본 태그값(전체 인기)
   const defaultTags = [
     { "tagId": 1, "codeId": "GEN", "tagName": "액션" },
     { "tagId": 2, "codeId": "GEN", "tagName": "전략" },
@@ -41,8 +44,7 @@ const Select: React.FC = () => {
     { "tagId": 18, "codeId": "GEN", "tagName": "스포츠" },
     { "tagId": 23, "codeId": "GEN", "tagName": "인디" },
     { "tagId": 25, "codeId": "GEN", "tagName": "어드벤처" },
-  ] // 전체게임 태그
-  const categorys = ['전체 인기', '취향 저격']
+  ] 
 
 
   // 전체 또는 취향 고를시 API요청
@@ -90,6 +92,7 @@ const Select: React.FC = () => {
 
   return (
     <>
+      {/* 카테고리 리스트 */}
       <div className="flex space-x-2 p-4 font-sejong">
         {categorys.map((category, index: number) => (
           <button
@@ -103,6 +106,7 @@ const Select: React.FC = () => {
         ))}
       </div>
       <div className="flex space-x-2 p-4 font-sejong">
+      {/* 전체 카테고리 골랐을때 */}
         {nowCategory === categorys[0] ? defaultTags.map((tag, index: number) => (
           <button
             key={index}
@@ -112,6 +116,7 @@ const Select: React.FC = () => {
           >
             {tag.tagName}
           </button>
+        // 취향 저격 카테고리 골랐을때
         )) : nowCategory === categorys[1] ? userTags?.map((tag, index: number) => (
           <button
             key={index}
