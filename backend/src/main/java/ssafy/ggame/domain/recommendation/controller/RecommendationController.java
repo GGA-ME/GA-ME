@@ -49,8 +49,12 @@ public class RecommendationController {
 
     @GetMapping("/personal/{userId}")
     @Operation(description = "사용자 가중치 기반 인기 게임 추천")
-    ResponseEntity<BaseResponse<RecommendationResponseDto>> getPersonalGameList(@PathVariable Integer userId){
-        RecommendationResponseDto resultList = recommendationService.getPersonalList(userId);
+    ResponseEntity<BaseResponse<RecommendationResponseDto>> getPersonalGameList(
+            @PathVariable Integer userId,
+            @RequestParam(defaultValue = "0") String codeId,
+            @RequestParam(defaultValue = "0") Short tagId
+    ){
+        RecommendationResponseDto resultList = recommendationService.getPersonalList(userId, codeId, tagId);
 
         return ResponseEntity.ok(new BaseResponse<RecommendationResponseDto>(resultList));
     }

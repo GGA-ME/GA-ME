@@ -98,7 +98,7 @@ public class RecommendationService {
      * @param userId
      * @return
      */
-    public RecommendationResponseDto getPersonalList(Integer userId) {
+    public RecommendationResponseDto getPersonalList(Integer userId, String codeId, Short tagId) {
 
         // 사용자 존재 유무 확인
         User user = userRepository.findById(userId).orElseThrow(() -> new BaseException(StatusCode.USER_NOT_FOUND));
@@ -133,7 +133,6 @@ public class RecommendationService {
         Map<TempDto, Double> gameScoreMap = calculateScore(tagDtoList, tagWeightMap);
 
 
-
         // 점수계산을 마쳤으니 내림차순으로 정렬하고,
         // GameCardDto형식으로 변환해서
         // 개수 잘라 반환하기
@@ -142,23 +141,35 @@ public class RecommendationService {
 //        System.out.println("getSortedGameScoreList Done =========================== ");
 
 
-
         // 100개만 잘라서 가져오기
         List<Map.Entry<TempDto, Double>> subList = sortedGameScoreList.subList(0, 100);
 
-//        System.out.println("subList = " + subList);
 
+        List<GameCardDto> gameCardDtoList = new ArrayList<>();
+        // TODO: tagId, codeId 둘다 0이면
+        if (codeId.equals("0") && tagId == 0) {
+            // 반환형식인 gameCardDto로 변환하기
+            gameCardDtoList = sortedGameCardDtoList(userId, subList);
+        }
 
-
-        // 반환형식인 gameCardDto로 변환하기
-        List<GameCardDto> gameCardDtoList = sortedGameCardDtoList(userId, subList);
-
+        // TODO: 둘다 0이 아니면
+        else if (!codeId.equals("0") && tagId != 0) {
+            List<Map.Entry<TempDto, Double>> filteredList = new ArrayList<>();
+            // 걸러진 맟춤 100개의 게임 중에
+            for (Map.Entry<TempDto, Double> entry : subList) {
+                TempDto game = entry.getKey();
+                // 요청으로 온 codeId, tagId가 포함된 게임이라면 필터링 리스트에 추가
+                if (game.getCodeId().equals(codeId) && game.getTagId() == tagId) {
+                    filteredList.add(entry);
+                }
+            }
+            gameCardDtoList = sortedGameCardDtoList(userId, filteredList);
+        }
 
         return RecommendationResponseDto.builder()
                 .tagDtoList(resultTagDtoList)
                 .gameCardDtoList(gameCardDtoList)
                 .build();
-
     }
 
     /**
