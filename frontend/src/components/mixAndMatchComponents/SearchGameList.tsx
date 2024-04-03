@@ -108,9 +108,9 @@ const SearchGameList: React.FC = () => {
                       .map((tag) => tag.tagName) ?? []
                   }
                   tagsAll={item.tagsAll}
-                  likes={0}
+                  likes={item.likes}
                   onGameClick={handleClickGame}
-                  isPrefer={false}
+                  isPrefer={item.isPrefer}
                   developer={item.developer}
                   beforPrice={`${item.price}`}
                 />
@@ -164,9 +164,9 @@ const SearchGameList: React.FC = () => {
                     .map((tag) => tag.tagName) ?? []
                 }
                 tagsAll={item.tagsAll}
-                likes={0}
+                likes={item.likes}
                 onGameClick={handleClickGame}
-                isPrefer={false}
+                isPrefer={item.isPrefer}
                 developer={item.developer}
                 beforPrice={`${item.price}`}
               />

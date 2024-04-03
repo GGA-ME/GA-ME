@@ -52,8 +52,9 @@ function Detail(): JSX.Element {
         gameIsLike={data?.result?.gameIsLike}
         price={`₩ ${data?.result?.gamePriceFinal}` ?? ""}
         developer={data?.result?.gameDeveloper ?? ""}
-        tagsAll={data?.result?.gameTagList}
-      />
+        tagsAll={data?.result?.gameTagList} 
+        likes={0} 
+        isPrefer={data?.result?.gameIsLike ?? false}      />
       <div className={styles.detailContent}>
         <div className={styles.menuTab}>
           <button
