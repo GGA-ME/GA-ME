@@ -91,7 +91,7 @@ const GameCard: React.FC<GameCardProps> = ({
         title,
         price,
         tagsAll,
-        developer,
+        developer
       });
     }
   };

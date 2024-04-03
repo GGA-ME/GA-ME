@@ -51,12 +51,10 @@ interface StoreState {
   sLoading: boolean;
   nError: AxiosError | null;
   sError: AxiosError | null;
-  userId: number;
   newsFetched: boolean;
   setNewsFetched: (fetched: boolean) => void;
-  setUserId: (userId: number) => void;
-  fetchNewsData: () => Promise<void>;
-  fetchSalesData: () => Promise<void>;
+  fetchNewsData: (userId: number) => Promise<void>;
+  fetchSalesData: (userId: number) => Promise<void>;
 }
 
 const api = axios.create({
@@ -68,6 +66,7 @@ const api = axios.create({
     "Access-Control-Allow-Credentials": "true",
   },
 });
+
 
 const useHotTopicStore = create<StoreState>((set, get) => ({
   newsData: null,
@@ -81,13 +80,10 @@ const useHotTopicStore = create<StoreState>((set, get) => ({
   nError: null,
   sError: null,
   newsFetched: false, // 뉴스 데이터가 성공적으로 가져와졌는지 여부
-
+  
   setNewsFetched: (fetched: boolean) => set({ newsFetched: fetched }),
 
-  userId: 0, //임시 1 처리 원래 0
-  setUserId: (userId: number) => set({ userId }),
-
-  fetchNewsData: async () => {
+  fetchNewsData: async (userId:number) => {
     if (get().nLoading) return; // 이미 로딩 중이면 요청하지 않음
   
     set({ nLoading: true });
@@ -95,7 +91,6 @@ const useHotTopicStore = create<StoreState>((set, get) => ({
     let retries = 0;
   
     while (retries < maxRetries) {
-      const { userId } = get();
       const postData = { userId };
   
       try {
@@ -119,8 +114,7 @@ const useHotTopicStore = create<StoreState>((set, get) => ({
     set({ nLoading: false }); // 모든 시도 후 로딩 상태 종료, 성공/실패 관계 없이 실행되어야 함
   },
   
-  fetchSalesData: async () => {
-    const { userId } = get();
+  fetchSalesData: async (userId:number) => {
     const postData = { userId };
     set({ sLoading: true });
     try {
@@ -152,7 +146,6 @@ const useHotTopicStore = create<StoreState>((set, get) => ({
           ]);
       });
       set({ saleData: response.data, sLoading: false });
-      console.log(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error fetching sales data:", error); // 오류를 콘솔에 기록

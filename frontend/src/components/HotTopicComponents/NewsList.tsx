@@ -15,10 +15,10 @@ interface NewsList {
 
 const NewsList: React.FC = () => {
   const { newsData, nLoading, nError ,fetchNewsData} = useHotTopicStore();
-  const {isLoggedIn} = useUserStore();
+  const {isLoggedIn, user} = useUserStore();
      // 버튼 클릭 시 뉴스 데이터를 다시 가져오는 함수
   const handleRetry = () => {
-    fetchNewsData(); // 데이터 재요청
+    fetchNewsData(user?.userId??0); // 데이터 재요청
   };
   if(!isLoggedIn){
     return <div className={`${style.container}`}>

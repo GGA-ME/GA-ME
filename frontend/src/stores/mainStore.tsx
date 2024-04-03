@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import axios, { AxiosError } from 'axios';
 
-
 // API 응답 데이터의 타입을 정의합니다.
 interface ApiTags {
     codeId: string,

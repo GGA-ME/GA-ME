@@ -2,18 +2,18 @@ import { useEffect, useState } from 'react';
 import style from './SaleComponent.module.css'
 import SalesList from './SalesList';
 import useHotTopicStore from "../../stores/hotTopicStore";
-
+import useUserStore from "../../stores/userStore";
 const SaleComponent: React.FC = () => {
     const { saleData, saleData10, saleData30, saleData50, saleData75, fetchSalesData , sLoading, sError} = useHotTopicStore();
     const [selectedRange, setSelectedRange] = useState('10-30'); // 선택된 할인 범위 상태
-
+    const { user } = useUserStore();
     useEffect(() => {
         if (saleData == null) {
-            fetchSalesData(); // 초기 렌더링 시에만 실행됨            
+            fetchSalesData(user?.userId ?? 0); // 초기 렌더링 시에만 실행됨            
         }
     }, []);
     const handleRetryClick = () => {
-        fetchSalesData(); // 데이터를 다시 가져오기 위해 호출
+        fetchSalesData(user?.userId ?? 0); // 데이터를 다시 가져오기 위해 호출
     };
 
     const handleRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
