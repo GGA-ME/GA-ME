@@ -266,7 +266,7 @@ public class RecommendationService {
 
         // codeId, tagId가 둘 다 0일떄
         if (codeId.equals("0") && tagId == 0) {
-            List<Game> gameList = gameRepository.findAllByOrderByGameFinalScore(pageable);
+            List<Game> gameList = gameRepository.findAllByOrderByGameFinalScoreDesc(pageable);
             gameCardDtoList = makeGameCardDtoList(gameList);
         }
 

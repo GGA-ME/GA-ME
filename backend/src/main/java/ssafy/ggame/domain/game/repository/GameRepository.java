@@ -12,7 +12,7 @@ import ssafy.ggame.domain.user.entity.User;
 import java.util.List;
 
 public interface GameRepository extends JpaRepository<Game,Long> {
-    List<Game> findAllByOrderByGameFinalScore(Pageable pageable);
+    List<Game> findAllByOrderByGameFinalScoreDesc(Pageable pageable);
 
     List<Game> findAllByGameId(Long gameId);
 
