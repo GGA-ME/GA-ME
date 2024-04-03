@@ -54,7 +54,7 @@ function Detail(): JSX.Element {
         developer={data?.result?.gameDeveloper ?? ""}
         tagsAll={data?.result?.gameTagList} 
         likes={0} 
-        isPrefer={false}      />
+        isPrefer={data?.result?.gameIsLike ?? false}      />
       <div className={styles.detailContent}>
         <div className={styles.menuTab}>
           <button
