@@ -1,4 +1,4 @@
-/*Pocket.tsx*/
+// 담당자 : 장현욱
 
 import usePoketStore from '../../stores/poketStore'; // 스토어를 가져옵니다.
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,7 @@ const Poket: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useUserStore();
 
-  // 드래그 앤 드롭
+  // 드래그 앤 드롭 ( 드롭 위치 설정 )
   const [{ isOver }, dropRef] = useDrop({
     accept: 'GAME_CARD',
     drop: (item: DropItem) => {
@@ -50,7 +50,6 @@ const Poket: React.FC = () => {
   // 믹스앤매치 페이지로 이동하기 위한 함수
   const navigateToMixAndMatch = () => {
     navigate(`/mixAndMatch`);
-    console.log("믹스엔 매치 페이지 이동");
   };
 
   return (

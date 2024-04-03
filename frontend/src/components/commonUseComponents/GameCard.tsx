@@ -9,7 +9,7 @@ import Swal from "sweetalert2";
 import style from "./GameCard.module.css";
 import { useDrag } from 'react-dnd';
 
-
+// TagDtop 타입스크립트 정의
 interface TagDto {
   codeId: string;
   tagId: number;
@@ -45,12 +45,13 @@ const GameCard: React.FC<GameCardProps> = ({
   isPrefer,
   onGameClick,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const { cartItems, addItem, removeItem } = usePoketStore();
+  const [isHovered, setIsHovered] = useState(false); // 호버 상태
+  const { cartItems, addItem, removeItem } = usePoketStore(); // 포켓스토어
   const [showAlert, setShowAlert] = useState(false); // 경고 메시지 상태 추가
-  const { likeGame, unlikeGame, setGameId, setUserId, disLike } = useStoreLike();
-  const { user, isLoggedIn } = useUserStore();
-  // 좋아요 코드 수정
+  const { likeGame, unlikeGame, setGameId, setUserId, disLike } = useStoreLike(); // Like스토어
+  const { user, isLoggedIn } = useUserStore(); // 유저정보 스토어
+
+  // 좋아요 상태와 갯수를 즉작적으로 보여주기 위한 변수
   const [isLiked, setIsLiked] = useState(isPrefer);
   const [likeCount, setLikeCount] = useState(likes);
 
@@ -64,6 +65,7 @@ const GameCard: React.FC<GameCardProps> = ({
     setUserId(user?.userId ?? 0);
   }, [user]);
 
+  // 드래그 앤 드롭(드래그 가능 타입으로 지정)
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: 'GAME_CARD', // 드래그 아이템 타입을 지정합니다.
     item: { gameId, imageUrl, title, price, tagsAll, developer }, // 드래그하는 항목의 데이터를 지정합니다.
@@ -89,7 +91,7 @@ const GameCard: React.FC<GameCardProps> = ({
         title,
         price,
         tagsAll,
-        developer,
+        developer
       });
     }
   };
@@ -127,7 +129,6 @@ const GameCard: React.FC<GameCardProps> = ({
     if (user && isLoggedIn) {
       // user가 존재하는지 확인, 로그인 되어있는지 확인
       disLike(tagsAll);
-      console.log(tagsAll);
       Swal.fire({
         icon: "success",
         title: "가중치를 감소시켰습니다.",

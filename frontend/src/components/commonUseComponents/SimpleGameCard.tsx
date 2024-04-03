@@ -1,3 +1,6 @@
+// 담당자 : 장현욱
+
+
 import { motion } from "framer-motion";
 import { MdCheckCircle } from "react-icons/md"; // 체크 아이콘 import
 
