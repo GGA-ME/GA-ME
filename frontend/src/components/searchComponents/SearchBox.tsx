@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 function SearchBox() {
     const [keyword, setKeyword] = useState('');
-    const { setIsLoading } = useSearchStore();
+    const { setIsLoading, setSearchPerformed } = useSearchStore();
 
     const user = useUserStore((state) => state.user);
     const setResults = useSearchStore((state) => state.setResults);
@@ -31,6 +31,7 @@ function SearchBox() {
         }
         
         setIsLoading(true); // 검색 시작 시 로딩 상태를 true로 설정
+        setSearchPerformed(true); // 검색이 수행되었음을 표시
         console.log("검색 로딩중");
         try {
             const response = await searchGames(keyword, userId);
