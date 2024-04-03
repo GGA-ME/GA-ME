@@ -162,20 +162,16 @@ public class RecommendationService {
         else if (!codeId.equals("0") && tagId != 0) {
             List<Map.Entry<TempDto, Double>> filteredList = new ArrayList<>();
             // 걸러진 맟춤 100개의 게임 중에
-            System.out.println(" testestestestestes");
             for (Map.Entry<TempDto, Double> entry : subList) {
                 TempDto game = entry.getKey();
-                System.out.println("game = " + game);
                 for (TagDto tagDto : game.getTagList()) {
                     // 요청으로 온 codeId, tagId가 포함된 게임이라면 필터링 리스트에 추가
                     if (tagDto.getCodeId().equals(codeId) && tagDto.getTagId() == tagId) {
                         filteredList.add(entry);
                     }
                 }
-                System.out.println("filteredList = " + filteredList.size());
             }
             gameCardDtoList = sortedGameCardDtoList(userId, filteredList);
-            System.out.println("gameCardDtoList = " + gameCardDtoList.size());
         }
 
         return RecommendationResponseDto.builder()
@@ -386,14 +382,19 @@ public class RecommendationService {
             for (TagDto tagDto : tagDtoList) {
                 if (game.getCodeId() != null && game.getTagId() != null && game.getCodeId().equals(tagDto.getCodeId()) && game.getTagId() == tagDto.getTagId()) {
                     containGameList.add(game);
-                    gameScoreMap.put(game, gameScoreMap.getOrDefault(game, 0.0) + tagWeightMap.get(tagDto));
+                    if(game.getCodeId().equals("GEN")){
+                        gameScoreMap.put(game, gameScoreMap.getOrDefault(game, 0.0) + tagWeightMap.get(tagDto));
+                    } else if(game.getCodeId().equals("CAT")){
+                        // 코드가 CAT이면 가중치 20%만 추가(적은 비중)
+                        gameScoreMap.put(game, gameScoreMap.getOrDefault(game, 0.0) + tagWeightMap.get(tagDto) * 0.2);
+                    }
                 }
             }
         }
 
         // 점수계산
         for (TempDto game : containGameList) {
-            Double score1 = (Math.log(gameScoreMap.get(game) + 1)) / (5 + Math.log(gameScoreMap.get(game) + 1)) * 0.7;
+            Double score1 = (Math.log(gameScoreMap.get(game) + 1)) / (5 + Math.log(gameScoreMap.get(game) + 1)) * 100 * 0.7;
             Double score2 = game.getGameFinalScore() * 0.3;
             gameScoreMap.put(game, score1 + score2);
         }
