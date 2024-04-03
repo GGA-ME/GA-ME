@@ -107,6 +107,7 @@ const useStoreMain = create<StoreState>((set, get) => ({
         const response = await api.get<ApiResponse>(`/api/recommendations/personal/${userId}?codeId=${codeId}&tagId=${tagId}`);
         // 해당 유저의 추천 게임을 요청
         set({ data: response.data, loading: false });
+        console.log(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             set({ error, loading: false });
