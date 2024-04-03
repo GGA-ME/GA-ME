@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Swal from "sweetalert2";
 import style from "./Navbar.module.css";
 import useUserStore from "../../stores/userStore";
 
@@ -43,8 +44,8 @@ const Navbar: React.FC = () => {
         // 스토어의 fetchAndSetUser 함수 호출하여 서버에 사용자 정보 요청
         const isNewUser = await fetchAndSetUser(accessToken); // 비동기 처리에 await 추가
 
-        if(isNewUser == true){
-            navigate('/survey'); // 신규 사용자인 경우 설문조사 페이지로 이동
+        if (isNewUser == true) {
+          navigate('/survey'); // 신규 사용자인 경우 설문조사 페이지로 이동
         }
 
         setIsLoggedIn(true);
@@ -65,18 +66,34 @@ const Navbar: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     if (window.Kakao.Auth.getAccessToken()) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      window.Kakao.Auth.logout(() => {
-        console.log("카카오 로그아웃 완료");
-        // 여기에서 인증 관련 쿠키 삭제
-        deleteCookie("auth_token");
-        // 상태 업데이트
-        setIsLoggedIn(false);
-        setUser(null);
-
-        // 페이지 새로고침
-        window.location.reload();
+      Swal.fire({
+        title: "로그아웃 하시겠습니까?",
+        text: "로그아웃 하면 가중치가 쌓이지 않아요!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "로그아웃",
+        cancelButtonText: "취소",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          window.Kakao.Auth.logout(() => {
+            console.log("카카오 로그아웃 완료");
+            // 여기에서 인증 관련 쿠키 삭제
+            deleteCookie("auth_token");
+            // 상태 업데이트
+            setIsLoggedIn(false);
+            setUser(null);
+            // 페이지 새로고침
+            window.location.reload();
+          });
+          Swal.fire({
+            title: "로그아웃 되었습니다!",
+            icon: "success"
+          });
+        }
       });
     }
   };
@@ -111,7 +128,7 @@ const Navbar: React.FC = () => {
       icon: "/FireIcon.png",
       activeIcon: "/FireIcon.gif",
     },
-    
+
     // 로그인 상태에 따라 분기 처리
     !user
       ? {
@@ -119,23 +136,23 @@ const Navbar: React.FC = () => {
         icon: "/ProfileIcon.png",
         activeIcon: "/ProfileIcon.gif",
         action: handleLoginClick,
-      } : 
+      } :
       {
-          path: "/myPage",
-          label: "My Page",
-          icon: "/ProfileIcon.png",
-          activeIcon: "/ProfileIcon.gif",
+        path: "/myPage",
+        label: "My Page",
+        icon: "/ProfileIcon.png",
+        activeIcon: "/ProfileIcon.gif",
       },
     // isLoggedIn이 true일 때만 로그아웃 버튼 객체를 배열에 추가
     ...(isLoggedIn
       ? [
-          {
-            label: "Logout",
-            icon: "/Logout.png",
-            activeIcon: "/Logout.gif",
-            action: handleLogoutClick,
-          },
-        ]
+        {
+          label: "Logout",
+          icon: "/Logout.png",
+          activeIcon: "/Logout.gif",
+          action: handleLogoutClick,
+        },
+      ]
       : []),
   ];
 
@@ -158,7 +175,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-    {/* Nav박스 */}
+      {/* Nav박스 */}
       <div
         className={`${style.neonBorder} fixed top-0 left-5 flex flex-col items-center px-8 h-screen py-20 border-r-2 bg-gray-900 text-white z-40`}
       >
@@ -180,7 +197,7 @@ const Navbar: React.FC = () => {
         <div className="relative pl-8 pr-7">
           <motion.div
             className={`absolute left-0 px-2 py-1 border-2 rounded-full ${style.neonBorder2}`}
-            style={{ width: "calc(110% - 1rem)", maxWidth: "300px" , height: "2.8rem"}}
+            style={{ width: "calc(110% - 1rem)", maxWidth: "300px", height: "2.8rem" }}
             variants={variants}
             initial={false}
             animate="active"
@@ -212,7 +229,7 @@ const Navbar: React.FC = () => {
                   </span>
                 </NavLink>
               );
-            }       
+            }
             else {
               // path가 없는 경우 (예: 로그인 버튼), div와 onClick 이벤트를 사용
               return (
