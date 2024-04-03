@@ -1,5 +1,5 @@
 import styles from './DetailBanner.module.css'; // CSS 모듈 import
-import usePoketStore from '../../stores/poketStore';
+import usePoketStore, { CartItem } from '../../stores/poketStore';
 import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 
@@ -13,13 +13,15 @@ interface BannerProps {
   price: string;
   developer: string;
   tagsAll: Array<{ codeId: string; tagId:number; tagName: string }> | undefined;
+  likes: number;
+  isPrefer: boolean
 }
 
 import { useDetailStore } from '../../stores/DetailStore';
 import useUserStore from '../../stores/userStore';
 // import OnLikeImage from '/OnLike.png';
 
-const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, developer, tagsAll }) => {
+const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, developer, tagsAll, likes, }) => {
   const [isLike, setIsLike] = useState<boolean>(gameIsLike?? false);
 
   // 줄넘김이 적용된 텍스트
@@ -77,8 +79,11 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 버블링 중지
     const imageUrl = bannerImage
-    const title = gameName
-    const itemToAdd = { gameId, imageUrl, title, price, developer, tagsAll };
+    const title = gameName   
+    const isPrefer = gameIsLike ?? false; 
+    console.log(likes);
+    const itemToAdd: CartItem = { gameId, imageUrl, title, price, developer, tagsAll, likes, isPrefer };
+    console.log(itemToAdd);
     addItem(user?.userId, itemToAdd);
   };
   return (
