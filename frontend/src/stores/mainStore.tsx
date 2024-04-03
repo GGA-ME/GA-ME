@@ -19,6 +19,12 @@ interface ApiResult {
     isPrefer: false,
     tagList: ApiTags[]
 }
+
+interface UserApiResult {
+    tagDtoList: ApiTags[];
+    gameCardDtoList: ApiResult[];
+}
+
 interface ApiResponse {
     isSuccess: boolean;
     message: string;
@@ -26,11 +32,18 @@ interface ApiResponse {
     result: ApiResult[]; // `any` 대신 더 구체적인 타입을 사용해주세요.
 }
 
+interface userApiResponse {
+    isSuccess: boolean;
+    message: string;
+    code: number;
+    result: UserApiResult; // `any` 대신 더 구체적인 타입을 사용해주세요.
+}
 
 
 // 스토어 상태의 타입을 정의합니다.
 interface StoreState {
     data: ApiResponse | null;
+    userGameData: userApiResponse | null
     bannerData: ApiResponse | null;
     loading: boolean;
     error: AxiosError | null;
@@ -62,6 +75,7 @@ const api = axios.create({
 
 const useStoreMain = create<StoreState>((set, get) => ({
     data: null,
+    userGameData: null,
     bannerData: null,
     loading: false,
     error: null,
@@ -104,9 +118,9 @@ const useStoreMain = create<StoreState>((set, get) => ({
     set({ loading: true });
     try {
         console.log(userId)
-        const response = await api.get<ApiResponse>(`/api/recommendations/personal/${userId}?codeId=${codeId}&tagId=${tagId}`);
+        const response = await api.get<userApiResponse>(`/api/recommendations/personal/${userId}?codeId=${codeId}&tagId=${tagId}`);
         // 해당 유저의 추천 게임을 요청
-        set({ data: response.data, loading: false });
+        set({ userGameData: response.data, loading: false });
         console.log(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {

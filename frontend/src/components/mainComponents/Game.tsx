@@ -1,6 +1,6 @@
 // 담당자 : 장현욱
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 import GameCard from '../commonUseComponents/GameCard';
@@ -8,6 +8,7 @@ import useStoreMain from "../../stores/mainStore";
 import useStoreCurrentPage from '../../stores/currentPage';
 import { AxiosError } from 'axios';
 import LoadingComponent from '../commonUseComponents/Loading'; import style from './Game.module.css'
+
 
 // 사용 스토어의 구조를 기반으로 하는 구조
 interface Game {
@@ -22,14 +23,35 @@ interface Game {
   gameLike: number | null;
 }
 
+
 const GameComponent: React.FC = () => {
-  const { data, loading, error, fetchMainData, page, setPage } = useStoreMain();
+  const { data, loading, error, fetchMainData, fetchUserGameData, userGameData, page, setPage } = useStoreMain();
   const navigate = useNavigate(); // useNavigate 인스턴스화
   const { nowCategory } = useStoreCurrentPage();
+  const [nowGameList, setNowGameList] = useState<Game[]>([]); // nowGameList 상태 추가
 
   useEffect(() => {
-    fetchMainData(); // 마운트시 데이터 가져오기
-  }, [fetchMainData, page]); // page가 변경될 때마다 데이터를 불러옵니다.
+    if (nowCategory === '전체 인기') {
+      fetchMainData();
+    } else if (nowCategory === '취향 저격') {
+      fetchUserGameData();
+    }
+  }, [fetchMainData, fetchUserGameData, nowCategory, page]);
+
+  useEffect(() => {
+    // 데이터가 업데이트될 때마다 nowGameList 업데이트
+    if (nowCategory === '전체 인기') {
+      // data.result가 ApiResult[] 타입인지 확인
+      if (data && Array.isArray(data.result)) {
+        setNowGameList(data.result);
+      }
+    } else if (nowCategory === '취향 저격') {
+      // userGameData가 null이 아니고, userGameData.result에 gameCardDtoList가 존재하는지 확인
+      if (userGameData?.result.gameCardDtoList) {
+        setNowGameList(userGameData.result.gameCardDtoList);
+      }
+    }
+  }, [data, userGameData, nowCategory]);
 
   if (loading) { // 게임 데이터 로딩동안 보여줄 페이지 정의
     return <LoadingComponent />;
@@ -40,7 +62,7 @@ const GameComponent: React.FC = () => {
     return <div>Error: {axiosError.message}</div>;
   }
 
-  if (!data || !data.result.length) {
+  if (!data || !data.result) {
     return <div>No data available</div>;
   }
 
@@ -66,7 +88,7 @@ const GameComponent: React.FC = () => {
         initial="hidden"
         animate="visible"
       >
-        {data.result.map((game: Game, index: number) => (
+        {nowGameList.map((game: Game, index: number) => (
           <motion.li key={index} className="list-none"
             variants={{
               hidden: { x: -60, opacity: 0 },
