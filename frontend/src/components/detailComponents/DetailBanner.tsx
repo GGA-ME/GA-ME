@@ -1,7 +1,7 @@
-import styles from './DetailBanner.module.css'; // CSS 모듈 import
-import usePoketStore, { CartItem } from '../../stores/poketStore';
-import React, { useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
+import styles from "./DetailBanner.module.css"; // CSS 모듈 import
+import usePoketStore, { CartItem } from "../../stores/poketStore";
+import React, { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 // Define an interface for the props
 interface BannerProps {
@@ -12,9 +12,11 @@ interface BannerProps {
   gameIsLike: boolean | undefined;
   price: string;
   developer: string;
-  tagsAll: Array<{ codeId: string; tagId:number; tagName: string }> | undefined;
+  tagsAll:
+    | Array<{ codeId: string; tagId: number; tagName: string }>
+    | undefined;
   likes: number;
-  isPrefer: boolean
+  isPrefer: boolean;
 }
 
 import { useDetailStore } from "../../stores/DetailStore";
@@ -22,8 +24,18 @@ import useUserStore from "../../stores/userStore";
 import { api, log } from "../../url/api";
 // import OnLikeImage from '/OnLike.png';
 
-const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShortDescription, gameIsLike, price, developer, tagsAll, likes, }) => {
-  const [isLike, setIsLike] = useState<boolean>(gameIsLike?? false);
+const Banner: React.FC<BannerProps> = ({
+  bannerImage,
+  gameId,
+  gameName,
+  gameShortDescription,
+  gameIsLike,
+  price,
+  developer,
+  tagsAll,
+  likes,
+}) => {
+  const [isLike, setIsLike] = useState<boolean>(gameIsLike ?? false);
 
   // 줄넘김이 적용된 텍스트
   const MAX_LENGTH = 40; // 최대 길이 지정
@@ -64,17 +76,11 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
 
       //가중치 증가(좋아요)
       api.post(
-        "tracking?userId=" +
-          user.userId +
-          "&gameId=" +
-          gameId +
-          "&action=like"
+        "tracking?userId=" + user.userId + "&gameId=" + gameId + "&action=like"
       );
 
       //사용자 패턴 로그
-      log(user?.userId, "detail", "like", [
-        { game_id: gameId },
-      ]);
+      log(user?.userId, "detail", "like", [{ game_id: gameId }]);
     } else {
       Swal.fire({
         icon: "error",
@@ -87,7 +93,13 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
   const steamButtonClickHandler = () => {
     if (user) {
       //가중치 증가(스팀 이동)
-      api.post("tracking?userId=" + user.userId+"&gameId="+gameId+"&action=go-steam");
+      api.post(
+        "tracking?userId=" +
+          user.userId +
+          "&gameId=" +
+          gameId +
+          "&action=go-steam"
+      );
 
       //사용자 패턴 로그
       log(user?.userId, "detail", "move", [
@@ -107,15 +119,25 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
 
   const handleAddToCart = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation(); // 이벤트 버블링 중지
-    const imageUrl = bannerImage
-    const title = gameName   
-    const isPrefer = gameIsLike ?? false; 
+    const imageUrl = bannerImage;
+    const title = gameName;
+    const isPrefer = gameIsLike ?? false;
     console.log(likes);
-    price = price.slice(0, price.length-2);
-    const itemToAdd: CartItem = { gameId, imageUrl, title, price, developer, tagsAll, likes, isPrefer };
+    price = price.slice(0, price.length - 2);
+    const itemToAdd: CartItem = {
+      gameId,
+      imageUrl,
+      title,
+      price,
+      developer,
+      tagsAll,
+      likes,
+      isPrefer,
+    };
     console.log(itemToAdd);
     addItem(user?.userId, itemToAdd);
   };
+
   return (
     <>
       <div className={styles.bannerContainer}>
@@ -126,26 +148,46 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
           {/* bg 이미지 */}
           <div className={styles.darkFilter}></div>
 
-        {/* 내부 컨텐츠 */}
-        <div style={{ backgroundImage: `url(${bannerImage})` }} className={styles.innerContent}>
-          
-          {/* 찐 이미지 */}
-          {/* <img src={bannerImage} alt="Banner" className={styles.centerImage} /> */}
-          
-          {/* 좋아요 버튼 */}
-          <button className={styles.likeButton} onClick={likeClickHandler}>
-            <img className={styles.likeImg} src={isLike ? '/OnLike.png' : '/Like.png'} alt="Like" />
-          </button>
-          
-          {/* 왼쪽 하단 텍스트 */}
-          <div className={styles.leftBottomText}>
-            <h1 className='font-taebaek'>{gameName}</h1>
-            <div className='font-sejong' dangerouslySetInnerHTML={{ __html: modifiedShortDescription }} />
-          </div>
-          {/* 오른쪽 하단 버튼 */}
-          <div className={styles.rightBottomButtons}>
-            <button className={`${styles.urlButton} font-taebaek`} onClick={steamButtonClickHandler}>스팀으로 이동</button>
-            <button className={`${styles.urlButton} ${styles.addToCartBtn} font-taebaek`} onClick={(event) => handleAddToCart(event)}>포켓에 담기</button>
+          {/* 내부 컨텐츠 */}
+          <div
+            style={{ backgroundImage: `url(${bannerImage})` }}
+            className={styles.innerContent}
+          >
+            {/* 찐 이미지 */}
+            {/* <img src={bannerImage} alt="Banner" className={styles.centerImage} /> */}
+
+            {/* 좋아요 버튼 */}
+            <button className={styles.likeButton} onClick={likeClickHandler}>
+              <img
+                className={styles.likeImg}
+                src={isLike ? "/OnLike.png" : "/Like.png"}
+                alt="Like"
+              />
+            </button>
+
+            {/* 왼쪽 하단 텍스트 */}
+            <div className={styles.leftBottomText}>
+              <h1 className="font-taebaek">{gameName}</h1>
+              <div
+                className="font-sejong"
+                dangerouslySetInnerHTML={{ __html: modifiedShortDescription }}
+              />
+            </div>
+            {/* 오른쪽 하단 버튼 */}
+            <div className={styles.rightBottomButtons}>
+              <button
+                className={`${styles.urlButton} font-taebaek`}
+                onClick={steamButtonClickHandler}
+              >
+                스팀으로 이동
+              </button>
+              <button
+                className={`${styles.urlButton} ${styles.addToCartBtn} font-taebaek`}
+                onClick={(event) => handleAddToCart(event)}
+              >
+                포켓에 담기
+              </button>
+            </div>
           </div>
         </div>
       </div>
