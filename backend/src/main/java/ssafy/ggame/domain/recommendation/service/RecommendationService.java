@@ -366,7 +366,7 @@ public class RecommendationService {
 
         // 점수계산
         for (TempDto game : containGameList) {
-            Double score1 = Math.log(gameScoreMap.get(game) + 1) * 0.7;
+            Double score1 = (Math.log(gameScoreMap.get(game) + 1))/(5 + Math.log(gameScoreMap.get(game) + 1)) * 0.7;
             Double score2 = game.getGameFinalScore() * 0.3;
             gameScoreMap.put(game, score1 + score2);
         }
