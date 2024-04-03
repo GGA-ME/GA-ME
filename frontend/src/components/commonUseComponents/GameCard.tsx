@@ -1,7 +1,10 @@
 // 담장자 : 장현욱
 
+
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import 'react-tooltip/dist/react-tooltip.css' //반드시 필요
+import { Tooltip } from 'react-tooltip';
 import usePoketStore from "../../stores/poketStore";
 import useStoreLike from "../../stores/likeStore";
 import useUserStore from "../../stores/userStore";
@@ -164,6 +167,10 @@ const GameCard: React.FC<GameCardProps> = ({
 
   return (
     <>
+      <Tooltip
+        id='tooltip'
+        place="top"
+      />
       {/* 게임카드 컨테이너 */}
       <motion.div
         ref={dragRef} // 드래그 참조를 컴포넌트에 연결합니다.
@@ -238,6 +245,7 @@ const GameCard: React.FC<GameCardProps> = ({
                   src={isLiked ? "/OnLike.png" : "/Like.png"}
                   alt={"Like"}
                   className="w-6 h-6"
+                  data-tooltip-content='좋아요' data-tooltip-id='tooltip'
                 />
               </motion.button>
 
@@ -255,6 +263,7 @@ const GameCard: React.FC<GameCardProps> = ({
                   src={isInCart ? "/OnCart.png" : "/Cart.png"}
                   alt="Cart"
                   className="w-6 h-6"
+                  data-tooltip-content='포켓 넣기' data-tooltip-id='tooltip'
                 />
               </motion.button>
 
@@ -269,7 +278,7 @@ const GameCard: React.FC<GameCardProps> = ({
                   borderRadius: "100%",
                 }}
               >
-                <img src={"/NotLike.png"} alt={"NotLike"} className="w-6 h-6" />
+                <img src={"/NotLike.png"} alt={"NotLike"} className="w-6 h-6"  data-tooltip-content='관심 없음' data-tooltip-id='tooltip'/>
               </motion.button>
             </div>
             {/* Tag 리스트 컨테이너 */}
