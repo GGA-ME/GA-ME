@@ -2,7 +2,7 @@
 
 import create from 'zustand';
 import axios from 'axios';
-import useHotTopicStore from "../stores/hotTopicStore";
+// import useHotTopicStore from "../stores/hotTopicStore";
 
 interface User {
   userId: number;
@@ -41,9 +41,9 @@ const useUserStore = create<UserState>((set) => ({
         // 백엔드 응답에서 사용자 정보를 추출
         const userInfo = response.data.result;
 
-        // hotTopicStore의 setUserId 호출
-        const { setUserId } = useHotTopicStore();
-        setUserId(userInfo.userId); // hotTopicStore의 userId 업데이트
+        // // hotTopicStore의 setUserId 호출
+        // const { setUserId } = useHotTopicStore();
+        // setUserId(userInfo.userId); // hotTopicStore의 userId 업데이트
         
         // 사용자 정보를 스토어에 저장
         set({
