@@ -18,6 +18,7 @@ import "swiper/css/thumbs";
 import "swiper/css/pagination";
 import { FaPlusSquare } from "react-icons/fa";
 
+
 const LikeComponent: React.FC = () => {
   const { data } = myPageStore();
   const navigate = useNavigate();
