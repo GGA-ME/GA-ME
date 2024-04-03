@@ -68,7 +68,7 @@ const GameCard: React.FC<GameCardProps> = ({
   // 드래그 앤 드롭(드래그 가능 타입으로 지정)
   const [{ isDragging }, dragRef] = useDrag(() => ({
     type: 'GAME_CARD', // 드래그 아이템 타입을 지정합니다.
-    item: { gameId, imageUrl, title, price, tagsAll, developer }, // 드래그하는 항목의 데이터를 지정합니다.
+    item: { gameId, imageUrl, title, price, tagsAll, developer, likes, isPrefer }, // 드래그하는 항목의 데이터를 지정합니다.
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(), // 현재 드래그 상태를 반영합니다.
     }),
@@ -91,7 +91,9 @@ const GameCard: React.FC<GameCardProps> = ({
         title,
         price,
         tagsAll,
-        developer
+        developer,
+        likes: likes ?? 0,
+        isPrefer
       });
     }
   };

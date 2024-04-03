@@ -8,13 +8,15 @@ interface TagDto {
 }
 
 // 카트 아이탬 타입스크립트 선언식 tagsAll추가
-interface CartItem {
+export interface CartItem {
   gameId: number;
   imageUrl: string;
   title: string;
   price: string;
   developer: string;
   tagsAll?: TagDto[] | null;
+  likes: number;
+  isPrefer: boolean;
 }
 
 // 추가, 제거, 비우기 함수
