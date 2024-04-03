@@ -146,7 +146,6 @@ const useHotTopicStore = create<StoreState>((set, get) => ({
           ]);
       });
       set({ saleData: response.data, sLoading: false });
-      console.log(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error fetching sales data:", error); // 오류를 콘솔에 기록
