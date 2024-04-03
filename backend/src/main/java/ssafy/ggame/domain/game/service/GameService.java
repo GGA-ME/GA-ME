@@ -120,7 +120,9 @@ public class GameService {
         for (User user : users) {
             List<Game> preferredGames = gameRepository.findPreferredGamesByUser(user);
             for (Game game : preferredGames) {
-                gameCountMap.put(game, gameCountMap.getOrDefault(game, 0) + 1); // 해당 게임의 count를 증가시킴
+                if (game != detailGame) {
+                    gameCountMap.put(game, gameCountMap.getOrDefault(game, 0) + 1); // 해당 게임의 count를 증가시킴
+                }
             }
         }
         // gameCountMap이 완전히 비어 있는 경우 처리
