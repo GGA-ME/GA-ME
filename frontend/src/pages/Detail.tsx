@@ -41,9 +41,9 @@ function Detail(): JSX.Element {
 
     if (user) {
       //가중치 증가(detail 이동)
-      api.post("tracking?userId=" + user.userId+"&gameId="+gameId+"&action=detail");
+      api.put("/tracking?userId=" + user.userId+"&gameId="+gameId+"&action=detail");
 
-      //사용자 패턴 로그
+      // 사용자 패턴 로그
       log(user?.userId, "somewhere", "move", [
         { move_page: "detail" },
         { game_id: gameId },

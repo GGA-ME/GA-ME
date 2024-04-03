@@ -87,9 +87,9 @@ const InfoYoutube: React.FC<InfoYoutubeProps> = ({ userId, gameId, gameName }) =
 
     if (userId) {
       //가중치 증가(detail 이동)
-      api.post("tracking?userId=" + userId+"&gameId="+gameId+"&action=video-play");
+      api.put("/tracking?userId=" + userId+"&gameId="+gameId+"&action=video-play");
 
-      //사용자 패턴 로그
+      // 사용자 패턴 로그
       log(userId, "detail", "click", [
         { move_page: "video-play" },
         { game_id: gameId },

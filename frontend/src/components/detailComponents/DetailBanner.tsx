@@ -75,11 +75,11 @@ const Banner: React.FC<BannerProps> = ({
       toggleIsLike(gameIsLike, gameId, user?.userId);
 
       //가중치 증가(좋아요)
-      api.post(
-        "tracking?userId=" + user.userId + "&gameId=" + gameId + "&action=like"
+      api.put(
+        "/tracking?userId=" + user.userId + "&gameId=" + gameId + "&action=like"
       );
 
-      //사용자 패턴 로그
+      // 사용자 패턴 로그
       log(user?.userId, "detail", "like", [{ game_id: gameId }]);
     } else {
       Swal.fire({
@@ -93,8 +93,8 @@ const Banner: React.FC<BannerProps> = ({
   const steamButtonClickHandler = () => {
     if (user) {
       //가중치 증가(스팀 이동)
-      api.post(
-        "tracking?userId=" +
+      api.put(
+        "/tracking?userId=" +
           user.userId +
           "&gameId=" +
           gameId +
