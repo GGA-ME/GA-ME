@@ -22,6 +22,8 @@ interface DropItem {
   price: string;
   tagsAll?: TagDto[] | null;
   developer: string;
+  likes: number;
+  isPrefer: boolean;
 }
 
 
