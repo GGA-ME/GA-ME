@@ -1,6 +1,6 @@
 /*Pocket.tsx*/
 
-import usePoketStore from '../../stores/poketStore'; // 스토어를 가져옵니다.
+import usePoketStore, { CartItem } from '../../stores/poketStore'; // 스토어를 가져옵니다.
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import { useDrop } from 'react-dnd';
@@ -8,21 +8,21 @@ import style from './Poket.module.css';
 import React, { useState } from "react";
 import useUserStore from '../../stores/userStore';
 
-interface TagDto {
-  codeId: string
-  tagId: number
-  tagName: string
-}
+// interface TagDto {
+//   codeId: string
+//   tagId: number
+//   tagName: string
+// }
 
-interface DropItem {
-  userId: number | undefined;
-  gameId: number;
-  imageUrl: string;
-  title: string;
-  price: string;
-  tagsAll?: TagDto[] | null;
-  developer: string;
-}
+// interface DropItem {
+//   userId: number | undefined;
+//   gameId: number;
+//   imageUrl: string;
+//   title: string;
+//   price: string;
+//   tagsAll?: TagDto[] | null;
+//   developer: string;
+// }
 
 
 const Poket: React.FC = () => {
@@ -37,7 +37,7 @@ const Poket: React.FC = () => {
   // 드래그 앤 드롭
   const [{ isOver }, dropRef] = useDrop({
     accept: 'GAME_CARD',
-    drop: (item: DropItem) => {
+    drop: (item: CartItem) => {
       // 드랍 이벤트 핸들러, item.id 를 사용해 항목 추가
       addItem(user?.userId, item);
     },
