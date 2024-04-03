@@ -220,8 +220,27 @@ public class RecommendationService {
         // 개수 잘라 반환하기
         List<Map.Entry<TempDto, Double>> sortedGameScoreList = getSortedGameScoreList(gameScoreMap);
 
-        // 15개만 잘라서 가져오기
-        List<Map.Entry<TempDto, Double>> subList = sortedGameScoreList.subList(0, 15);
+        // 20개만 잘라서 가져오기
+        List<Map.Entry<TempDto, Double>> largeSubList = sortedGameScoreList.subList(0, 20);
+
+        // 겹치는 게임 삭제
+        List<Map.Entry<TempDto, Double>> subList = new ArrayList<>();
+        for(Map.Entry<TempDto, Double> entry : largeSubList){
+            TempDto game = entry.getKey();
+            boolean isContain = false;
+            for(GameIdAndTagDto gameIdAndTagDto :  gameIdAndTagDtoList){
+                if(gameIdAndTagDto.getGameId() == game.getGameId()){
+                    isContain = true;
+                    break;
+                }
+            }
+            if(!isContain){
+                subList.add(entry);
+            }
+        }
+
+        // 15개 반환
+        subList = largeSubList.subList(0, 15);
 
         // 반환형식인 gameCardDto로 변환하기
         Integer userId = searchGameRequestDto.getUserId();
