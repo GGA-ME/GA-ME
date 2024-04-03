@@ -117,6 +117,7 @@ public class RecommendationService {
                     .tagName(userTag.getTagName())
                     .build();
             tagWeightMap.put(tagDto, Long.valueOf(userTag.getUserTagWeight()));
+
         }
 
 
@@ -130,10 +131,9 @@ public class RecommendationService {
                 .limit(9) // 0부터 8번째 요소까지
                 .toList();
 
-
         // 6. 게임별 점수를 저장할 맵 (게임 아이디 - 가중치 합)
-        Map<TempDto, Double> gameScoreMap = calculateScore(tagDtoList, tagWeightMap);
-
+        //Map<TempDto, Double> gameScoreMap = calculateScore(tagDtoList, tagWeightMap);
+        Map<TempDto, Double> gameScoreMap = calculateScore(resultTagDtoList, tagWeightMap);
 
         // 점수계산을 마쳤으니 내림차순으로 정렬하고,
         // GameCardDto형식으로 변환해서
