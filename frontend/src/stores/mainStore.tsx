@@ -96,7 +96,12 @@ const useStoreMain = create<StoreState>((set, get) => ({
     setSize: (size: number) => set({ size }),
 
     fetchMainData: async () => {
-        const { userId, codeId, tagId, page, size } = get();
+        const { userId, codeId, tagId, page, size } = get();        
+        console.log('유저 코드 태그');
+        console.log(userId);
+        console.log(codeId);
+        console.log(tagId);
+        
 
         set({ loading: true });
         try {
@@ -112,6 +117,7 @@ const useStoreMain = create<StoreState>((set, get) => ({
 
     fetchUserGameData: async() => {
     const { userId, codeId, tagId } = get();
+    
 
     set({ loading: true });
     try {
