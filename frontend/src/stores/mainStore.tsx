@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import axios, { AxiosError } from 'axios';
 
-
 // API 응답 데이터의 타입을 정의합니다.
 interface ApiTags {
     codeId: string,
@@ -88,6 +87,7 @@ fetchMainData: async () => {
     try {
         console.log(userId)
         const response = await api.get<ApiResponse>(`/api/recommendations/popular?userId=${userId}&codeId=${codeId}&tagId=${tagId}&page=${page}&size=${size}`);
+        
         // 기존 데이터에 새로운 데이터를 추가하는 로직
         set({ data: response.data, loading: false });
     } catch (error) {
