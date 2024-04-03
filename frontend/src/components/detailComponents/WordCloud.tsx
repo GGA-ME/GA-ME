@@ -5,7 +5,6 @@ interface WordCloudProps {
   }
 
 const InfoDescription: React.FC<WordCloudProps> = ({ gameWordCloudUrl })  => {
-  gameWordCloudUrl = '/wordCloud/10_wordcloud_20240402.png';
   return (
     <>
       <div className={`${styles.container}`}>
