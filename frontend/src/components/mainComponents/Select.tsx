@@ -1,7 +1,6 @@
 // 담당자 : 장현욱
 
 import React, { useEffect } from 'react'
-import {myPageStore, TagWeight } from '../../stores/myPageStore'
 import useStoreCurrentPage from '../../stores/currentPage';
 import useUserStore from '../../stores/userStore';
 import useStoreMain from '../../stores/mainStore';
@@ -16,27 +15,22 @@ interface Tag {
 
 const Select: React.FC = () => {
 
-  const { data, fetchData } = myPageStore()  // 유저기반 태그 가져오는 스토어
   const { user, isLoggedIn } = useUserStore();  // 유저의 유저ID가져오는 스토어
-  const { setUserId, setTagId, setCodeId, fetchMainData, fetchUserGameData, setPage } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
+  const { setUserId, setTagId, setCodeId, fetchMainData, fetchUserGameData, userGameData, setPage } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
   const { nowCategory, selectedTagName, setNowCategory, setSelectedTagName, } = useStoreCurrentPage();
 
   useEffect(() => {
     if (user) { // user가 null이 아닐 때만 fetchData 호출
       setUserId(user.userId)
-      fetchData(user.userId);
     } else {
       console.log('user 정보가 없습니다.');
     }
     fetchMainData()
-  }, [user, fetchData, fetchMainData, fetchUserGameData]);
+  }, [user, fetchMainData, fetchUserGameData]);
 
-  const userTags: TagWeight[] = data?.result.tagWeightList.filter((tag) => tag.codeId !== 'CAT'); // 유저기반 태그
-  // const userTags: TagWeight[] = data.result.tagWeightList.forEach((tag: TagWeight) => {           
-  //   if (!noUsedTag.some(item => item.tagId === tag.tagId && item.codeId === tag.codeId)) {
-  //     userTags.push(tag);
-  //   }
-// });
+  // const userTags: TagWeight[] = userGameData?.result.tagDtoList.filter((tag) => tag.codeId !== 'CAT'); // 유저기반 태그
+  const userTags = userGameData?.result.tagDtoList.filter((tag) => tag.codeId !== 'CAT');
+
   
   const defaultTags = [
     { "tagId": 1, "codeId": "GEN", "tagName": "액션" },
@@ -118,7 +112,7 @@ const Select: React.FC = () => {
           >
             {tag.tagName}
           </button>
-        )) : nowCategory === categorys[1] ? userTags.map((tag, index: number) => (
+        )) : nowCategory === categorys[1] ? userTags?.map((tag, index: number) => (
           <button
             key={index}
             className={`ml-6 px-3 py-1 rounded-full border-2 border-transparent ${selectedTagName === tag.tagName ? `text-white ${style.neonNormal}` : 'text-gray-500 hover:bg-gray-300'
