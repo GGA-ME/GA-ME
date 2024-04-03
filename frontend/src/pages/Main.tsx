@@ -8,14 +8,15 @@ import useHotTopicStore from "../stores/hotTopicStore";
 import useUserStore from "../stores/userStore";
 function Main() {
   const { user } = useUserStore();
-  const { fetchNewsData, newsFetched, setNewsFetched, nLoading } = useHotTopicStore(); // 상태와 함수 추출
+  // const { fetchNewsData, newsFetched, setNewsFetched, nLoading } = useHotTopicStore(); // 상태와 함수 추출
+  const { newsFetched, nLoading } = useHotTopicStore(); // 상태와 함수 추출
   //news
   useEffect(() => {
-    if (user && !newsFetched && !nLoading) {
-      fetchNewsData().then(() => {
-        setNewsFetched(true);
-      });
-    }
+    // if (user && !newsFetched && !nLoading) {
+    //   fetchNewsData().then(() => {
+    //     setNewsFetched(true);
+    //   });
+    // }
   }, [user, newsFetched, nLoading]); // 함수를 의존성 배열에서 제거
   
   
