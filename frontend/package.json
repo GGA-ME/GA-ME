@@ -25,6 +25,7 @@
     "react-lottie-player": "^2.0.0",
     "react-router-dom": "^6.22.3",
     "react-step-progress-bar": "^1.0.3",
+    "react-tooltip": "^5.26.3",
     "sweetalert2": "^11.10.7",
     "swiper": "^11.0.7",
     "zustand": "^4.5.2"
@@ -33,6 +34,7 @@
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
+    "@types/react-tooltip": "^4.2.4",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "@vitejs/plugin-react": "^4.2.1",
