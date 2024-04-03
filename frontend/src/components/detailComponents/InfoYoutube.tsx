@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import styles from './InfoYoutube.module.css';
 import axios from 'axios';
-
+import { api, log } from '../../url/api';
 
 
 // Props 인터페이스 정의
 interface InfoYoutubeProps {
+  userId?: number;
   gameId: number;
   gameName: string;
 }
@@ -58,7 +59,7 @@ interface YoutubeSearchResponse {
 }
 
 // DetailInfo 컴포넌트를 정의합니다.
-const InfoYoutube: React.FC<InfoYoutubeProps> = ({ gameId, gameName }) => {
+const InfoYoutube: React.FC<InfoYoutubeProps> = ({ userId, gameId, gameName }) => {
   const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [showButton, setShowButton] = useState(true);
@@ -82,6 +83,17 @@ const InfoYoutube: React.FC<InfoYoutubeProps> = ({ gameId, gameName }) => {
       setShowButton(false); // 버튼 숨기기
     } catch (error) {
       console.error('Error fetching data:', error);
+    }
+
+    if (userId) {
+      //가중치 증가(detail 이동)
+      api.post("tracking?userId=" + userId+"&gameId="+gameId+"&action=video-play");
+
+      //사용자 패턴 로그
+      log(userId, "detail", "click", [
+        { move_page: "video-play" },
+        { game_id: gameId },
+      ]);
     }
   };
 

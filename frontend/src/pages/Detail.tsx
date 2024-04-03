@@ -8,14 +8,14 @@ import styles from "../components/detailComponents/Detail.module.css";
 import { useDetailStore } from "../stores/DetailStore";
 import { useParams } from "react-router-dom";
 import useUserStore from "../stores/userStore";
-
+import { api, log } from "../url/api";
 
 type ActiveComponentType = "info" | "statistics";
 
 function Detail(): JSX.Element {
   const { gameId } = useParams<{ gameId: string }>();
   const parsedGameId = gameId ? parseInt(gameId, 10) : undefined;
-  const { user } = useUserStore()
+  const { user } = useUserStore();
 
   const [activeComponent, setActiveComponent] =
     useState<ActiveComponentType>("info");
@@ -38,11 +38,22 @@ function Detail(): JSX.Element {
       top: 0,
       behavior: "smooth", // 스크롤 부드럽게 이동
     });
+
+    if (user) {
+      //가중치 증가(detail 이동)
+      api.post("tracking?userId=" + user.userId+"&gameId="+gameId+"&action=detail");
+
+      //사용자 패턴 로그
+      log(user?.userId, "somewhere", "move", [
+        { move_page: "detail" },
+        { game_id: gameId },
+      ]);
+    }
   }, [parsedGameId]); // 컴포넌트가 마운트될 때 한 번만 fetchData 함수 호출
 
   return (
     <>
-    <Poket/>
+      <Poket />
       <BackButton />
       <DetailBanner
         bannerImage={data?.result?.gameHeaderImg ?? ""}
