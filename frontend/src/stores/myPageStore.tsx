@@ -114,8 +114,7 @@ const myPageStore = create<myPageDetail>((set) => ({
             set({ data: response.data, loading: false });
             set(state => {
                 const topTenTag: TagWeight[] = [];
-                state.data.result.tagWeightList.forEach((tag: TagWeight) => { 
-                    console.log(`${tag.codeId} ${tag.tagId}`)          
+                state.data.result.tagWeightList.forEach((tag: TagWeight) => {           
                     if (!noUsedTag.some(item => item.tagId === tag.tagId && item.codeId === tag.codeId)) {
                         topTenTag.push(tag);
                     }
