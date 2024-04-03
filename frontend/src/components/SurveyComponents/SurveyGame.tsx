@@ -174,7 +174,7 @@ const SurveyGame: React.FC = () => {
                 <p className="text-white mt-[20px] mb-[20px]">
                   맞춤 추천을 위해 당신의 게임 취향을 알려주세요!
                 </p>
-                <div className="bg-stone-900 ">
+                <div className="bg-box ">
                   <div className="grid grid-cols-4 gap-3">
                     {groups[current].map(
                       (choiceGame: ChoiceGame, index: number) => (
