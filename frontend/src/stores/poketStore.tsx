@@ -8,21 +8,25 @@ interface TagDto {
 }
 
 // 카트 아이탬 타입스크립트 선언식 tagsAll추가
-interface CartItem {
+export interface CartItem {
   gameId: number;
   imageUrl: string;
   title: string;
   price: string;
   developer: string;
   tagsAll?: TagDto[] | null;
+  likes: number;
+  isPrefer: boolean;
 }
 
 // 추가, 제거, 비우기 함수
 interface PoketStore {
   cartItems: CartItem[];
   addItem: (userId: number | undefined, newItem: CartItem) => void;
+  updateItem:(userId: number | undefined, gameId: number) => void;
   removeItem: (userId: number | undefined, gameId: number) => void;
   clearCart: (userId: number | undefined) => void;
+  
 }
 
 // 스토어 생성
@@ -61,6 +65,24 @@ const usePoketStore = create<PoketStore>((set) => ({
     return { cartItems: newCartItems };
   }),
 
+  updateItem: (userId, gameId) => (state: { cartItems: CartItem[]; }) => {
+    const updateItems:CartItem[] = state.cartItems.filter((item: CartItem) => item.gameId == gameId);
+    const item:CartItem = updateItems[0];
+    if(item.isPrefer) {
+      item.likes -= 1;
+      item.isPrefer = false;
+    }
+    else {
+      item.likes += 1;
+      item.isPrefer = true;
+    }
+    
+    // 사용자 패턴 로그
+    log(userId, 'pocket', 'click', [
+      { 'clicked_item': 'pocket_remove' },
+      { 'game_id': gameId},
+    ]);
+  },
   // 장바구니 초기화
   clearCart: (userId) => set(() => {
     sessionStorage.removeItem('cartItems');
