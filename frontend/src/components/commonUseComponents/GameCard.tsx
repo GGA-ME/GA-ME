@@ -26,7 +26,7 @@ export interface GameCardProps {
   beforPrice: string;
   tagsAll?: TagDto[] | null;
   tags: string[];
-  likes: number | null;
+  likes: number;
   isPrefer: boolean;
   onGameClick: (gameId: number) => void; // 해당 게임 디테일로 이둉
 }
@@ -90,6 +90,8 @@ const GameCard: React.FC<GameCardProps> = ({
         price,
         tagsAll,
         developer,
+        likes,
+        isPrefer
       });
     }
   };

@@ -78,8 +78,8 @@ const Result: React.FC = () => {
                       imageUrl={item.gameHeaderImg}
                       title={item.gameName}
                       developer={item.gameDeveloper}
-                      price={`₩ ${item.gamePriceFinal}`}
-                      beforPrice={`₩ ${item.gamePriceInitial}`}
+                      price={`₩ ${item.gamePriceFinal/100}`}
+                      beforPrice={`₩ ${item.gamePriceInitial/100}`}
                       tags={item.tagList
                         .filter((tag) => tag.codeId === "GEN")
                         .map((tag) => tag.tagName)}
