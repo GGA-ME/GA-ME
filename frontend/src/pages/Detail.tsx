@@ -32,7 +32,7 @@ function Detail(): JSX.Element {
 
   useEffect(() => {
     // userId와 gameId를 설정하고 fetchData 함수를 호출하여 데이터를 가져옴
-    fetchData(parsedGameId, user?.userId);
+    fetchData(parsedGameId, user?.userId?? 0);
     statisticsData(parsedGameId);
     window.scrollTo({
       top: 0,
