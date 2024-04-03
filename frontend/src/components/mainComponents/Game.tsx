@@ -1,12 +1,13 @@
-// 작성자 : 장현욱
+// 담당자 : 장현욱
 
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 추가
 import GameCard from '../commonUseComponents/GameCard';
 import useStoreMain from "../../stores/mainStore";
+import useStoreCurrentPage from '../../stores/currentPage';
 import { AxiosError } from 'axios';
-import LoadingComponent from '../commonUseComponents/Loading';import style from './Game.module.css'
+import LoadingComponent from '../commonUseComponents/Loading'; import style from './Game.module.css'
 
 // 사용 스토어의 구조를 기반으로 하는 구조
 interface Game {
@@ -16,7 +17,7 @@ interface Game {
   gamePriceInitial: number
   gamePriceFinal: number;
   gameDeveloper: string;
-  tagList: Array<{ codeId: string; tagId:number; tagName: string }>;
+  tagList: Array<{ codeId: string; tagId: number; tagName: string }>;
   isPrefer: boolean;
   gameLike: number | null;
 }
@@ -24,12 +25,13 @@ interface Game {
 const GameComponent: React.FC = () => {
   const { data, loading, error, fetchMainData, page, setPage } = useStoreMain();
   const navigate = useNavigate(); // useNavigate 인스턴스화
+  const { nowCategory } = useStoreCurrentPage();
 
   useEffect(() => {
     fetchMainData(); // 마운트시 데이터 가져오기
   }, [fetchMainData, page]); // page가 변경될 때마다 데이터를 불러옵니다.
 
-  if (loading) {
+  if (loading) { // 게임 데이터 로딩동안 보여줄 페이지 정의
     return <LoadingComponent />;
   }
 
@@ -42,9 +44,8 @@ const GameComponent: React.FC = () => {
     return <div>No data available</div>;
   }
 
-  const handleClickGame = (gameId:number) => {
+  const handleClickGame = (gameId: number) => {
     navigate(`/detail/${gameId}`)
-    console.log('디테일페이지 이동')
   }
 
   const handleNextPage = () => {
@@ -57,62 +58,61 @@ const GameComponent: React.FC = () => {
 
   return (
     <>
-    <motion.ul className="grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-      variants={{
-        hidden: {},
-        visible: { transition: { staggerChildren: 0.1 } }
-      }}
-      initial="hidden"
-      animate="visible"
-    >
-      {data.result.map((game: Game, index: number) => (
-        <motion.li key={index} className="list-none"
-          variants={{
-            hidden: { x: -60, opacity: 0 },
-            visible: { x: 0, opacity: 1, transition: { duration: 0.1 } }
-          }}
-        >
-          <GameCard
-            key={game.gameId}
-            gameId={game.gameId}
-            imageUrl={game.gameHeaderImg}
-            title={game.gameName}
-            developer={game.gameDeveloper}
-            beforPrice={`₩ ${game.gamePriceInitial / 100}`}
-            price={`₩ ${game.gamePriceFinal / 100}`}
-            tagsAll={game.tagList}
-            tags={game.tagList.filter(tag => tag.codeId === "GEN" && tag.tagName.length < 7).map(tag => tag.tagName) ?? []}
-            isPrefer={game.isPrefer}
-            likes={game.gameLike}
-            onGameClick={handleClickGame} // 디테일 페이지 이동
+      <motion.ul className="grid gap-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        variants={{
+          hidden: {},
+          visible: { transition: { staggerChildren: 0.1 } }
+        }}
+        initial="hidden"
+        animate="visible"
+      >
+        {data.result.map((game: Game, index: number) => (
+          <motion.li key={index} className="list-none"
+            variants={{
+              hidden: { x: -60, opacity: 0 },
+              visible: { x: 0, opacity: 1, transition: { duration: 0.1 } }
+            }}
+          >
+            {/* 게임 카드 데이터 지정해서 넣어주기 */}
+            <GameCard
+              key={game.gameId}
+              gameId={game.gameId}
+              imageUrl={game.gameHeaderImg}
+              title={game.gameName}
+              developer={game.gameDeveloper}
+              beforPrice={`₩ ${game.gamePriceInitial / 100}`}
+              price={`₩ ${game.gamePriceFinal / 100}`}
+              tagsAll={game.tagList}
+              tags={game.tagList.filter(tag => tag.codeId === "GEN" && tag.tagName.length < 7).map(tag => tag.tagName) ?? []}
+              isPrefer={game.isPrefer}
+              likes={game.gameLike}
+              onGameClick={handleClickGame} // 디테일 페이지 이동
             />
-        </motion.li>
-      ))}
-    </motion.ul>
-
-    <div className={`${style.container} p-7 flex justify-center items-start`}>
-    <div className={`${style.pane}`}>
-        <button className={`${style.label} pb-2`} onClick={handlePrevPage} disabled={page <= 1}>
+          </motion.li>
+        ))}
+      </motion.ul>
+      {/* 페이지 이동 버튼 */}
+      {/* nowCategory 가 '취향 저격' 일경우에만 보이게 하기 */}
+      {nowCategory === '전체 인기' && (
+      <div className={`${style.container} p-7 flex justify-center items-start`}>
+        <div className={`${style.pane}`}>
+          <button className={`${style.label} pb-2`} onClick={handlePrevPage} disabled={page <= 1}>
             <span> 이전 </span>
-            <input id="left" className={`${style.input}`} name="radio" type="radio"/>
-        </button>
-        <label className={`${style.label}`}>
+            <input id="left" className={`${style.input}`} name="radio" type="radio" />
+          </button>
+          <label className={`${style.label}`}>
             <span>{page}</span>
-            <input id="middle" className={`${style.input}`} defaultChecked={true} name="radio" type="radio"/>
-        </label>
-        <button className={`${style.label} pb-2`} onClick={handleNextPage}>
+            <input id="middle" className={`${style.input}`} defaultChecked={true} name="radio" type="radio" />
+          </label>
+          <button className={`${style.label} pb-2`} onClick={handleNextPage}>
             <span> 다음 </span>
-            <input id="right" className={`${style.input}`} name="radio" type="radio"/>
-        </button>
-        <span className={`${style.selection}`}></span>
-    </div>
-</div>
-          {/* <div className="pagination-buttons">
-          <button onClick={handlePrevPage} disabled={page <= 1}>Previous</button>
-          <span>{page}</span>
-          <button onClick={handleNextPage}>Next</button>
-        </div> */}
-        </>
+            <input id="right" className={`${style.input}`} name="radio" type="radio" />
+          </button>
+          <span className={`${style.selection}`}></span>
+        </div>
+      </div>
+      )}
+    </>
   );
 };
 

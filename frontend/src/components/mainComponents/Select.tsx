@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react'
+// 담당자 : 장현욱
+
+import React, { useEffect } from 'react'
 import {myPageStore, TagWeight } from '../../stores/myPageStore'
+import useStoreCurrentPage from '../../stores/currentPage';
 import useUserStore from '../../stores/userStore';
 import useStoreMain from '../../stores/mainStore';
 import Swal from 'sweetalert2';
@@ -15,7 +18,8 @@ const Select: React.FC = () => {
 
   const { data, fetchData } = myPageStore()  // 유저기반 태그 가져오는 스토어
   const { user, isLoggedIn } = useUserStore();  // 유저의 유저ID가져오는 스토어
-  const { setUserId, setTagId, setCodeId, fetchMainData, setPage } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
+  const { setUserId, setTagId, setCodeId, fetchMainData, fetchUserGameData, setPage } = useStoreMain(); // 게임리스트 상태를 바꾸기 위한 스토어
+  const { nowCategory, selectedTagName, setNowCategory, setSelectedTagName, } = useStoreCurrentPage();
 
   useEffect(() => {
     if (user) { // user가 null이 아닐 때만 fetchData 호출
@@ -25,7 +29,7 @@ const Select: React.FC = () => {
       console.log('user 정보가 없습니다.');
     }
     fetchMainData()
-  }, [user, fetchData, fetchMainData]);
+  }, [user, fetchData, fetchMainData, fetchUserGameData]);
 
   const userTags: TagWeight[] = data?.result.tagWeightList; // 유저기반 태그
   const defaultTags = [
@@ -39,8 +43,7 @@ const Select: React.FC = () => {
     { "tagId": 25, "codeId": "GEN", "tagName": "어드벤처" },
   ] // 전체게임 태그
   const categorys = ['전체 인기', '취향 저격']
-  const [nowCategory, setNowCategory] = useState<string>('전체 인기') // 전체게임 or 맞춤게임 중 현재상태
-  const [selectedTagName, setSelectedTagName] = useState<string | null>(null);  // 현재 선택된 tagWeightList
+
 
   // 전체 또는 취향 고를시 API요청
   const handleCategoryChange = (category: string) => {
@@ -53,7 +56,7 @@ const Select: React.FC = () => {
         setTagId(0) // 태그와 코드 아이디를 0으로 초기화
         setCodeId('0')
         setNowCategory(category)
-        fetchMainData(); // 바뀐 값으로 메인데이터 다시 요청
+        fetchUserGameData(); // 바뀐 값으로 메인데이터 다시 요청
       } else {
         Swal.fire({
           icon: 'error',
@@ -77,7 +80,12 @@ const Select: React.FC = () => {
     setSelectedTagName(tag.tagName); // 태그 이름을 누른 태그로 지정
     setTagId(tag.tagId);
     setCodeId(tag.codeId);
-    fetchMainData(); // Fetch data based on tagId and codeId
+    // 카테고리 상태에 따른 분기
+    if (nowCategory === '전체 인기') {
+      fetchMainData();
+  } else if (nowCategory === '취향 저격') {
+      fetchUserGameData();
+  }
   }
 
   return (

@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
   const handleLoginClick = () => {
     window.Kakao.Auth.login({
       success: async function (authObj) {
-        console.log(authObj); // 인증 정보 출력
+        // console.log(authObj); // 인증 정보 출력
         // authObj 객체에서 access_token을 추출
         const accessToken = authObj.access_token;
         // 스토어의 fetchAndSetUser 함수 호출하여 서버에 사용자 정보 요청
@@ -147,7 +147,7 @@ const Navbar: React.FC = () => {
     if (activeLinkIndex !== -1) {
       const newY = navLinkYPositions[activeLinkIndex];
       setIndicatorY(newY);
-      // 상태를 로컬 스토리지에 저장
+      // 위치 상태를 로컬 스토리지에 저장 ( 현재 위치를 보여주기 위함 )
       localStorage.setItem("indicatorY", newY.toString());
     }
   }, [location.pathname]); // location.pathname이 변경될 때마다 실행

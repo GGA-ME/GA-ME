@@ -1,3 +1,4 @@
+// 담당자 : 장현욱
 
 const Loading = () => {
     return (
