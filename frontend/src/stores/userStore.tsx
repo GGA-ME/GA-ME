@@ -42,7 +42,7 @@ const useUserStore = create<UserState>((set) => ({
         const userInfo = response.data.result;
 
         // hotTopicStore의 setUserId 호출
-        const { setUserId } = useHotTopicStore.getState();
+        const { setUserId } = useHotTopicStore();
         setUserId(userInfo.userId); // hotTopicStore의 userId 업데이트
         
         // 사용자 정보를 스토어에 저장
@@ -55,7 +55,7 @@ const useUserStore = create<UserState>((set) => ({
           },
           isLoggedIn: true,
         });
-
+        
         // 로컬 스토리지에 사용자 정보 저장
         localStorage.setItem(
           "user",
