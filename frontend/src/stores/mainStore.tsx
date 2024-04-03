@@ -98,9 +98,7 @@ const useStoreMain = create<StoreState>((set, get) => ({
     fetchMainData: async () => {
         const { userId, codeId, tagId, page, size } = get();        
         console.log('유저 코드 태그');
-        console.log(userId);
-        console.log(codeId);
-        console.log(tagId);
+        
         
 
         set({ loading: true });
@@ -119,6 +117,9 @@ const useStoreMain = create<StoreState>((set, get) => ({
 
     fetchUserGameData: async() => {
     const { userId, codeId, tagId } = get();
+    console.log(userId);
+    console.log(codeId);
+    console.log(tagId);
     
 
     set({ loading: true });
