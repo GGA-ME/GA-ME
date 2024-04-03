@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 
 const Result: React.FC = () => {
   // useSearchStore에서 검색 결과 가져오기
-  const { results, isLoading } = useSearchStore();
+  const { results, isLoading, searchPerformed } = useSearchStore();
   const navigate = useNavigate(); // useNavigate 인스턴스화
 
   const handleGameClick = (gameId: number) => {
@@ -19,9 +19,9 @@ const Result: React.FC = () => {
 
   // 랜덤 메시지 배열
   const noResultsMessages = [
-    "한 번 더 시도해보시겠어요? 😅",
+    "다시 찾아볼 기회를 주시겠어요? 😅",
     "앗! 결과를 찾지 못했어요! 😵",
-    "엥? 게임이 안 보여요! 😳"
+    "다른 단어로 검색을 시도해볼까요? 😳"
   ];
 
   // 랜덤 인덱스를 선택하여 메시지를 결정
@@ -75,8 +75,11 @@ const Result: React.FC = () => {
             </motion.li>
           ))}
         </motion.ul>
-      ) : (
+      ) : searchPerformed ? (
         <p className="text-center mt-[100px] text-[20px]">{randomMessage}</p>
+      ) : (
+        // 최초 접근 시 표시되는 메시지
+        <p className="text-center mt-[100px] text-[20px]">검색어를 입력해주세요! 😊</p>
       )}
     </div>
   );
