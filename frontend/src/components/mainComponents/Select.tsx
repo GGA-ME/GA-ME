@@ -32,11 +32,6 @@ const Select: React.FC = () => {
   }, [user, fetchData, fetchMainData, fetchUserGameData]);
 
   const userTags: TagWeight[] = data?.result.tagWeightList.filter((tag) => tag.codeId !== 'CAT'); // 유저기반 태그
-  // const userTags: TagWeight[] = data.result.tagWeightList.forEach((tag: TagWeight) => {           
-  //   if (!noUsedTag.some(item => item.tagId === tag.tagId && item.codeId === tag.codeId)) {
-  //     userTags.push(tag);
-  //   }
-// });
   
   const defaultTags = [
     { "tagId": 1, "codeId": "GEN", "tagName": "액션" },

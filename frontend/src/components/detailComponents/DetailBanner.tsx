@@ -82,6 +82,7 @@ const Banner: React.FC<BannerProps> = ({ bannerImage, gameId, gameName, gameShor
     const title = gameName   
     const isPrefer = gameIsLike ?? false; 
     console.log(likes);
+    price = price.slice(0, price.length-2);
     const itemToAdd: CartItem = { gameId, imageUrl, title, price, developer, tagsAll, likes, isPrefer };
     console.log(itemToAdd);
     addItem(user?.userId, itemToAdd);
