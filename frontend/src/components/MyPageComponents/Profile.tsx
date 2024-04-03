@@ -9,12 +9,14 @@ import useUserStore from "../../stores/userStore";
 const MyProfile: React.FC = () => {
   const { user } = useUserStore();
   const { data, topTenTag, error, loading, fetchData } = myPageStore();
+  
 
   if (user) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       fetchData(user.userId);
     }, [fetchData, user]);
+    console.log(topTenTag);
 
     if (loading) {
       return (
