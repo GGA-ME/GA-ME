@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import axios, { AxiosError } from 'axios';
 
-
 // API 응답 데이터의 타입을 정의합니다.
 interface ApiTags {
     codeId: string,
@@ -20,6 +19,12 @@ interface ApiResult {
     isPrefer: false,
     tagList: ApiTags[]
 }
+
+interface UserApiResult {
+    tagDtoList: ApiTags[];
+    gameCardDtoList: ApiResult[];
+}
+
 interface ApiResponse {
     isSuccess: boolean;
     message: string;
@@ -27,11 +32,18 @@ interface ApiResponse {
     result: ApiResult[]; // `any` 대신 더 구체적인 타입을 사용해주세요.
 }
 
+interface userApiResponse {
+    isSuccess: boolean;
+    message: string;
+    code: number;
+    result: UserApiResult; // `any` 대신 더 구체적인 타입을 사용해주세요.
+}
 
 
 // 스토어 상태의 타입을 정의합니다.
 interface StoreState {
     data: ApiResponse | null;
+    userGameData: userApiResponse | null
     bannerData: ApiResponse | null;
     loading: boolean;
     error: AxiosError | null;
@@ -46,6 +58,7 @@ interface StoreState {
     setPage: (page: number) => void;
     setSize: (size: number) => void;
     fetchMainData: () => Promise<void>;
+    fetchUserGameData: () => Promise<void>;
     mainBanner: () => Promise<void>;
 }
 
@@ -62,6 +75,7 @@ const api = axios.create({
 
 const useStoreMain = create<StoreState>((set, get) => ({
     data: null,
+    userGameData: null,
     bannerData: null,
     loading: false,
     error: null,
@@ -81,15 +95,33 @@ const useStoreMain = create<StoreState>((set, get) => ({
     size: 50,
     setSize: (size: number) => set({ size }),
 
-fetchMainData: async () => {
-    const { userId, codeId, tagId, page, size } = get();
-    
+    fetchMainData: async () => {
+        const { userId, codeId, tagId, page, size } = get();
+
+        set({ loading: true });
+        try {
+            console.log(userId)
+            console.log(codeId, tagId, page)
+            const response = await api.get<ApiResponse>(`/api/recommendations/popular?userId=${userId}&codeId=${codeId}&tagId=${tagId}&page=${page}&size=${size}`);
+            // 기존 데이터에 새로운 데이터를 추가하는 로직
+            set({ data: response.data, loading: false });
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                set({ error, loading: false });
+            }
+        }
+    },
+
+    fetchUserGameData: async() => {
+    const { userId, codeId, tagId } = get();
+
     set({ loading: true });
     try {
         console.log(userId)
-        const response = await api.get<ApiResponse>(`/api/recommendations/popular?userId=${userId}&codeId=${codeId}&tagId=${tagId}&page=${page}&size=${size}`);
-        // 기존 데이터에 새로운 데이터를 추가하는 로직
-        set({ data: response.data, loading: false });
+        const response = await api.get<userApiResponse>(`/api/recommendations/personal/${userId}?codeId=${codeId}&tagId=${tagId}`);
+        // 해당 유저의 추천 게임을 요청
+        set({ userGameData: response.data, loading: false });
+        console.log(response.data);
     } catch (error) {
         if (axios.isAxiosError(error)) {
             set({ error, loading: false });
@@ -97,18 +129,18 @@ fetchMainData: async () => {
     }
 },
 
-    mainBanner: async () => {
-        set({ loading: true });
-        try {
-            const response = await api.get<ApiResponse>(`/api/recommendations/recent-popular`,);
-            set({ bannerData: response.data, loading: false });
-            console.log(response.data);
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                set({ error, loading: false });
-            }
+mainBanner: async () => {
+    set({ loading: true });
+    try {
+        const response = await api.get<ApiResponse>(`/api/recommendations/recent-popular`,);
+        set({ bannerData: response.data, loading: false });
+        console.log(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            set({ error, loading: false });
         }
-    },
+    }
+},
 }));
 
 export default useStoreMain;

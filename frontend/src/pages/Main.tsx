@@ -1,11 +1,22 @@
+import { useEffect } from "react";
 import Navbar from "../components/commonUseComponents/Navbar";
 import Poket from "../components/commonUseComponents/Poket";
 import Banner from "../components/mainComponents/Banner";
 import Game from "../components/mainComponents/Game"
 import Select from "../components/mainComponents/Select"
-function Main() {
-
+import useUserStore from "../stores/userStore";
+import useHotTopicStore from "../stores/hotTopicStore";
+function Main() {  
+  const { user } = useUserStore();
+  const { newsData, nLoading, newsFetched,fetchNewsData } = useHotTopicStore();
+  useEffect(() => {
+    if (user && !newsFetched && !nLoading&& newsData==null) {
+      console.log("news : Main요청")
+      fetchNewsData(user.userId);
+    }
+  }, [user]); // 두 번째 매개변수로 빈 배열 전달
   return (
+    
     <>
     <div className="flex">
     <Navbar /> {/* 네브바를 화면의 왼쪽에 고정 */}

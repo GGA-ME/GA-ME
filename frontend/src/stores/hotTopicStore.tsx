@@ -51,23 +51,22 @@ interface StoreState {
   sLoading: boolean;
   nError: AxiosError | null;
   sError: AxiosError | null;
-  userId: number;
-  setUserId: (userId: number) => void;
-  fetchNewsData: () => Promise<void>;
-  fetchSalesData: () => Promise<void>;
+  newsFetched: boolean;
+  setNewsFetched: (fetched: boolean) => void;
+  fetchNewsData: (userId: number) => Promise<void>;
+  fetchSalesData: (userId: number) => Promise<void>;
 }
 
 const api = axios.create({
   baseURL: "https://j10e105.p.ssafy.io",
-  // baseURL: 'http://localhost:8000',
   headers: {
     "Content-Type": `application/json;charset=UTF-8`,
     Accept: "application/json",
-    // 추가
     "Access-Control-Allow-Origin": `http://localhost:5173/`,
     "Access-Control-Allow-Credentials": "true",
   },
 });
+
 
 const useHotTopicStore = create<StoreState>((set, get) => ({
   newsData: null,
@@ -80,42 +79,42 @@ const useHotTopicStore = create<StoreState>((set, get) => ({
   sLoading: false,
   nError: null,
   sError: null,
+  newsFetched: false, // 뉴스 데이터가 성공적으로 가져와졌는지 여부
+  
+  setNewsFetched: (fetched: boolean) => set({ newsFetched: fetched }),
 
-  userId: 0, //임시 1 처리 원래 0
-  setUserId: (userId: number) => set({ userId }),
-
-  fetchNewsData: async () => {
+  fetchNewsData: async (userId:number) => {
+    if (get().nLoading) return; // 이미 로딩 중이면 요청하지 않음
+  
+    set({ nLoading: true });
     const maxRetries = 5; // 최대 재시도 횟수
     let retries = 0;
-
+  
     while (retries < maxRetries) {
-      const { userId } = get();
       const postData = { userId };
-      set({ nLoading: true });
+  
       try {
-        const response = await api.post<ApiResponse>(
-          `/api/topics/news`,
-          postData
-        );
+        const response = await api.post<ApiResponse>("/api/topics/news", postData);
         if (response.data.isSuccess) {
-          set({ newsData: response.data, nLoading: false });
+          set({ newsData: response.data, nLoading: false, newsFetched: true }); // 성공 시 newsFetched도 업데이트
           return; // 성공한 경우 함수 종료
         } else {
           // API 요청이 실패하더라도 서버에서 isSuccess가 false를 반환할 경우에만 재시도합니다.
           retries++;
           console.log(`Retrying request... Attempt ${retries}`);
         }
-        console.log(response.data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Error fetching news data:", error); // 오류를 콘솔에 기록
-          set({ nError: error, nLoading: false });
+          set({ nError: error });
+          break; // 오류 발생 시 재시도 중단
         }
       }
     }
+    set({ nLoading: false }); // 모든 시도 후 로딩 상태 종료, 성공/실패 관계 없이 실행되어야 함
   },
-  fetchSalesData: async () => {
-    const { userId } = get();
+  
+  fetchSalesData: async (userId:number) => {
     const postData = { userId };
     set({ sLoading: true });
     try {
@@ -147,7 +146,6 @@ const useHotTopicStore = create<StoreState>((set, get) => ({
           ]);
       });
       set({ saleData: response.data, sLoading: false });
-      console.log(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error fetching sales data:", error); // 오류를 콘솔에 기록

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { api } from '../url/api';
 import axios, { AxiosError } from "axios";
 import { log } from "../url/api";
+import noUsedTag from '../components/MyPageComponents/NoUsedTagList'
 
 // interface로 response data들에 대한 타입을 미리 지정해줌
 // dto랑 비슷한 느낌으로 사용
@@ -113,8 +114,11 @@ const myPageStore = create<myPageDetail>((set) => ({
             set({ data: response.data, loading: false });
             set(state => {
                 const topTenTag: TagWeight[] = [];
-                state.data.result.tagWeightList.forEach((tag: TagWeight) => {
-                    topTenTag.push(tag);                    
+                state.data.result.tagWeightList.forEach((tag: TagWeight) => {           
+                    if (!noUsedTag.some(item => item.tagId === tag.tagId && item.codeId === tag.codeId)) {
+                        topTenTag.push(tag);
+                    }
+                    
                 });
                 return { ...state, topTenTag };
             })

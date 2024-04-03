@@ -7,7 +7,9 @@ import useStoreLike from "../../stores/likeStore";
 import useUserStore from "../../stores/userStore";
 import Swal from "sweetalert2";
 import style from "./GameCard.module.css";
+import { useDrag } from 'react-dnd';
 
+// TagDtop 타입스크립트 정의
 interface TagDto {
   codeId: string;
   tagId: number;
@@ -43,15 +45,16 @@ const GameCard: React.FC<GameCardProps> = ({
   isPrefer,
   onGameClick,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const { cartItems, addItem, removeItem } = usePoketStore();
+  const [isHovered, setIsHovered] = useState(false); // 호버 상태
+  const { cartItems, addItem, removeItem } = usePoketStore(); // 포켓스토어
   const [showAlert, setShowAlert] = useState(false); // 경고 메시지 상태 추가
-  const { likeGame, unlikeGame, setGameId, setUserId, disLike } =
-    useStoreLike();
-  const { user, isLoggedIn } = useUserStore();
-  // 좋아요 코드 수정
+  const { likeGame, unlikeGame, setGameId, setUserId, disLike } = useStoreLike(); // Like스토어
+  const { user, isLoggedIn } = useUserStore(); // 유저정보 스토어
+
+  // 좋아요 상태와 갯수를 즉작적으로 보여주기 위한 변수
   const [isLiked, setIsLiked] = useState(isPrefer);
   const [likeCount, setLikeCount] = useState(likes);
+
 
   // 카트 안에 데이터가 있는지 확인
   const isInCart = cartItems.some((item) => item.gameId === gameId);
@@ -61,6 +64,15 @@ const GameCard: React.FC<GameCardProps> = ({
     // 정보가 있으면 유저ID 없으면 0 으로 세팅
     setUserId(user?.userId ?? 0);
   }, [user]);
+
+  // 드래그 앤 드롭(드래그 가능 타입으로 지정)
+  const [{ isDragging }, dragRef] = useDrag(() => ({
+    type: 'GAME_CARD', // 드래그 아이템 타입을 지정합니다.
+    item: { gameId, imageUrl, title, price, tagsAll, developer, likes, isPrefer }, // 드래그하는 항목의 데이터를 지정합니다.
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(), // 현재 드래그 상태를 반영합니다.
+    }),
+  }));
 
   // 포켓에 넣는 핸들러
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -80,6 +92,8 @@ const GameCard: React.FC<GameCardProps> = ({
         price,
         tagsAll,
         developer,
+        likes: likes ?? 0,
+        isPrefer
       });
     }
   };
@@ -117,7 +131,6 @@ const GameCard: React.FC<GameCardProps> = ({
     if (user && isLoggedIn) {
       // user가 존재하는지 확인, 로그인 되어있는지 확인
       disLike(tagsAll);
-      console.log(tagsAll);
       Swal.fire({
         icon: "success",
         title: "가중치를 감소시켰습니다.",
@@ -153,11 +166,13 @@ const GameCard: React.FC<GameCardProps> = ({
     <>
       {/* 게임카드 컨테이너 */}
       <motion.div
+        ref={dragRef} // 드래그 참조를 컴포넌트에 연결합니다.
         className={`${style.card} w-50 m-2 rounded overflow-hidden text-white text-center relative cursor-pointer`}
         whileHover={hoverEffects}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={() => onGameClick(gameId)}
+        style={{ opacity: isDragging ? 0.5 : 1 }} // 드래그 중일 때 투명도를 변경합니다.
       >
         {/* 게임카드 내부 컨테이너 */}
         <div

@@ -52,6 +52,7 @@ export interface statisticsDto {
 
 export interface statistics {
   isSuccess: null;
+  gameWordCloudUrl: string |null; // 04/02 수정
   statisticsDto: statisticsDto;
 }
 

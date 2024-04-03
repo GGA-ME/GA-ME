@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import usePoketStore from "../../stores/poketStore";
 import GameCard from "../commonUseComponents/GameCard";
 import style from "./MixandMatch.module.css";
@@ -7,12 +7,21 @@ import useMixAndMatchStore from "../../stores/mixAndMatchStore";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅 추가
 import { motion } from "framer-motion";
 import { FaPlusSquare, FaArrowRight } from "react-icons/fa";
+import { myPageStore } from "../../stores/myPageStore";
 
 const SearchGameList: React.FC = () => {
   const cartItems = usePoketStore((state) => state.cartItems);
+  const myPageStores = myPageStore();
 
   // axios 요청을 위한 requestData 생성
   const userId = useUserStore().user?.userId;
+  if (userId) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      myPageStores.fetchData(userId);
+    }, [myPageStores.fetchData]);
+  }
+  console.log(myPageStores.data);
 
   const gameIdAndTagDtoList = [];
   for (const item of cartItems) {
@@ -22,6 +31,7 @@ const SearchGameList: React.FC = () => {
     });
   }
 
+  // console.log(cartItems)
   const requestData = {
     userId,
     gameIdAndTagDtoList,
@@ -57,15 +67,11 @@ const SearchGameList: React.FC = () => {
         }}
       >
         <div className={style.getPocketBtn} onClick={handleGoToMain}>
-          {/* <FaGamepad size={50} /> */}
           <FaPlusSquare size={50} className={style.neonEffect} />
           <p className={`mt-[10px] mb-[20px] text-lg ${style.neonEffect}`}>
             게임 담으러 가기😉
           </p>
         </div>
-        {/* <button className={style.getPocketBtn} onClick={handleGoToMain}>
-          담으러 가기
-        </button> */}
       </div>
     );
   } else if (cartItems.length < 2) {
@@ -95,18 +101,18 @@ const SearchGameList: React.FC = () => {
                   gameId={item.gameId}
                   imageUrl={item.imageUrl}
                   title={item.title}
-                  price={`₩ ${item.price}`}
+                  price={`${item.price}`}
                   tags={
                     item.tagsAll
                       ?.filter((tag) => tag.codeId === "GEN")
                       .map((tag) => tag.tagName) ?? []
                   }
                   tagsAll={item.tagsAll}
-                  likes={0}
+                  likes={item.likes}
                   onGameClick={handleClickGame}
-                  isPrefer={false}
+                  isPrefer={item.isPrefer}
                   developer={item.developer}
-                  beforPrice={`₩ ${item.price}`}
+                  beforPrice={`${item.price}`}
                 />
               </motion.li>
             ))}
@@ -151,18 +157,18 @@ const SearchGameList: React.FC = () => {
                 gameId={item.gameId}
                 imageUrl={item.imageUrl}
                 title={item.title}
-                price={`₩ ${item.price}`}
+                price={`${item.price}`}
                 tags={
                   item.tagsAll
                     ?.filter((tag) => tag.codeId === "GEN")
                     .map((tag) => tag.tagName) ?? []
                 }
                 tagsAll={item.tagsAll}
-                likes={0}
+                likes={item.likes}
                 onGameClick={handleClickGame}
-                isPrefer={false}
+                isPrefer={item.isPrefer}
                 developer={item.developer}
-                beforPrice={`₩ ${item.price}`}
+                beforPrice={`${item.price}`}
               />
             </motion.li>
           ))}

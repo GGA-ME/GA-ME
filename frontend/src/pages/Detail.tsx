@@ -32,7 +32,7 @@ function Detail(): JSX.Element {
 
   useEffect(() => {
     // userId와 gameId를 설정하고 fetchData 함수를 호출하여 데이터를 가져옴
-    fetchData(parsedGameId, user?.userId);
+    fetchData(parsedGameId, user?.userId?? 0);
     statisticsData(parsedGameId);
     window.scrollTo({
       top: 0,
@@ -63,8 +63,9 @@ function Detail(): JSX.Element {
         gameIsLike={data?.result?.gameIsLike}
         price={`₩ ${data?.result?.gamePriceFinal}` ?? ""}
         developer={data?.result?.gameDeveloper ?? ""}
-        tagsAll={data?.result?.gameTagList}
-      />
+        tagsAll={data?.result?.gameTagList} 
+        likes={0} 
+        isPrefer={data?.result?.gameIsLike ?? false}      />
       <div className={styles.detailContent}>
         <div className={styles.menuTab}>
           <button
@@ -89,12 +90,13 @@ function Detail(): JSX.Element {
             통계
           </button>
         </div>
-        <div>
-          {activeComponent === "info" && <DetailInfo userId={user?.userId} data={data?.result} />}
+        <div style={{marginTop:'15px'}}>
+          {activeComponent === "info" && <DetailInfo data={data?.result} />}
           {activeComponent === "statistics" && (
             <Statistics
               ratioData={statisticsResult?.result.statisticsDto}
               gameName={data?.result?.gameName ?? ""}
+              gameWordCloudUrl={statisticsResult?.result.gameWordCloudUrl ?? null}
             />
           )}
         </div>
