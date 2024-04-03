@@ -14,7 +14,7 @@ function Main() {
       console.log("news : Main요청")
       fetchNewsData(user.userId);
     }
-  }, []); // 두 번째 매개변수로 빈 배열 전달
+  }, [user]); // 두 번째 매개변수로 빈 배열 전달
   return (
     
     <>
