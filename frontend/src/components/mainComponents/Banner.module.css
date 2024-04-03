@@ -5,16 +5,16 @@
   }
 
 
-  @keyframes neon {
+  /* @keyframes neon {
     from, to {
       box-shadow:
       0 0 5px #c8c8c8,
       0 0 10px #c8c8c8,
       0 0 20px #608894,
       0 0 30px #608894,
-      0 0 40px #608894
+      0 0 40px #608894 */
       /* 0 0 70px #0fa; */
-    }
+    /* }
     20%, 24%, 55% {         
         box-shadow:
         0 0 5px #c8c8c8,
@@ -23,13 +23,13 @@
         0 0 20px #608894,
         0 0 35px #608894;
     }
-  }
+  } */
 
 /* Banner.module.css */
-.detailButton {
+/* .detailButton {
   border: 3px solid rgb(255, 255, 255);
   animation: neon 2s infinite alternate;
-  }
+  } */
 
 .famousGame{
   font-family:'SejonghospitalBold';
