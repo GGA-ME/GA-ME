@@ -96,7 +96,7 @@ def analyze_reviews(num_batches, index, **kwargs):
 
 
         # 이미지 저장
-        image_file_path = f'/opt/airflow/wordcloud/{game_id}_wordcloud_{current_date}.png'
+        image_file_path = f'/opt/airflow/wordcloud/{game_id}.png'
         
         # 파일이 이미 존재하는지 확인하고 덮어쓰기
         if os.path.exists(image_file_path):
@@ -104,9 +104,11 @@ def analyze_reviews(num_batches, index, **kwargs):
         
         wordcloud.to_file(image_file_path)
         
-        # 데이터베이스에 이미지 경로 저장
+        db_file_path = f'/wordCloud/{game_id}.png'
+        
+        # 데이터베이스에 이미지 경로 저장 `/wordCloud/게임ID.png'
         try:
-            cursor.execute(f'''update game set game_word_cloud_url = '{image_file_path}' where game_id = {game_id}''')
+            cursor.execute(f'''update game set game_word_cloud_url = '{db_file_path}' where game_id = {game_id}''')
             conn.commit()
         except Exception as e:
             print("fail db line 106", e)
@@ -116,6 +118,7 @@ def analyze_reviews(num_batches, index, **kwargs):
 
 
 with DAG('dags_get_review_wordcloud', 
+         
          default_args=default_args, 
          schedule_interval=None, 
          catchup=False) as dag:
