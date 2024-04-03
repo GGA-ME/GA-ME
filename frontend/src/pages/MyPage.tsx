@@ -6,7 +6,7 @@ function MyPage() {
   return (
     <>
       <Navbar /> {/* 네브바를 화면의 왼쪽에 고정 */}
-      <div className="font-sejong" style={{ position: "relative" }}>
+      <div style={{ position: "relative"}}>
         <Poket />
         <div style={{ position: "absolute", left: "350px", top: "100px" }}>
           <Profile />
