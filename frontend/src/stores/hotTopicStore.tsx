@@ -52,6 +52,8 @@ interface StoreState {
   nError: AxiosError | null;
   sError: AxiosError | null;
   userId: number;
+  newsFetched: boolean;
+  setNewsFetched: (fetched: boolean) => void;
   setUserId: (userId: number) => void;
   fetchNewsData: () => Promise<void>;
   fetchSalesData: () => Promise<void>;
@@ -59,11 +61,9 @@ interface StoreState {
 
 const api = axios.create({
   baseURL: "https://j10e105.p.ssafy.io",
-  // baseURL: 'http://localhost:8000',
   headers: {
     "Content-Type": `application/json;charset=UTF-8`,
     Accept: "application/json",
-    // 추가
     "Access-Control-Allow-Origin": `http://localhost:5173/`,
     "Access-Control-Allow-Credentials": "true",
   },
@@ -80,6 +80,9 @@ const useHotTopicStore = create<StoreState>((set, get) => ({
   sLoading: false,
   nError: null,
   sError: null,
+  newsFetched: false, // 뉴스 데이터가 성공적으로 가져와졌는지 여부
+
+  setNewsFetched: (fetched: boolean) => set({ newsFetched: fetched }),
 
   userId: 0, //임시 1 처리 원래 0
   setUserId: (userId: number) => set({ userId }),
