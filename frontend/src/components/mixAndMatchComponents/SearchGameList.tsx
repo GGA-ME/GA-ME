@@ -95,7 +95,7 @@ const SearchGameList: React.FC = () => {
                   gameId={item.gameId}
                   imageUrl={item.imageUrl}
                   title={item.title}
-                  price={`₩ ${item.price}`}
+                  price={`${item.price}`}
                   tags={
                     item.tagsAll
                       ?.filter((tag) => tag.codeId === "GEN")
@@ -106,7 +106,7 @@ const SearchGameList: React.FC = () => {
                   onGameClick={handleClickGame}
                   isPrefer={false}
                   developer={item.developer}
-                  beforPrice={`₩ ${item.price}`}
+                  beforPrice={`${item.price}`}
                 />
               </motion.li>
             ))}
@@ -151,7 +151,7 @@ const SearchGameList: React.FC = () => {
                 gameId={item.gameId}
                 imageUrl={item.imageUrl}
                 title={item.title}
-                price={`₩ ${item.price}`}
+                price={`${item.price}`}
                 tags={
                   item.tagsAll
                     ?.filter((tag) => tag.codeId === "GEN")
@@ -162,7 +162,7 @@ const SearchGameList: React.FC = () => {
                 onGameClick={handleClickGame}
                 isPrefer={false}
                 developer={item.developer}
-                beforPrice={`₩ ${item.price}`}
+                beforPrice={`${item.price}`}
               />
             </motion.li>
           ))}
