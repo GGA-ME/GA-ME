@@ -406,7 +406,7 @@ public class RecommendationService {
                         gameScoreMap.put(game, gameScoreMap.getOrDefault(game, 0.0) + tagWeightMap.get(tagDto));
                     } else if(game.getCodeId().equals("CAT")){
                         // 코드가 CAT이면 가중치 20%만 추가(적은 비중)
-                        gameScoreMap.put(game, gameScoreMap.getOrDefault(game, 0.0) + tagWeightMap.get(tagDto) * 0.2);
+                        gameScoreMap.put(game, gameScoreMap.getOrDefault(game, 0.0) + tagWeightMap.get(tagDto) * 0.05);
                     }
                 }
             }
@@ -414,8 +414,8 @@ public class RecommendationService {
 
         // 점수계산
         for (TempDto game : containGameList) {
-            Double score1 = (Math.log(gameScoreMap.get(game) + 1)) / (5 + Math.log(gameScoreMap.get(game) + 1)) * 100 * 0.7;
-            Double score2 = game.getGameFinalScore() * 0.3;
+            Double score1 = (Math.log(gameScoreMap.get(game) + 1)) / (3 + Math.log(gameScoreMap.get(game) + 1)) * 100 * 0.8;
+            Double score2 = game.getGameFinalScore() * 0.2;
             gameScoreMap.put(game, score1 + score2);
         }
 
