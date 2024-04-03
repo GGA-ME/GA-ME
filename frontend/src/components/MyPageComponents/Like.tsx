@@ -10,7 +10,7 @@ import {
   Navigation,
   Thumbs,
   FreeMode,
-  EffectCoverflow
+  EffectCoverflow,
 } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -25,7 +25,6 @@ const LikeComponent: React.FC = () => {
   const handleGoToMain = () => {
     navigate("/");
   };
-
 
   const getDetailPage = (gameId: number) => {
     // 라엘아 여기서 로그 남겨줘
@@ -43,13 +42,14 @@ const LikeComponent: React.FC = () => {
             height: "200px",
             display: "flex",
             justifyContent: "center",
+            marginBottom: '10px'
           }}
         >
           <div className={style.getPocketBtn} onClick={handleGoToMain}>
             {/* <FaGamepad size={50} /> */}
             <FaPlusSquare size={50} className={style.neonEffect} />
             <p className={`mt-[10px] mb-[20px] text-lg ${style.neonEffect}`}>
-              게임 담으러 가기😉
+             좋아요한 게임이 없어요😉
             </p>
           </div>
           {/* <button className={style.getPocketBtn} onClick={handleGoToMain}>
@@ -62,42 +62,56 @@ const LikeComponent: React.FC = () => {
 
   return (
     <>
-      <div style={{ width: "900px", height: "200px" }}>
+      <div style={{ width: "900px", height: "384.56px" }}>
+        <h1 className="text-2xl font-sejong pb-10">선호 게임 🤍</h1>
         <Swiper
-          modules={[FreeMode, Autoplay, Pagination, Navigation, Thumbs, EffectCoverflow]}
-          effect={'coverflow'}
-        grabCursor={true}
-        centeredSlides={true}
-        coverflowEffect={{
-          rotate: 50,
-          stretch: 0,
-          depth: 50,
-          modifier: 1,
-          slideShadows: true,
-        }}
+          modules={[
+            FreeMode,
+            Autoplay,
+            Pagination,
+            Navigation,
+            Thumbs,
+            EffectCoverflow,
+          ]}
+          effect={"coverflow"}
+          grabCursor={true}
+          centeredSlides={true}
+          coverflowEffect={{
+            rotate: 50,
+            stretch: 0,
+            depth: 50,
+            modifier: 1,
+            slideShadows: true,
+          }}
           spaceBetween={0}
           slidesPerView={4}
-          loop={true}
+          loop={false}
           navigation={true}
         >
           {data.result.preferList.map((prefer: Prefer, index: number) => (
             <SwiperSlide key={index} style={{ position: "relative" }}>
-                <motion.div>
-                  <GameCard
-                    key={prefer.gameId}
-                    gameId={prefer.gameId}
-                    imageUrl={prefer.gameHeaderImg}
-                    title={prefer.gameName}
-                    developer={prefer.gameDeveloper}
-                    beforPrice={`₩ ${prefer.gamePriceInitial / 100}`}
-                    price={`₩ ${prefer.gamePriceFinal / 100}`} 
-                    tagsAll={prefer.tagList}
-                    tags={prefer.tagList ? prefer.tagList.map((tag) => tag.tagName) : []}
-                    isPrefer={prefer.isPrefer}
-                    likes={prefer.gameLike}
-                    onGameClick={getDetailPage}
-                  ></GameCard>
-                </motion.div>
+              <motion.div>
+                <GameCard
+                  key={prefer.gameId}
+                  gameId={prefer.gameId}
+                  imageUrl={prefer.gameHeaderImg}
+                  title={prefer.gameName}
+                  developer={prefer.gameDeveloper}
+                  beforPrice={`₩ ${prefer.gamePriceInitial / 100}`}
+                  price={`₩ ${prefer.gamePriceFinal / 100}`}
+                  tagsAll={prefer.tagList}
+                  tags={
+                    prefer.tagList
+                      ?.filter(
+                        (tag) => tag.codeId === "GEN" && tag.tagName.length < 7
+                      )
+                      .map((tag) => tag.tagName) ?? []
+                  }
+                  isPrefer={prefer.isPrefer}
+                  likes={prefer.gameLike}
+                  onGameClick={getDetailPage}
+                ></GameCard>
+              </motion.div>
             </SwiperSlide>
           ))}
         </Swiper>
