@@ -15,7 +15,7 @@ export interface CartItem {
   price: string;
   developer: string;
   tagsAll?: TagDto[] | null;
-  likes: number;
+  likes: number | null;
   isPrefer: boolean;
 }
 
@@ -68,12 +68,11 @@ const usePoketStore = create<PoketStore>((set) => ({
   updateItem: (userId, gameId) => (state: { cartItems: CartItem[]; }) => {
     const updateItems:CartItem[] = state.cartItems.filter((item: CartItem) => item.gameId == gameId);
     const item:CartItem = updateItems[0];
-    if(item.isPrefer) {
-      item.likes -= 1;
+    if (item.isPrefer) {
+      item.likes = (item.likes != null ? item.likes - 1 : 0);
       item.isPrefer = false;
-    }
-    else {
-      item.likes += 1;
+    } else {
+      item.likes = (item.likes != null ? item.likes + 1 : 0);
       item.isPrefer = true;
     }
     
