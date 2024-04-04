@@ -132,8 +132,8 @@ public class RecommendationService {
                 .toList();
 
         // 6. 게임별 점수를 저장할 맵 (게임 아이디 - 가중치 합)
-        //Map<TempDto, Double> gameScoreMap = calculateScore(tagDtoList, tagWeightMap);
-        Map<TempDto, Double> gameScoreMap = calculateScore(resultTagDtoList, tagWeightMap);
+        Map<TempDto, Double> gameScoreMap = calculateScore(tagDtoList, tagWeightMap);
+//        Map<TempDto, Double> gameScoreMap = calculateScore(resultTagDtoList, tagWeightMap);
 
         // 점수계산을 마쳤으니 내림차순으로 정렬하고,
         // GameCardDto형식으로 변환해서
@@ -222,19 +222,19 @@ public class RecommendationService {
 
         // 20개만 잘라서 가져오기
         List<Map.Entry<TempDto, Double>> largeSubList = sortedGameScoreList.subList(0, 20);
-        
+
         // 겹치는 게임 삭제
         List<Map.Entry<TempDto, Double>> subList = new ArrayList<>();
-        for(Map.Entry<TempDto, Double> entry : largeSubList){
+        for (Map.Entry<TempDto, Double> entry : largeSubList) {
             TempDto game = entry.getKey();
             boolean isContain = false;
-            for(GameIdAndTagDto gameIdAndTagDto :  gameIdAndTagDtoList){
-                if(Objects.equals(gameIdAndTagDto.getGameId(), game.getGameId())){
+            for (GameIdAndTagDto gameIdAndTagDto : gameIdAndTagDtoList) {
+                if (Objects.equals(gameIdAndTagDto.getGameId(), game.getGameId())) {
                     isContain = true;
                     break;
                 }
             }
-            if(!isContain){
+            if (!isContain) {
                 subList.add(entry);
             }
         }
@@ -402,20 +402,22 @@ public class RecommendationService {
             for (TagDto tagDto : tagDtoList) {
                 if (game.getCodeId() != null && game.getTagId() != null && game.getCodeId().equals(tagDto.getCodeId()) && game.getTagId() == tagDto.getTagId()) {
                     containGameList.add(game);
-                    if(game.getCodeId().equals("GEN")){
+                    if (game.getCodeId().equals("GEN")) {
                         gameScoreMap.put(game, gameScoreMap.getOrDefault(game, 0.0) + tagWeightMap.get(tagDto));
-                    } else if(game.getCodeId().equals("CAT")){
+                        System.out.println("game = " + game);
+                    } else if (game.getCodeId().equals("CAT")) {
                         // 코드가 CAT이면 가중치 20%만 추가(적은 비중)
                         gameScoreMap.put(game, gameScoreMap.getOrDefault(game, 0.0) + tagWeightMap.get(tagDto) * 0.05);
                     }
                 }
+
             }
         }
 
         // 점수계산
         for (TempDto game : containGameList) {
             Double score1 = (Math.log(gameScoreMap.get(game) + 1)) / (3 + Math.log(gameScoreMap.get(game) + 1)) * 100 * 0.8;
-            Double score2 = game.getGameFinalScore() * 0.2;
+            Double score2 = game.getGameFinalScore() * score1 * 0.01 * 0.25;
             gameScoreMap.put(game, score1 + score2);
         }
 
