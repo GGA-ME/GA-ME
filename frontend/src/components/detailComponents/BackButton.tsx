@@ -5,7 +5,7 @@ const BackButton: React.FC = () => {
     const navigate = useNavigate();
 
   return (
-    <button className="absolute m-12 cursor-pointer duration-200 hover:scale-125 active:scale-100"
+    <button className="fixed m-12 cursor-pointer duration-200 hover:scale-125 active:scale-100"
     style={{ zIndex: 999 }} // 여기에 zIndex를 직접 지정
     title="Go Back"
     onClick={() => navigate(-1)}>
