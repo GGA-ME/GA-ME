@@ -132,8 +132,8 @@ public class RecommendationService {
                 .toList();
 
         // 6. 게임별 점수를 저장할 맵 (게임 아이디 - 가중치 합)
-        Map<TempDto, Double> gameScoreMap = calculateScore(tagDtoList, tagWeightMap);
-//        Map<TempDto, Double> gameScoreMap = calculateScore(resultTagDtoList, tagWeightMap);
+//        Map<TempDto, Double> gameScoreMap = calculateScore(tagDtoList, tagWeightMap);
+        Map<TempDto, Double> gameScoreMap = calculateScore(resultTagDtoList, tagWeightMap);
 
         // 점수계산을 마쳤으니 내림차순으로 정렬하고,
         // GameCardDto형식으로 변환해서
@@ -417,7 +417,7 @@ public class RecommendationService {
         // 점수계산
         for (TempDto game : containGameList) {
             Double score1 = (Math.log(gameScoreMap.get(game) + 1)) / (3 + Math.log(gameScoreMap.get(game) + 1)) * 100 * 0.8;
-            Double score2 = game.getGameFinalScore() * score1 * 0.01 * 0.25;
+            Double score2 = game.getGameFinalScore() * 0.2;
             gameScoreMap.put(game, score1 + score2);
         }
 
