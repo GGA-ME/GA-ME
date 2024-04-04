@@ -96,13 +96,18 @@ const useStoreMain = create<StoreState>((set, get) => ({
     setSize: (size: number) => set({ size }),
 
     fetchMainData: async () => {
-        const { userId, codeId, tagId, page, size } = get();
+        const { userId, codeId, tagId, page, size } = get();        
+        console.log('유저 코드 태그');
+        
+        
 
         set({ loading: true });
         try {
             const response = await api.get<ApiResponse>(`/api/recommendations/popular?userId=${userId}&codeId=${codeId}&tagId=${tagId}&page=${page}&size=${size}`);
+            console.log(response.data);
             // 기존 데이터에 새로운 데이터를 추가하는 로직
             set({ data: response.data, loading: false });
+            console.log(response.data);
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 set({ error, loading: false });
@@ -112,6 +117,10 @@ const useStoreMain = create<StoreState>((set, get) => ({
 
     fetchUserGameData: async() => {
     const { userId, codeId, tagId } = get();
+    console.log(userId);
+    console.log(codeId);
+    console.log(tagId);
+    
 
     set({ loading: true });
     try {
