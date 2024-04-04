@@ -73,7 +73,7 @@ const Statistics: React.FC<StatisticsProps> = ({
 
     // 그래프의 제목
     title: {
-      text: `${gameName}은 ${(parseFloat(maxYPoint.x) / 60).toFixed(
+      text: `이 게임은 ${(parseFloat(maxYPoint.x) / 60).toFixed(
         1
       )}시간 이상 즐겨보시는것을 추천합니다.`,
       offsetX: 30,
@@ -87,7 +87,7 @@ const Statistics: React.FC<StatisticsProps> = ({
 
     // 그래프의 부제목
     subtitle: {
-      text: `시간대별 선호도 비율`, // 부제목에 추가 텍스트를 표시
+      text: `${gameName}의 시간대별 선호도 비율`, // 부제목에 추가 텍스트를 표시
       offsetX: 30,
       offsetY: 5,
       style: {
