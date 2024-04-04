@@ -81,7 +81,7 @@ const Statistics: React.FC<StatisticsProps> = ({
       style: {
         color: "#FFFFFF", // 제목 글자색을 하얀색으로 설정
         fontFamily: "SejonghospitalBold",
-        fontSize: "25px",
+        fontSize: "23px",
       },
     },
 
