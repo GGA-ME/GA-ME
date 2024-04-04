@@ -87,7 +87,7 @@ const InfoYoutube: React.FC<InfoYoutubeProps> = ({ userId, gameId, gameName }) =
 
     useEffect( () => {
       handleClickYoutube();
-    }, [])
+    }, [gameId])
 
     if (userId) {
       //가중치 증가(detail 이동)
