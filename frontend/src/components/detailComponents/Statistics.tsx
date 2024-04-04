@@ -57,8 +57,8 @@ const Statistics: React.FC<StatisticsProps> = ({
 
   // 각 막대의 색상 결정
   const barColors = series[0].data.map((item) => {
-    if (item.y === maxY) return "#adedff"; // Y가 가장 큰 값 색
-    if (item.y === minY) return "#DC2626"; // Y가 가장 작은 값 색
+    if (item.y === maxY) return "#0451b5"; // Y가 가장 큰 값 색
+    if (item.y === minY) return "#fc539f"; // Y가 가장 작은 값 색
     return "#6B7280"; // 나머지 값은 파란색
   });
   const options: ApexCharts.ApexOptions = {
@@ -73,9 +73,11 @@ const Statistics: React.FC<StatisticsProps> = ({
 
     // 그래프의 제목
     title: {
-      text: "시간대별 만족도",
+      text: `${gameName}은 ${(parseFloat(maxYPoint.x) / 60).toFixed(
+        1
+      )}시간 이상 즐겨보시는것을 추천합니다.`,
       offsetX: 30,
-      offsetY: 20,
+      offsetY: 30,
       style: {
         color: "#FFFFFF", // 제목 글자색을 하얀색으로 설정
         fontFamily: "SejonghospitalBold",
@@ -85,11 +87,9 @@ const Statistics: React.FC<StatisticsProps> = ({
 
     // 그래프의 부제목
     subtitle: {
-      text: `${gameName}은 ${(parseFloat(maxYPoint.x) / 60).toFixed(
-        1
-      )}시간 이상의 플레이타임을 추천합니다.`, // 부제목에 추가 텍스트를 표시
+      text: `시간대별 선호도 비율`, // 부제목에 추가 텍스트를 표시
       offsetX: 30,
-      offsetY: 60,
+      offsetY: 5,
       style: {
         color: "#FFFFFF", // 부제목 글자색을 하얀색으로 설정
         fontFamily: "Pretendard-Regular",
