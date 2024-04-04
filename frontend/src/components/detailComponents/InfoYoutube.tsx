@@ -62,7 +62,7 @@ interface YoutubeSearchResponse {
 const InfoYoutube: React.FC<InfoYoutubeProps> = ({ userId, gameId, gameName }) => {
   const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
   const [videos, setVideos] = useState<VideoItem[]>([]);
-  const [showButton, setShowButton] = useState(true);
+  // const [showButton, setShowButton] = useState(true);
 
   const handleClickYoutube = async (): Promise<void> => {
     try {
@@ -80,10 +80,14 @@ const InfoYoutube: React.FC<InfoYoutubeProps> = ({ userId, gameId, gameName }) =
       });
       console.log(response.data.items, gameId, gameName)
       setVideos(response.data.items);
-      setShowButton(false); // 버튼 숨기기
+      // setShowButton(false); // 버튼 숨기기
     } catch (error) {
       console.error('Error fetching data:', error);
     }
+
+    useEffect( () => {
+      handleClickYoutube();
+    }, [])
 
     if (userId) {
       //가중치 증가(detail 이동)
@@ -101,8 +105,7 @@ const InfoYoutube: React.FC<InfoYoutubeProps> = ({ userId, gameId, gameName }) =
     <>
     <div className={styles.container}>
       <div className={styles.title}>공식 트레일러</div>
-      {showButton && <button onClick={handleClickYoutube}>관련 영상 보기</button>}
-
+      {/* {showButton && <button onClick={handleClickYoutube}>관련 영상 보기</button>} */}
       <div>
         {videos.length > 0 && (
           <div key={videos[0].id.videoId}>
@@ -123,3 +126,6 @@ const InfoYoutube: React.FC<InfoYoutubeProps> = ({ userId, gameId, gameName }) =
 }
 
 export default InfoYoutube;
+
+
+
