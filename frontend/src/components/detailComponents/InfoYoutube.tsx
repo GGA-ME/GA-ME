@@ -84,22 +84,22 @@ const InfoYoutube: React.FC<InfoYoutubeProps> = ({ userId, gameId, gameName }) =
     } catch (error) {
       console.error('Error fetching data:', error);
     }
+  }
 
-    useEffect( () => {
-      handleClickYoutube();
-    }, [gameId])
+  useEffect(() => {
+    handleClickYoutube();
+  }, [gameId]); // 빈 배열을 전달하여 컴포넌트가 마운트될 때 한 번만 실행되도록 함
 
     if (userId) {
       //가중치 증가(detail 이동)
       api.put("/tracking?userId=" + userId+"&gameId="+gameId+"&action=video-play");
-
+      
       // 사용자 패턴 로그
       log(userId, "detail", "click", [
         { move_page: "video-play" },
         { game_id: gameId },
       ]);
     }
-  };
 
   return (
     <>
