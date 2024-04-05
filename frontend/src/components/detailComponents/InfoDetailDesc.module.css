@@ -6,7 +6,7 @@
   background-size: cover;
   background-position: center;
   border-radius: 10px;
-  overflow: hidden;
+  /* overflow: hidden; */
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
 }
 
@@ -25,12 +25,12 @@
 }
 /* 내부 컨텐츠를 감싸는 요소 */
 .innerContent {
-  position: absolute;
+  position: relative;
   width: 100%;
   min-height: 100%; /* 변경: 고정된 높이에서 최소 높이로 변경 */
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  /* left: 50%; */
+  /* transform: translate(-50%, -50%); */
   text-align: center;
   color: white;
   padding: 0%;
