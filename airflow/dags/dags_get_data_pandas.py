@@ -79,7 +79,7 @@ def get_game_data():
     conn.close()
 
 with DAG(
-    dag_id="dags_get_data_pandas",
+    dag_id="dags_sget_data_pandas",
     schedule="0 0 * * *",
     start_date=pendulum.datetime(2021, 1, 1, tz="Asia/Seoul"),
     catchup=False,

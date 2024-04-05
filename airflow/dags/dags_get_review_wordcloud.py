@@ -18,7 +18,7 @@ default_args = {
     'start_date': datetime(2024, 3, 14),
 }
 
-MAX_RETRIES = 10
+MAX_RETRIES = 8
 
 def load_reviews_with_retry(game_id, max_reviews):
     retry_count = 0
@@ -39,7 +39,8 @@ def get_game_ids(**kwargs):
     mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
     conn = mysql_hook.get_conn()
     cursor = conn.cursor()
-    cursor.execute(f"SELECT game_id FROM game")
+    # cursor.execute(f"SELECT game_id FROM game")
+    cursor.execute("SELECT game_id FROM game ORDER BY game_final_score DESC LIMIT 40000")
     game_ids = [row[0] for row in cursor.fetchall()]
     print(f'아이디 길이 {len(game_ids)}')
     cursor.close()
@@ -61,7 +62,7 @@ def analyze_reviews(num_batches, index, **kwargs):
     font_path = '/opt/airflow/wordcloud/bamin_doheon.ttf'
 
     for game_id in game_id_batch:
-        max_reviews = 1000
+        max_reviews = 1300
         reviews_kr = load_reviews_with_retry(game_id, max_reviews)
         current_date = datetime.now().strftime('%Y%m%d')
 
@@ -90,7 +91,7 @@ def analyze_reviews(num_batches, index, **kwargs):
                          ])  # 불용어 목록
         stopwords.update(english_stopwords)
 
-        wordcloud = WordCloud(stopwords=stopwords, font_path=font_path, max_words=50, width=845, height=425, 
+        wordcloud = WordCloud(stopwords=stopwords, font_path=font_path, max_words=75, width=845, height=425, 
                               background_color='white').generate(' '.join(reviews))
 
 
@@ -121,6 +122,7 @@ with DAG('dags_get_review_wordcloud',
          
          default_args=default_args, 
          schedule_interval=None, 
+         tags=["mysql","wordcloud",'weekly'],
          catchup=False) as dag:
 
 
@@ -130,7 +132,7 @@ with DAG('dags_get_review_wordcloud',
         provide_context=True,
         dag=dag
     )
-    num_batches = 15  # 등분할 개수
+    num_batches = 12  # 등분할 개수
 
     for i in range(num_batches):
         analyze_reviews_task = PythonOperator(

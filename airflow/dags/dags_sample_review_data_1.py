@@ -216,9 +216,10 @@ def process_reviews(**kwargs):
             cursor.close()
             conn.close()
             
-with DAG('dags_sample_review_data_1', 
+with DAG('dags_reduce_weight', 
          default_args=default_args, 
-         schedule_interval='@daily', 
+         schedule_interval=None, 
+         tags=["mysql","weight",'weekly'],
          catchup=False) as dag:
 
     get_game_ids_task = PythonOperator(

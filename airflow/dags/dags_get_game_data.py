@@ -52,7 +52,7 @@ cursor = conn.cursor()
 
 
 with DAG(
-    dag_id="dags_get_game_data",
+    dag_id="dags_sget_game_data",
     schedule="0 0 * * *",
     start_date=pendulum.datetime(2021, 1, 1, tz="Asia/Seoul"),
     catchup=False,

@@ -340,10 +340,8 @@ def insert_game_data(app, detail_res):
                 ##print("game_price_final: ", game_price_final)
                 game_discount_percent = detail_body.get("price_overview").get("discount_percent")
                 ##print("game_discount_percent: ", game_discount_percent)
-
             # 문자열로 받은 release_date를 date type으로 저장
             game_release_date = detail_body.get("release_date").get("date").replace('"', '')
-            
             # list를 json 객체로 만든 후 저장
             screenshots_json = {
                 "screenshots": detail_body.get("screenshots")
@@ -502,7 +500,7 @@ with DAG(
     default_args=default_args, 
     schedule=None,
     catchup=False,
-    tags=["please","mysql","test"],
+    tags=["mysql","gameData",'weekly','3days'],
 ) as dag:
     trigger_statis_dag = TriggerDagRunOperator(
         task_id="trigger_statis_dag",

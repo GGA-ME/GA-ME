@@ -6,6 +6,9 @@ from airflow.hooks.mysql_hook import MySqlHook
 from steam_reviews import ReviewLoader
 import requests
 from time import sleep
+# import retry from retry
+
+
 
 import nltk
 nltk.download('vader_lexicon')
@@ -38,7 +41,7 @@ MAX_RETRIES = 5
 
 # 24, 5 일 경우 taskSize = 2 partitionSize = 125000 partition = (5 or 4)//2 => 2 / 0,1 2,3 4,5
 # 리뷰가 무거운 게임이 비슷한 번호에 몰려있는듯, 미리 파티셔닝 하지말고 gameId if로 파티션 정해서 저장할걸 그랬나
-dbPartitionSize = 250000
+dbPartitionSize = 250000 #250000
 num_batches = 12  # 등분할 개수
 taskSize = num_batches // 12
 partitionSize = dbPartitionSize // taskSize
@@ -48,7 +51,7 @@ def load_reviews_with_retry(game_id, max_reviews):
     while retry_count < MAX_RETRIES:
         try:
             review_loader = ReviewLoader().set_language('english')
-            reviews_en = review_loader.load_from_api(game_id, max_reviews)
+            reviews_en = review_loader.load_from_api(game_id)
         
             return reviews_en
         except Exception as e:
@@ -64,7 +67,8 @@ def get_game_ids(**kwargs):
     mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
     conn = mysql_hook.get_conn()
     cursor = conn.cursor()
-    cursor.execute("SELECT game_id FROM game")
+    # cursor.execute("SELECT game_id FROM game") #TODO 게임 거르기
+    cursor.execute("SELECT game_id FROM game_score_info WHERE game_review_cnt > 10000")
     game_ids = [row[0] for row in cursor.fetchall()]
     #print(game_ids)
     cursor.close()
@@ -88,10 +92,13 @@ def process_reviews(num_batches, index, **kwargs):
     game_ids = kwargs['ti'].xcom_pull(task_ids='game_ids_task', key='game_ids')
     
     # TODO 유기적으로 적용가능하게 하기. ex) 24개의 태스크 12개의 파티션 -> 파티션당 25만개  TASK / Partition 값으로 partition = index//TP / partitionSize*index로 하면될듯? 
+    # partition = (index//taskSize) % 12 # 사실 12가 의미 없어야함.
     partition = (index//taskSize) % 12 # 사실 12가 의미 없어야함.
     game_id_batch = [game_id for game_id in game_ids if index * partitionSize <= int(game_id) < (index + 1) * partitionSize]
     print(f'batch partition{partition} index{index} 게임아이디 범위{index * partitionSize} 부터 {(index + 1) * partitionSize}')
-
+    print(f"게임 아이디 개수 {len(game_id_batch)}")
+    
+    
     mysql_hook = MySqlHook(mysql_conn_id=MYSQL_CONN_ID)
     conn = mysql_hook.get_conn()
     cursor = conn.cursor()
@@ -139,7 +146,9 @@ def process_reviews(num_batches, index, **kwargs):
         else:
             #print("리뷰를 불러오지 못했습니다.")
             continue
-
+        
+        
+        #TODO 리뷰가 적어도 score 테이블만 만들걸 그랬나.
         if not reviews_en.data['reviews'] or len(reviews_en.data['reviews']) < 1:
             #print(f"No reviews found for game ID: {game_id}")
             continue
@@ -223,7 +232,13 @@ def process_reviews(num_batches, index, **kwargs):
             
             # 4. 리뷰 삽입 여길 쪼개자. 긍/부정까지는 하고 1.3배가 된 경우에는 값을 주고 안 된 경우에는 값을 빼자.
             # 이미 True라면 나머지 값만 UPDATE되고 그 값은 원래 값으로 사용 - 이거 안될듯
+            # 사용 예시
+            # try:
+            #     insert_review_into_cassandra(partition, game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dtm)
+            # except Exception as e:
+            #     print("리트라이 시도 후에도 실패했습니다.")
             try:
+                sleep(0.001)
                 insert_query = """INSERT INTO review_partition (partition, game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dtm) 
                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
                 cassandra_session.execute(insert_query, (partition, game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dtm))
@@ -271,6 +286,17 @@ def process_reviews(num_batches, index, **kwargs):
     conn.close()
     cassandra_session.shutdown()
     cassandra_cluster.shutdown()
+    
+    # @retry(Exception, delay=1, backoff=2, max_delay=4, tries=3)
+    # def insert_review_into_cassandra(partition, game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dtm):
+    #     try:
+    #         insert_query = """INSERT INTO review_partition (partition, game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dtm) 
+    #                         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+    #         cassandra_session.execute(insert_query, (partition, game_id, review_id, review_content, review_is_good, review_updated_dt, review_playtime_at, review_playtime_total, review_playtime_recent, review_is_use, updated_dtm))
+    #     except Exception as e:
+    #         print("카산드라 데이터 저장 중 오류 발생:", e)
+    #         raise
+
 
      
      
@@ -338,8 +364,8 @@ def process_statistics(num_batches, index, **kwargs):
         
         
         # review_playtime_recent의 총합 계산
-        total_playtime_recent = sum(review['review_playtime_recent'] for review in review_list)
-        play_reviews_count = sum(1 for review in review_list if review['review_playtime_recent'] > 0)
+        total_playtime_recent = sum(review['review_playtime_recent'] for review in review_list if review['review_playtime_recent'] is not None)
+        play_reviews_count = sum(1 for review in review_list if review['review_playtime_recent'] is not None and review['review_playtime_recent'] > 0)
 
         # TODO 최신 점수 앞 TASK로 옮길지 옮기려면 리뷰를 돌면서 review_playtime_recent를 더해놓고 마지막에 이 로직써야함. 아니면 앞에서 한 번에 처리하거나?
         # 이건 유지보수 과정에서 필수 인 것 같음 그 당시 받아왔을 때 리뷰 기준으로 값을 넣는게 맞는듯. 애초에 시간은 게임에 저장할 필요도 없음.
@@ -471,7 +497,7 @@ def get_game_final_score(index, num_batches, **kwargs):
         cursor = conn.cursor()
 
         for game_id in game_id_batch:
-            sleep(0.01)
+            sleep(0.001)
 
             #print("################### CALCULATE GAME SCORE!!!#######################")
 
@@ -517,8 +543,12 @@ def get_game_final_score(index, num_batches, **kwargs):
             game_final_score = round(review_cnt_score * 0.8 + max(review_like_score, 50) * 0.1 + in_use_score * 0.1, 4) # 최종 점수(소숫점 아래 4째 자리까지)
 
             # game_final_recent_score 점수 계산
-            game_final_recent_score = round(game_final_score * 0.8 + game_recent_score * 0.2, 4) # 최신 게임 가치 점수(수숫점 아래 4쨰 자리까지 )
-
+            if game_recent_score is not None:
+                game_final_recent_score = round(game_final_score * 0.6 + game_recent_score * 0.4, 4)
+            else:
+                # game_recent_score가 None인 경우 처리할 내용을 입력하세요
+                # 예를 들어, 기본값으로 대체하거나 다른 값을 할당할 수 있습니다.
+                game_final_recent_score = round(game_final_score * 0.8, 4)  # 예시: 최종 점수를 그대로 사용
 
             # game db에 점수 저장하기
             update_query = """update game set game_final_score =%s, game_final_recent_score = %s where game_id =%s"""
@@ -533,7 +563,7 @@ def get_game_final_score(index, num_batches, **kwargs):
 with DAG('dags_get_save_data_statis', 
         default_args=default_args, 
         schedule_interval=None,
-        tags=["please","mysql","test"],
+         tags=["mysql","cassandra",'weekly','review','score'],
         catchup=False) as dag:
     
     game_ids_task = PythonOperator(
@@ -544,13 +574,13 @@ with DAG('dags_get_save_data_statis',
     )
 
     for i in range(num_batches):
-        # process_reviews_task = PythonOperator(
-        #     task_id=f'process_reviews_batch_{i+1}',
-        #     python_callable=process_reviews,
-        #     op_kwargs={'index': i, 'num_batches':num_batches},
-        #     provide_context=True,
-        #     dag=dag
-        # )
+        process_reviews_task = PythonOperator(
+            task_id=f'process_reviews_batch_{i+1}',
+            python_callable=process_reviews,
+            op_kwargs={'index': i, 'num_batches':num_batches},
+            provide_context=True,
+            dag=dag
+        )
         process_statistics_task = PythonOperator(
             task_id=f'process_statistics_batch_{i+1}',
             python_callable=process_statistics,
@@ -568,6 +598,6 @@ with DAG('dags_get_save_data_statis',
         )
 
         # game_ids_task >> process_reviews_task
-        # game_ids_task >> process_reviews_task >> process_statistics_task >> get_game_final_score_task
+        game_ids_task >> process_reviews_task >> process_statistics_task >> get_game_final_score_task
         # game_ids_task >> process_reviews_task >> process_statistics_task 
-        game_ids_task >> process_statistics_task >> get_game_final_score_task 
+        # game_ids_task >> process_statistics_task >> get_game_final_score_task 
