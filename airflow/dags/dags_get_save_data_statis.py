@@ -33,7 +33,7 @@ default_args = {
     'start_date': datetime(2024, 1, 1, tzinfo=timezone('Asia/Seoul')),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 2,
+    'retries': 5,
     'retry_delay': timedelta(minutes=5),
 }
 MAX_RETRIES = 5
@@ -51,7 +51,7 @@ def load_reviews_with_retry(game_id, max_reviews):
     while retry_count < MAX_RETRIES:
         try:
             review_loader = ReviewLoader().set_language('english')
-            reviews_en = review_loader.load_from_api(game_id)
+            reviews_en = review_loader.load_from_api(game_id) #TODO 맥스리뷰개수
         
             return reviews_en
         except Exception as e:
@@ -215,9 +215,17 @@ def process_reviews(num_batches, index, **kwargs):
             
             # if latest_review_date is None or review_updated_dt > latest_review_date: 
             # 리뷰 저장 코드 작성
-            scores = analyzer.polarity_scores(review_content)
+            if review_content is not None:
+                scores = analyzer.polarity_scores(review_content)
+            else:
+                # review_content가 None인 경우 처리할 내용을 입력하세요
+                # 예를 들어, 기본값으로 대체하거나 다른 처리를 수행할 수 있습니다.
+                scores = None  # 예시: None을 할당하여 이후 작업에서 처리
             # {'neg': 0.0, 'neu': 0.308, 'pos': 0.692, 'compound': 0.6249}
-            compound_score = scores['compound']
+            
+            if scores is not None:
+                compound_score = scores['compound']
+                
             if compound_score >= 0:
                 #print("긍정적인 감정입니다.")
                 review_is_good = True
