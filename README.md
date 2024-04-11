@@ -339,7 +339,7 @@ __=> 기존 약 5분 가량 걸리던 조회 시간이 "1.5초"로 단축!__
 ## 팀원 소개 
 |이상훈 [팀장]|김하영|장현욱|김윤민|정라엘|박종국|
 |---|---|---|---|---|---|
-|![Alt text](%EC%9D%B4%EC%83%81%ED%9B%88.png)|![Alt text](%EA%B9%80%ED%95%98%EC%98%81.png)|![Alt text](%EC%9E%A5%ED%98%84%EC%9A%B1.png)|![Alt text](%EA%B9%80%EC%9C%A4%EB%AF%BC.png)|![Alt text](%EC%A0%95%EB%9D%BC%EC%97%98.png)|![Alt text](%EB%B0%95%EC%A2%85%EA%B5%AD.png)|
+|![Alt text](./readme_img/이상훈.png)|![Alt text](./readme_img/%EA%B9%80%ED%95%98%EC%98%81.png)|![Alt text](./readme_img/%EC%9E%A5%ED%98%84%EC%9A%B1.png)|![Alt text](./readme_img/%EA%B9%80%EC%9C%A4%EB%AF%BC.png)|![Alt text](./readme_img/%EC%A0%95%EB%9D%BC%EC%97%98.png)|![Alt text](./readme_img/%EB%B0%95%EC%A2%85%EA%B5%AD.png)|
 |**[ BE & FE ]**|**[ BE & FE ]**|**[ FE ]**|**[ BE & FE ]**|**[ BE & FE ]**|**[ BE & FE ]**|
 
 ### 팀원 역할
