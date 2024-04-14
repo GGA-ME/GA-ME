@@ -231,109 +231,109 @@ __=> 기존 약 5분 가량 걸리던 조회 시간이 "1.5초"로 단축!__
 
 ## 프론트 폴더 구조
 📦src
- ┣ 📂components
- ┃ ┣ 📂commonUseComponents
- ┃ ┃ ┣ 📜CallbackComponent.tsx
- ┃ ┃ ┣ 📜GameCard.module.css
- ┃ ┃ ┣ 📜GameCard.tsx
- ┃ ┃ ┣ 📜Loading.tsx
- ┃ ┃ ┣ 📜Navbar.module.css
- ┃ ┃ ┣ 📜Navbar.tsx
- ┃ ┃ ┣ 📜Poket.module.css
- ┃ ┃ ┣ 📜Poket.tsx
- ┃ ┃ ┗ 📜SimpleGameCard.tsx
- ┃ ┣ 📂detailComponents
- ┃ ┃ ┣ 📜BackButton.tsx
- ┃ ┃ ┣ 📜Detail.module.css
- ┃ ┃ ┣ 📜DetailBanner.module.css
- ┃ ┃ ┣ 📜DetailBanner.tsx
- ┃ ┃ ┣ 📜DetailInfo.module.css
- ┃ ┃ ┣ 📜DetailInfo.tsx
- ┃ ┃ ┣ 📜InfoDescription.module.css
- ┃ ┃ ┣ 📜InfoDescription.tsx
- ┃ ┃ ┣ 📜InfoDetailDesc.module.css
- ┃ ┃ ┣ 📜InfoDetailDesc.tsx
- ┃ ┃ ┣ 📜InfoGame.module.css
- ┃ ┃ ┣ 📜InfoGame.tsx
- ┃ ┃ ┣ 📜InfoScreenshot.module.css
- ┃ ┃ ┣ 📜InfoScreenshot.tsx
- ┃ ┃ ┣ 📜InfoYoutube.module.css
- ┃ ┃ ┣ 📜InfoYoutube.tsx
- ┃ ┃ ┣ 📜Statistics.module.css
- ┃ ┃ ┣ 📜Statistics.tsx
- ┃ ┃ ┣ 📜WordCloud.module.css
- ┃ ┃ ┗ 📜WordCloud.tsx
- ┃ ┣ 📂HotTopicComponents
- ┃ ┃ ┣ 📜HotTopicButton.module.css
- ┃ ┃ ┣ 📜NewsButton.tsx
- ┃ ┃ ┣ 📜NewsCard.module.css
- ┃ ┃ ┣ 📜NewsCard.tsx
- ┃ ┃ ┣ 📜NewsList.module.css
- ┃ ┃ ┣ 📜NewsList.tsx
- ┃ ┃ ┣ 📜SaleButton.tsx
- ┃ ┃ ┣ 📜SaleComponent.module.css
- ┃ ┃ ┣ 📜SaleComponent.tsx
- ┃ ┃ ┣ 📜SalesList.tsx
- ┃ ┃ ┣ 📜Title.module.css
- ┃ ┃ ┗ 📜Title.tsx
- ┃ ┣ 📂mainComponents
- ┃ ┃ ┣ 📜Banner.module.css
- ┃ ┃ ┣ 📜Banner.tsx
- ┃ ┃ ┣ 📜Game.module.css
- ┃ ┃ ┣ 📜Game.tsx
- ┃ ┃ ┣ 📜Select.module.css
- ┃ ┃ ┗ 📜Select.tsx
- ┃ ┣ 📂mixAndMatchComponents
- ┃ ┃ ┣ 📜CombinationList.tsx
- ┃ ┃ ┣ 📜MixandMatch.module.css
- ┃ ┃ ┣ 📜RelatedTagList.tsx
- ┃ ┃ ┣ 📜Result.tsx
- ┃ ┃ ┣ 📜SearchGameList.tsx
- ┃ ┃ ┣ 📜Title.module.css
- ┃ ┃ ┗ 📜Title.tsx
- ┃ ┣ 📂MyPageComponents
- ┃ ┃ ┣ 📜Like.tsx
- ┃ ┃ ┣ 📜MyPage.module.css
- ┃ ┃ ┣ 📜NoUsedTagList.tsx
- ┃ ┃ ┣ 📜Profile.tsx
- ┃ ┃ ┗ 📜Statistics.tsx
- ┃ ┣ 📂searchComponents
- ┃ ┃ ┣ 📜Result.tsx
- ┃ ┃ ┣ 📜Search.module.css
- ┃ ┃ ┣ 📜SearchBox.tsx
- ┃ ┃ ┣ 📜Title.module.css
- ┃ ┃ ┗ 📜Title.tsx
- ┃ ┗ 📂SurveyComponents
- ┃ ┃ ┣ 📜SurveyGame.module.css
- ┃ ┃ ┗ 📜SurveyGame.tsx
- ┣ 📂pages
- ┃ ┣ 📜Detail.tsx
- ┃ ┣ 📜HotTopic.tsx
- ┃ ┣ 📜Main.tsx
- ┃ ┣ 📜MixAndMatch.tsx
- ┃ ┣ 📜MyPage.tsx
- ┃ ┣ 📜Search.tsx
- ┃ ┣ 📜Survey.tsx
- ┃ ┗ 📜text.module.css
- ┣ 📂stores
- ┃ ┣ 📜currentPage.tsx
- ┃ ┣ 📜DetailStore.tsx
- ┃ ┣ 📜hotTopicStore.tsx
- ┃ ┣ 📜likeStore.tsx
- ┃ ┣ 📜mainStore.tsx
- ┃ ┣ 📜mixAndMatchStore.tsx
- ┃ ┣ 📜myPageStore.tsx
- ┃ ┣ 📜poketStore.tsx
- ┃ ┣ 📜searchStore.tsx
- ┃ ┣ 📜surveyStore.tsx
- ┃ ┗ 📜userStore.tsx
- ┣ 📂url
- ┃ ┗ 📜api.tsx
- ┣ 📜App.css
- ┣ 📜App.tsx
- ┣ 📜index.css
- ┣ 📜main.tsx
- ┗ 📜vite-env.d.ts
+ - ┣ 📂components
+ - ┃ ┣ 📂commonUseComponents
+ - ┃ ┃ ┣ 📜CallbackComponent.tsx
+ - ┃ ┃ ┣ 📜GameCard.module.css
+ - ┃ ┃ ┣ 📜GameCard.tsx
+ - ┃ ┃ ┣ 📜Loading.tsx
+ - ┃ ┃ ┣ 📜Navbar.module.css
+ - ┃ ┃ ┣ 📜Navbar.tsx
+ - ┃ ┃ ┣ 📜Poket.module.css
+ - ┃ ┃ ┣ 📜Poket.tsx
+ - ┃ ┃ ┗ 📜SimpleGameCard.tsx
+ - ┃ ┣ 📂detailComponents
+ - ┃ ┃ ┣ 📜BackButton.tsx
+ - ┃ ┃ ┣ 📜Detail.module.css
+ - ┃ ┃ ┣ 📜DetailBanner.module.css
+ - ┃ ┃ ┣ 📜DetailBanner.tsx
+ - ┃ ┃ ┣ 📜DetailInfo.module.css
+ - ┃ ┃ ┣ 📜DetailInfo.tsx
+ - ┃ ┃ ┣ 📜InfoDescription.module.css
+ - ┃ ┃ ┣ 📜InfoDescription.tsx
+ - ┃ ┃ ┣ 📜InfoDetailDesc.module.css
+ - ┃ ┃ ┣ 📜InfoDetailDesc.tsx
+ - ┃ ┃ ┣ 📜InfoGame.module.css
+ - ┃ ┃ ┣ 📜InfoGame.tsx
+ - ┃ ┃ ┣ 📜InfoScreenshot.module.css
+ - ┃ ┃ ┣ 📜InfoScreenshot.tsx
+ - ┃ ┃ ┣ 📜InfoYoutube.module.css
+ - ┃ ┃ ┣ 📜InfoYoutube.tsx
+ - ┃ ┃ ┣ 📜Statistics.module.css
+ - ┃ ┃ ┣ 📜Statistics.tsx
+ - ┃ ┃ ┣ 📜WordCloud.module.css
+ - ┃ ┃ ┗ 📜WordCloud.tsx
+ - ┃ ┣ 📂HotTopicComponents
+ - ┃ ┃ ┣ 📜HotTopicButton.module.css
+ - ┃ ┃ ┣ 📜NewsButton.tsx
+ - ┃ ┃ ┣ 📜NewsCard.module.css
+ - ┃ ┃ ┣ 📜NewsCard.tsx
+ - ┃ ┃ ┣ 📜NewsList.module.css
+ - ┃ ┃ ┣ 📜NewsList.tsx
+ - ┃ ┃ ┣ 📜SaleButton.tsx
+ - ┃ ┃ ┣ 📜SaleComponent.module.css
+ - ┃ ┃ ┣ 📜SaleComponent.tsx
+ - ┃ ┃ ┣ 📜SalesList.tsx
+ - ┃ ┃ ┣ 📜Title.module.css
+ - ┃ ┃ ┗ 📜Title.tsx
+ - ┃ ┣ 📂mainComponents
+ - ┃ ┃ ┣ 📜Banner.module.css
+ - ┃ ┃ ┣ 📜Banner.tsx
+ - ┃ ┃ ┣ 📜Game.module.css
+ - ┃ ┃ ┣ 📜Game.tsx
+ - ┃ ┃ ┣ 📜Select.module.css
+ - ┃ ┃ ┗ 📜Select.tsx
+ - ┃ ┣ 📂mixAndMatchComponents
+ - ┃ ┃ ┣ 📜CombinationList.tsx
+ - ┃ ┃ ┣ 📜MixandMatch.module.css
+ - ┃ ┃ ┣ 📜RelatedTagList.tsx
+ - ┃ ┃ ┣ 📜Result.tsx
+ - ┃ ┃ ┣ 📜SearchGameList.tsx
+ - ┃ ┃ ┣ 📜Title.module.css
+ - ┃ ┃ ┗ 📜Title.tsx
+ - ┃ ┣ 📂MyPageComponents
+ - ┃ ┃ ┣ 📜Like.tsx
+ - ┃ ┃ ┣ 📜MyPage.module.css
+ - ┃ ┃ ┣ 📜NoUsedTagList.tsx
+ - ┃ ┃ ┣ 📜Profile.tsx
+ - ┃ ┃ ┗ 📜Statistics.tsx
+ - ┃ ┣ 📂searchComponents
+ - ┃ ┃ ┣ 📜Result.tsx
+ - ┃ ┃ ┣ 📜Search.module.css
+ - ┃ ┃ ┣ 📜SearchBox.tsx
+ - ┃ ┃ ┣ 📜Title.module.css
+ - ┃ ┃ ┗ 📜Title.tsx
+ - ┃ ┗ 📂SurveyComponents
+ - ┃ ┃ ┣ 📜SurveyGame.module.css
+ - ┃ ┃ ┗ 📜SurveyGame.tsx
+ - ┣ 📂pages
+ - ┃ ┣ 📜Detail.tsx
+ - ┃ ┣ 📜HotTopic.tsx
+ - ┃ ┣ 📜Main.tsx
+ - ┃ ┣ 📜MixAndMatch.tsx
+ - ┃ ┣ 📜MyPage.tsx
+ - ┃ ┣ 📜Search.tsx
+ - ┃ ┣ 📜Survey.tsx
+ - ┃ ┗ 📜text.module.css
+ - ┣ 📂stores
+ - ┃ ┣ 📜currentPage.tsx
+ - ┃ ┣ 📜DetailStore.tsx
+ - ┃ ┣ 📜hotTopicStore.tsx
+ - ┃ ┣ 📜likeStore.tsx
+ - ┃ ┣ 📜mainStore.tsx
+ - ┃ ┣ 📜mixAndMatchStore.tsx
+ - ┃ ┣ 📜myPageStore.tsx
+ - ┃ ┣ 📜poketStore.tsx
+ - ┃ ┣ 📜searchStore.tsx
+ - ┃ ┣ 📜surveyStore.tsx
+ - ┃ ┗ 📜userStore.tsx
+ - ┣ 📂url
+ - ┃ ┗ 📜api.tsx
+ - ┣ 📜App.css
+ - ┣ 📜App.tsx
+ - ┣ 📜index.css
+ - ┣ 📜main.tsx
+ - ┗ 📜vite-env.d.ts
 
 
 ## 팀원 소개 
