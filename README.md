@@ -30,11 +30,12 @@ GA:ME만의 추천 알고리즘으로 게임 별 자체 점수를 산정하고
 
 - 요즘 게임 점수
     - 최근 게임 점수:
-        - ${{game\_recent\_score}} = \left( \left(1 - \frac{1}{{1 + \log(\text{{총 최근 게임 시간}} + 1)}}\right) + \left(1 - \frac{1}{{1 + \log(\text{{최근 게임 플레이한 유저}} \times 100 + 1)}}\right) \right) \times 100$
+         ${{gameRecentScore}} = \left( \left(1 - \frac{1}{{1 + \log(\text{{총 최근 게임 시간}} + 1)}}\right) + \left(1 - \frac{1}{{1 + \log(\text{{최근 게임 플레이한 유저}} \times 100 + 1)}}\right) \right) \times 100$
     
 
     - 최종 최근 게임 점수:
-      - ${{game\_final\_recent\_score}} = \text{{ game\_final\_score}} \times 0.6 + \text{{game\_recent\_score}} \times 0.4$
+      ${{gameFinalRecentScore}} = \text{{ gameFinalScore}} \times 0.6 + \text{{gameRecentScore}} \times 0.4$
+     
 
 
 
